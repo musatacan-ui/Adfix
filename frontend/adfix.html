@@ -1,0 +1,2442 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Adfix — Adisyon Sistemi</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#F97316">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F97316'/%3E%3Ctext y='72' x='50' font-size='58' text-anchor='middle'%3E%F0%9F%A7%A8%3C/text%3E%3C/svg%3E">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --ana:#F97316; --ana-koyu:#C2410C; --ana-acik:#FFF7ED;
+  --koyu:#1E293B; --koyu2:#0F172A; --gri:#64748B; --cizgi:#E2E8F0;
+  --zemin:#F1F5F9; --kart:#FFFFFF;
+  --yesil:#16A34A; --kirmizi:#DC2626; --mavi:#2563EB; --mor:#7C3AED; --sari:#CA8A04;
+}
+/* Lucide ikonları — currentColor ile metnin rengini alır, her boyutta net */
+.ik{width:1.08em;height:1.08em;fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;vertical-align:-.16em}
+.ik-b{width:1.35em;height:1.35em}
+.ik-xl{width:2.2em;height:2.2em;stroke-width:1.6}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:14px;background:var(--zemin);color:#0F172A;overflow:hidden}
+input,select,textarea,button{font-family:inherit;font-size:14px}
+.gizli{display:none!important}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:6px}
+::-webkit-scrollbar-thumb:hover{background:#94A3B8}
+
+/* ───────────── giriş ───────────── */
+#girisEkran{display:flex;align-items:center;justify-content:center;min-height:100vh;
+  background:linear-gradient(135deg,#7C2D12 0%,#C2410C 45%,#EA580C 100%)}
+.giris-kutu{background:#fff;border-radius:18px;padding:34px;width:360px;max-width:92vw;
+  box-shadow:0 24px 60px rgba(0,0,0,.35)}
+.marka{text-align:center;margin-bottom:26px}
+.marka-ikon{width:64px;height:64px;margin:0 auto 12px;border-radius:18px;
+  background:linear-gradient(140deg,#F97316,#DC2626);display:flex;align-items:center;
+  justify-content:center;font-size:32px;box-shadow:0 10px 26px rgba(249,115,22,.45)}
+.marka h1{font-size:27px;font-weight:800;letter-spacing:-.6px}
+.marka p{font-size:11px;color:var(--gri);letter-spacing:3px;margin-top:3px;text-transform:uppercase}
+.alan{margin-bottom:14px}
+.alan label{display:block;font-size:11px;font-weight:700;color:var(--gri);
+  margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
+.alan input,.alan select,.alan textarea{width:100%;padding:11px 13px;border:1.5px solid var(--cizgi);
+  border-radius:10px;background:#fff;transition:border .15s,box-shadow .15s}
+.alan input:focus,.alan select:focus,.alan textarea:focus{outline:none;border-color:var(--ana);
+  box-shadow:0 0 0 3px rgba(249,115,22,.15)}
+.btn{padding:11px 18px;border:none;border-radius:10px;font-weight:600;cursor:pointer;
+  transition:transform .08s,filter .15s;background:var(--ana);color:#fff}
+.btn:hover{filter:brightness(1.07)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-tam{width:100%;padding:13px;font-size:15px}
+.btn-gri{background:#E2E8F0;color:#334155}
+.btn-yesil{background:var(--yesil)}
+.btn-kirmizi{background:var(--kirmizi)}
+.btn-mavi{background:var(--mavi)}
+.btn-koyu{background:var(--koyu)}
+.btn-cizgi{background:#fff;color:#334155;border:1.5px solid var(--cizgi)}
+.btn-kucuk{padding:7px 11px;font-size:12.5px;border-radius:8px}
+.hata{background:#FEF2F2;color:#B91C1C;padding:9px 13px;border-radius:9px;
+  font-size:12.5px;margin-bottom:12px;display:none;border:1px solid #FECACA}
+.demo-not{margin-top:16px;font-size:11.5px;color:var(--gri);text-align:center;line-height:1.7}
+.demo-not code{background:var(--zemin);padding:1px 6px;border-radius:4px;font-size:11px}
+
+/* ───────────── iskelet ───────────── */
+#uygulama{display:none;height:100vh}
+.yan{width:196px;background:var(--koyu2);display:flex;flex-direction:column;flex-shrink:0;
+  transition:transform .25s}
+.yan-ust{padding:16px 15px;border-bottom:1px solid rgba(255,255,255,.08)}
+.yan-marka{display:flex;align-items:center;gap:9px}
+.yan-marka-ikon{width:32px;height:32px;border-radius:9px;
+  background:linear-gradient(140deg,#F97316,#DC2626);display:flex;align-items:center;
+  justify-content:center;font-size:17px}
+.yan-marka b{color:#fff;font-size:17px;font-weight:800;letter-spacing:-.3px}
+.yan-kul{font-size:11px;color:#94A3B8;margin-top:9px;line-height:1.5}
+.yan-kul b{color:#F97316;display:block;font-size:12px}
+.menu{flex:1;padding:8px 0;overflow-y:auto}
+.menu-og{display:flex;align-items:center;gap:10px;padding:11px 15px;cursor:pointer;
+  color:#CBD5E1;font-size:13.5px;border-left:3px solid transparent;transition:all .13s}
+.menu-og:hover{background:rgba(255,255,255,.05);color:#fff}
+.menu-og.aktif{background:rgba(249,115,22,.14);color:#FB923C;border-left-color:var(--ana);font-weight:600}
+.menu-og .ik{width:18px;height:18px}
+.menu-rozet{margin-left:auto;background:var(--kirmizi);color:#fff;font-size:10px;
+  font-weight:700;padding:1px 6px;border-radius:9px;min-width:18px;text-align:center}
+.yan-alt{padding:11px 15px;border-top:1px solid rgba(255,255,255,.08)}
+.yan-cikis{font-size:12px;color:#94A3B8;cursor:pointer}
+.yan-cikis:hover{color:#F87171}
+.govde{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.ust{background:#fff;border-bottom:1px solid var(--cizgi);padding:11px 18px;
+  display:flex;align-items:center;gap:14px;flex-shrink:0;min-height:56px}
+.ust h2{font-size:17px;font-weight:700}
+.ust-bilgi{font-size:12px;color:var(--gri)}
+.ust-sag{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sayfa{flex:1;overflow-y:auto;padding:18px}
+.menu-ac{display:none;background:none;border:none;font-size:22px;cursor:pointer;color:#334155}
+
+/* ───────────── masa planı ───────────── */
+.salon-sekme{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.sekme{padding:8px 15px;border-radius:20px;background:#fff;border:1.5px solid var(--cizgi);
+  cursor:pointer;font-size:13px;font-weight:600;color:#475569;transition:all .15s;
+  display:inline-flex;align-items:center;gap:7px}
+.sekme:hover{border-color:#CBD5E1}
+.sekme.aktif{background:var(--ana);border-color:var(--ana);color:#fff}
+.masa-izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:13px}
+.masa{background:#fff;border:2px solid var(--cizgi);border-radius:14px;padding:13px;
+  cursor:pointer;transition:all .15s;min-height:112px;display:flex;flex-direction:column;
+  position:relative;overflow:hidden}
+.masa:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.09)}
+.masa.dolu{border-color:var(--ana);background:linear-gradient(160deg,#FFF7ED,#FFEDD5)}
+.masa.odendi{border-color:var(--yesil);background:linear-gradient(160deg,#F0FDF4,#DCFCE7)}
+.masa-ad{font-size:19px;font-weight:800;letter-spacing:-.4px}
+.masa-bos{font-size:12px;color:#94A3B8;margin-top:auto}
+.masa-tutar{font-size:18px;font-weight:800;color:var(--ana-koyu);margin-top:auto}
+.masa-satir{display:flex;justify-content:space-between;align-items:center;
+  font-size:11.5px;color:var(--gri);margin-top:3px}
+.masa-rozet{position:absolute;top:9px;right:9px;background:var(--kirmizi);color:#fff;
+  font-size:10px;font-weight:700;padding:2px 7px;border-radius:9px}
+.masa-kap{font-size:11px;color:#94A3B8}
+.bos-durum{text-align:center;padding:56px 20px;color:var(--gri)}
+.bos-durum .ikon{font-size:46px;margin-bottom:12px;opacity:.55}
+
+/* ───────────── özet kartları ───────────── */
+.kart-sira{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-bottom:18px}
+.ozet-kart{background:#fff;border:1px solid var(--cizgi);border-radius:12px;padding:14px 16px}
+.ozet-kart .etiket{font-size:11px;color:var(--gri);text-transform:uppercase;
+  letter-spacing:.05em;font-weight:700}
+.ozet-kart .deger{font-size:23px;font-weight:800;margin-top:5px;letter-spacing:-.6px}
+.ozet-kart .alt{font-size:11.5px;color:var(--gri);margin-top:2px}
+.ozet-kart.vurgu{background:linear-gradient(140deg,#F97316,#DC2626);border:none;color:#fff}
+.ozet-kart.vurgu .etiket,.ozet-kart.vurgu .alt{color:rgba(255,255,255,.8)}
+
+/* ───────────── adisyon ekranı ───────────── */
+.adisyon-duzen{display:grid;grid-template-columns:1fr 372px;gap:14px;height:100%}
+.urun-panel{display:flex;flex-direction:column;overflow:hidden}
+.kat-sekme{display:flex;gap:6px;overflow-x:auto;padding-bottom:9px;flex-shrink:0}
+.kat-sekme .sekme{white-space:nowrap;padding:7px 13px;font-size:12.5px;
+  display:inline-flex;align-items:center;gap:6px}
+.urun-izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));
+  gap:9px;overflow-y:auto;align-content:start;padding-right:4px}
+.urun{background:#fff;border:1.5px solid var(--cizgi);border-radius:11px;padding:11px 10px;
+  cursor:pointer;text-align:left;transition:all .12s;min-height:74px;display:flex;
+  flex-direction:column;justify-content:space-between}
+.urun:hover{border-color:var(--ana);background:var(--ana-acik);transform:translateY(-1px)}
+.urun:active{transform:scale(.96)}
+.urun .ad{font-size:12.5px;font-weight:600;line-height:1.35}
+.urun .fy{font-size:14px;font-weight:800;color:var(--ana-koyu);margin-top:6px}
+.urun-gorsel{width:100%;height:66px;border-radius:8px;overflow:hidden;margin-bottom:7px;
+  display:flex;align-items:center;justify-content:center;background:var(--zemin)}
+.urun-gorsel img{width:100%;height:100%;object-fit:cover;display:block}
+.urun-gorsel .ik{width:26px;height:26px;opacity:.85;stroke-width:1.6}
+.gorsel-kutu{display:flex;align-items:center;gap:13px;padding:12px;border:1.5px dashed var(--cizgi);
+  border-radius:11px;background:#FAFAFA}
+.gorsel-onizleme{width:74px;height:74px;border-radius:10px;overflow:hidden;flex-shrink:0;
+  background:var(--zemin);display:flex;align-items:center;justify-content:center;color:var(--gri)}
+.gorsel-onizleme img{width:100%;height:100%;object-fit:cover}
+.logo-onizleme{width:96px;height:96px;border-radius:14px;background:var(--zemin);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;
+  border:1px solid var(--cizgi)}
+.logo-onizleme img{max-width:100%;max-height:100%;object-fit:contain}
+.marka-ikon img,.yan-marka-ikon img{width:100%;height:100%;object-fit:contain;
+  border-radius:inherit;background:#fff}
+.qr-kart{background:#fff;border:1px solid var(--cizgi);border-radius:12px;padding:14px;
+  text-align:center;break-inside:avoid}
+.qr-kart svg{width:100%;height:auto;max-width:190px;margin:0 auto;display:block}
+.qr-kart .qr-ad{font-size:16px;font-weight:800;margin-bottom:8px}
+.qr-kart .qr-alt{font-size:11px;color:var(--gri);margin-top:8px;word-break:break-all}
+.qr-izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:13px}
+.sepet-panel{background:#fff;border:1px solid var(--cizgi);border-radius:14px;
+  display:flex;flex-direction:column;overflow:hidden}
+.sepet-ust{padding:13px 15px;border-bottom:1px solid var(--cizgi);background:#FAFAFA}
+.sepet-ust h3{font-size:16px;font-weight:800}
+.sepet-ust .alt{font-size:11.5px;color:var(--gri);margin-top:2px}
+.sepet-liste{flex:1;overflow-y:auto;padding:6px 0}
+.sepet-satir{display:flex;align-items:center;gap:9px;padding:8px 14px;border-bottom:1px solid #F1F5F9}
+.sepet-satir.ikram{background:#F0FDF4}
+.sepet-satir.iptal{background:#FEF2F2;opacity:.62;text-decoration:line-through}
+.sepet-satir.yeni{background:#FFFBEB}
+.sepet-satir .bilgi{flex:1;min-width:0}
+.sepet-satir .ad{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.sepet-satir .kck{font-size:11px;color:var(--gri);margin-top:1px}
+.sepet-satir .tut{font-size:13.5px;font-weight:700;min-width:76px;text-align:right}
+.adet-kutu{display:flex;align-items:center;gap:2px;background:var(--zemin);border-radius:8px;padding:2px}
+.adet-kutu button{width:26px;height:26px;border:none;background:#fff;border-radius:6px;
+  cursor:pointer;color:#475569;line-height:0;display:inline-flex;
+  align-items:center;justify-content:center}
+.adet-kutu button:hover{background:var(--ana);color:#fff}
+.adet-kutu span{min-width:24px;text-align:center;font-weight:700;font-size:13px}
+.satir-menu{background:none;border:none;cursor:pointer;color:#94A3B8;font-size:17px;
+  padding:2px 4px;line-height:0}
+.satir-menu:hover{color:var(--kirmizi)}
+.sepet-alt{border-top:2px solid var(--cizgi);padding:13px 15px;background:#FAFAFA}
+.top-satir{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;color:#475569}
+.top-satir.buyuk{font-size:20px;font-weight:800;color:#0F172A;padding-top:8px;
+  border-top:1px dashed var(--cizgi);margin-top:8px}
+.top-satir.yesil{color:var(--yesil);font-weight:700}
+.top-satir.kirmizi{color:var(--kirmizi);font-weight:700}
+.islem-sira{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}
+.islem-sira .genis{grid-column:1/-1}
+
+/* ───────────── mutfak ───────────── */
+.mutfak-izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:12px}
+.fis-kart{background:#fff;border-left:5px solid var(--mavi);border-radius:11px;padding:13px;
+  box-shadow:0 2px 6px rgba(0,0,0,.05)}
+.fis-kart.uyari{border-left-color:var(--sari);background:#FEFCE8}
+.fis-kart.gecikti{border-left-color:var(--kirmizi);background:#FEF2F2;animation:nabiz 1.8s infinite}
+@keyframes nabiz{50%{box-shadow:0 0 0 5px rgba(220,38,38,.12)}}
+.fis-ust{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.fis-masa{font-size:16px;font-weight:800}
+.fis-sure{font-size:12px;font-weight:700;padding:2px 8px;border-radius:9px;
+  background:var(--zemin);color:#475569}
+.fis-sure.gec{background:#FEE2E2;color:#B91C1C}
+.fis-urun{font-size:14px;font-weight:600;padding:4px 0}
+.fis-urun .adet{display:inline-block;background:var(--koyu);color:#fff;font-size:11.5px;
+  padding:1px 7px;border-radius:6px;margin-right:6px;font-weight:700}
+.fis-not{font-size:11.5px;color:var(--ana-koyu);font-style:italic;margin-top:2px}
+.fis-alt{display:flex;justify-content:space-between;align-items:center;margin-top:10px;
+  padding-top:9px;border-top:1px dashed var(--cizgi)}
+.fis-garson{font-size:11px;color:var(--gri)}
+
+/* ───────────── tablo ───────────── */
+.tablo-sar{background:#fff;border:1px solid var(--cizgi);border-radius:12px;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:#F8FAFC;padding:10px 12px;text-align:left;font-size:11px;font-weight:700;
+  color:var(--gri);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--cizgi);
+  white-space:nowrap;position:sticky;top:0;z-index:2}
+td{padding:9px 12px;border-bottom:1px solid #F1F5F9;vertical-align:middle}
+tbody tr:hover{background:#FAFAFA}
+.sag{text-align:right}
+.orta{text-align:center}
+.para{font-variant-numeric:tabular-nums;font-weight:600}
+.etiket-durum{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;
+  border-radius:9px;text-transform:uppercase;letter-spacing:.03em}
+.d-acik{background:#FFEDD5;color:#9A3412}
+.d-kapali{background:#DCFCE7;color:#15803D}
+.d-iptal{background:#FEE2E2;color:#B91C1C}
+.d-pasif{background:#F1F5F9;color:#64748B}
+.bolum{margin-bottom:22px}
+.bolum h3{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;
+  align-items:center;gap:8px}
+.bolum h3 small{font-weight:500;color:var(--gri);font-size:12px}
+
+/* ───────────── modal ───────────── */
+.perde{display:none;position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:200;
+  align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(2px)}
+.perde.acik{display:flex}
+.modal{background:#fff;border-radius:16px;width:440px;max-width:96vw;max-height:92vh;
+  overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+.modal.genis{width:680px}
+.modal-ust{padding:16px 20px;border-bottom:1px solid var(--cizgi);display:flex;
+  align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;z-index:3}
+.modal-ust h3{font-size:16px;font-weight:700}
+.modal-kapat{background:none;border:none;cursor:pointer;color:#94A3B8;line-height:0;padding:4px}
+.modal-kapat:hover{color:#334155}
+.modal-govde{padding:20px 20px 26px}
+.modal-alt{padding:14px 20px;border-top:1px solid var(--cizgi);display:flex;gap:9px;
+  justify-content:flex-end;background:#FAFAFA;position:sticky;bottom:0}
+
+/* ───────────── ödeme ───────────── */
+.odeme-ozet{background:var(--koyu2);color:#fff;border-radius:13px;padding:17px;margin-bottom:16px}
+.odeme-ozet .kalan-et{font-size:11.5px;color:#94A3B8;text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.odeme-ozet .kalan{font-size:35px;font-weight:800;letter-spacing:-1.2px;margin-top:3px}
+.odeme-ozet .detay{font-size:11.5px;color:#94A3B8;margin-top:6px}
+.tur-sec{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+.tur{padding:13px 9px;border:2px solid var(--cizgi);border-radius:11px;background:#fff;
+  cursor:pointer;text-align:center;font-weight:600;font-size:13px;transition:all .13s}
+.tur:hover{border-color:#CBD5E1}
+.tur.aktif{border-color:var(--ana);background:var(--ana-acik);color:var(--ana-koyu)}
+.tur-ik{display:block;margin-bottom:5px;color:var(--gri)}
+.tur.aktif .tur-ik{color:var(--ana)}
+.tus-takim{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
+.tus{padding:15px;border:1.5px solid var(--cizgi);border-radius:11px;background:#fff;
+  font-size:19px;font-weight:700;cursor:pointer;transition:all .1s}
+.tus:hover{background:var(--zemin)}
+.tus:active{background:var(--ana);color:#fff;transform:scale(.95)}
+.tus.islem{background:#F8FAFC;font-size:15px;color:#475569}
+.tutar-goster{font-size:31px;font-weight:800;text-align:right;padding:13px 15px;
+  background:var(--zemin);border-radius:11px;font-variant-numeric:tabular-nums;
+  border:2px solid var(--cizgi)}
+.hizli-sira{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.hizli{padding:7px 12px;border:1.5px solid var(--cizgi);border-radius:8px;background:#fff;
+  font-size:12.5px;font-weight:600;cursor:pointer}
+.hizli:hover{border-color:var(--ana);color:var(--ana-koyu)}
+.ustu-kutu{background:#F0FDF4;border:1px solid #BBF7D0;border-radius:10px;padding:11px 14px;
+  margin-top:11px;display:flex;justify-content:space-between;align-items:center}
+.ustu-kutu b{font-size:19px;color:var(--yesil)}
+
+/* ───────────── bildirim ───────────── */
+#bildirimler{position:fixed;bottom:16px;right:16px;z-index:400;display:flex;
+  flex-direction:column;gap:8px;max-width:340px}
+.bildirim{background:var(--koyu2);color:#fff;padding:12px 16px;border-radius:11px;
+  font-size:13px;box-shadow:0 10px 26px rgba(0,0,0,.28);animation:gir .22s ease;
+  border-left:4px solid var(--ana)}
+.bildirim.iyi{border-left-color:var(--yesil)}
+.bildirim.kotu{border-left-color:var(--kirmizi)}
+@keyframes gir{from{opacity:0;transform:translateY(16px)}}
+
+/* ───────────── fiş çıktısı ───────────── */
+#fisAlani{display:none}
+@media print{
+  body{background:#fff;overflow:visible}
+  body>*{display:none!important}
+  #fisAlani{display:block!important;width:76mm;margin:0 auto;font-family:'Courier New',monospace;
+    font-size:12px;color:#000}
+  .fis-baslik{text-align:center;font-weight:bold;font-size:16px;margin-bottom:2mm}
+  .fis-ayrac{border-top:1px dashed #000;margin:2mm 0}
+  .fis-sat{display:flex;justify-content:space-between;gap:4mm}
+  .fis-buyuk{font-size:15px;font-weight:bold}
+  .fis-kucuk{font-size:10px}
+  .fis-orta{text-align:center}
+  .fis-logo{max-height:16mm;max-width:44mm;object-fit:contain;margin-bottom:1.5mm}
+}
+
+/* ───────────── duyarlı ───────────── */
+@media(max-width:1080px){ .adisyon-duzen{grid-template-columns:1fr 320px} }
+@media(max-width:860px){
+  .menu-ac{display:block}
+  .yan{position:fixed;left:0;top:0;bottom:0;z-index:120;transform:translateX(-100%)}
+  .yan.acik{transform:translateX(0)}
+  .yan-perde{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:110}
+  .yan-perde.acik{display:block}
+  .adisyon-duzen{grid-template-columns:1fr;height:auto}
+  .sepet-panel{max-height:none}
+  .sayfa{padding:12px}
+  .masa-izgara{grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px}
+}
+</style>
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true"><!-- Lucide v1.34.0 — ISC License, https://lucide.dev --><symbol id="i-utensils-crossed" viewBox="0 0 24 24"><path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8" /> <path d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7" /> <path d="m2.1 21.8 6.4-6.3" /> <path d="m19 5-7 7" /></symbol><symbol id="i-chef-hat" viewBox="0 0 24 24"><path d="M17 21a1 1 0 0 0 1-1v-5.35c0-.457.316-.844.727-1.041a4 4 0 0 0-2.134-7.589 5 5 0 0 0-9.186 0 4 4 0 0 0-2.134 7.588c.411.198.727.585.727 1.041V20a1 1 0 0 0 1 1Z" /> <path d="M6 17h12" /></symbol><symbol id="i-receipt-text" viewBox="0 0 24 24"><path d="M13 16H8" /> <path d="M14 8H8" /> <path d="M16 12H8" /> <path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /></symbol><symbol id="i-chart-column" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16" /> <path d="M18 17V9" /> <path d="M13 17V5" /> <path d="M8 17v-3" /></symbol><symbol id="i-book-open" viewBox="0 0 24 24"><path d="M12 5v16" /> <path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></symbol><symbol id="i-settings" viewBox="0 0 24 24"><path d="M9.671 4.136a2.34 2.34 0 0 1 4.659 0 2.34 2.34 0 0 0 3.319 1.915 2.34 2.34 0 0 1 2.33 4.033 2.34 2.34 0 0 0 0 3.831 2.34 2.34 0 0 1-2.33 4.033 2.34 2.34 0 0 0-3.319 1.915 2.34 2.34 0 0 1-4.659 0 2.34 2.34 0 0 0-3.32-1.915 2.34 2.34 0 0 1-2.33-4.033 2.34 2.34 0 0 0 0-3.831A2.34 2.34 0 0 1 6.35 6.051a2.34 2.34 0 0 0 3.319-1.915" /> <circle cx="12" cy="12" r="3" /></symbol><symbol id="i-qr-code" viewBox="0 0 24 24"><rect width="5" height="5" x="3" y="3" rx="1" /> <rect width="5" height="5" x="16" y="3" rx="1" /> <rect width="5" height="5" x="3" y="16" rx="1" /> <path d="M21 16h-3a2 2 0 0 0-2 2v3" /> <path d="M21 21v.01" /> <path d="M12 7v3a2 2 0 0 1-2 2H7" /> <path d="M3 12h.01" /> <path d="M12 3h.01" /> <path d="M12 16v.01" /> <path d="M16 12h1" /> <path d="M21 12v.01" /> <path d="M12 21v-1" /></symbol><symbol id="i-log-out" viewBox="0 0 24 24"><path d="m16 17 5-5-5-5" /> <path d="M21 12H9" /> <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /></symbol><symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 5h16" /> <path d="M4 12h16" /> <path d="M4 19h16" /></symbol><symbol id="i-refresh-cw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" /> <path d="M21 3v5h-5" /> <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" /> <path d="M8 16H3v5" /></symbol><symbol id="i-package" viewBox="0 0 24 24"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z" /> <path d="M12 22V12" /> <polyline points="3.29 7 12 12 20.71 7" /> <path d="m7.5 4.27 9 5.15" /></symbol><symbol id="i-shopping-bag" viewBox="0 0 24 24"><path d="M16 10a4 4 0 0 1-8 0" /> <path d="M3.103 6.034h17.794" /> <path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z" /></symbol><symbol id="i-search" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34" /> <circle cx="11" cy="11" r="8" /></symbol><symbol id="i-bell-ring" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0" /> <path d="M22 8c0-2.3-.8-4.3-2-6" /> <path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326" /> <path d="M4 2C2.8 3.7 2 5.7 2 8" /></symbol><symbol id="i-credit-card" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="5" rx="2" /> <line x1="2" x2="22" y1="10" y2="10" /></symbol><symbol id="i-banknote" viewBox="0 0 24 24"><rect width="20" height="12" x="2" y="6" rx="2" /> <circle cx="12" cy="12" r="2" /> <path d="M6 12h.01M18 12h.01" /></symbol><symbol id="i-ticket" viewBox="0 0 24 24"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z" /> <path d="M13 5v2" /> <path d="M13 17v2" /> <path d="M13 11v2" /></symbol><symbol id="i-notebook-pen" viewBox="0 0 24 24"><path d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4" /> <path d="M2 6h4" /> <path d="M2 10h4" /> <path d="M2 14h4" /> <path d="M2 18h4" /> <path d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z" /></symbol><symbol id="i-percent" viewBox="0 0 24 24"><line x1="19" x2="5" y1="5" y2="19" /> <circle cx="6.5" cy="6.5" r="2.5" /> <circle cx="17.5" cy="17.5" r="2.5" /></symbol><symbol id="i-calculator" viewBox="0 0 24 24"><rect width="16" height="20" x="4" y="2" rx="2" /> <line x1="8" x2="16" y1="6" y2="6" /> <line x1="16" x2="16" y1="14" y2="18" /> <path d="M16 10h.01" /> <path d="M12 10h.01" /> <path d="M8 10h.01" /> <path d="M12 14h.01" /> <path d="M8 14h.01" /> <path d="M12 18h.01" /> <path d="M8 18h.01" /></symbol><symbol id="i-arrow-left-right" viewBox="0 0 24 24"><path d="M8 3 4 7l4 4" /> <path d="M4 7h16" /> <path d="m16 21 4-4-4-4" /> <path d="M20 17H4" /></symbol><symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /> <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" /></symbol><symbol id="i-pencil" viewBox="0 0 24 24"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /> <path d="m15 5 4 4" /></symbol><symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></symbol><symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18" /> <path d="m6 6 12 12" /></symbol><symbol id="i-printer" viewBox="0 0 24 24"><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" /> <path d="M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6" /> <rect x="6" y="14" width="12" height="8" rx="1" /></symbol><symbol id="i-trash-2" viewBox="0 0 24 24"><path d="M10 11v6" /> <path d="M14 11v6" /> <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" /> <path d="M3 6h18" /> <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></symbol><symbol id="i-gift" viewBox="0 0 24 24"><path d="M12 7v14" /> <path d="M20 11v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8" /> <path d="M7.5 7a1 1 0 0 1 0-5A4.8 8 0 0 1 12 7a4.8 8 0 0 1 4.5-5 1 1 0 0 1 0 5" /> <rect x="3" y="7" width="18" height="4" rx="1" /></symbol><symbol id="i-delete" viewBox="0 0 24 24"><path d="M10 5a2 2 0 0 0-1.344.519l-6.328 5.74a1 1 0 0 0 0 1.481l6.328 5.741A2 2 0 0 0 10 19h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z" /> <path d="m12 9 6 6" /> <path d="m18 9-6 6" /></symbol><symbol id="i-corner-down-right" viewBox="0 0 24 24"><path d="m15 10 5 5-5 5" /> <path d="M4 4v7a4 4 0 0 0 4 4h12" /></symbol><symbol id="i-party-popper" viewBox="0 0 24 24"><path d="M5.8 11.3 2 22l10.7-3.79" /> <path d="M4 3h.01" /> <path d="M22 8h.01" /> <path d="M15 2h.01" /> <path d="M22 20h.01" /> <path d="m22 2-2.24.75a2.9 2.9 0 0 0-1.96 3.12c.1.86-.57 1.63-1.45 1.63h-.38c-.86 0-1.6.6-1.76 1.44L14 10" /> <path d="m22 13-.82-.33c-.86-.34-1.82.2-1.98 1.11c-.11.7-.72 1.22-1.43 1.22H17" /> <path d="m11 2 .33.82c.34.86-.2 1.82-1.11 1.98C9.52 4.9 9 5.52 9 6.23V7" /> <path d="M11 13c1.93 1.93 2.83 4.17 2 5-.83.83-3.07-.07-5-2-1.93-1.93-2.83-4.17-2-5 .83-.83 3.07.07 5 2Z" /></symbol><symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4" /></symbol><symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" /> <path d="M16 3.128a4 4 0 0 1 0 7.744" /> <path d="M22 21v-2a4 4 0 0 0-3-3.87" /> <circle cx="9" cy="7" r="4" /></symbol><symbol id="i-layers" viewBox="0 0 24 24"><path d="M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z" /> <path d="M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12" /> <path d="M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17" /></symbol><symbol id="i-calendar" viewBox="0 0 24 24"><path d="M8 2v3" /> <path d="M16 2v3" /> <rect x="3" y="3" width="18" height="18" rx="2" /> <path d="M3 9h18" /></symbol><symbol id="i-lock" viewBox="0 0 24 24"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /> <path d="M7 11V7a5 5 0 0 1 10 0v4" /></symbol><symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /> <path d="M12 9v4" /> <path d="M12 17h.01" /></symbol><symbol id="i-armchair" viewBox="0 0 24 24"><path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3" /> <path d="M3 16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V11a2 2 0 0 0-4 0z" /> <path d="M5 18v2" /> <path d="M19 18v2" /></symbol><symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /> <circle cx="12" cy="7" r="4" /></symbol><symbol id="i-scroll-text" viewBox="0 0 24 24"><path d="M15 12h-5" /> <path d="M15 8h-5" /> <path d="M19 17V5a2 2 0 0 0-2-2H4" /> <path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" /></symbol><symbol id="i-key-round" viewBox="0 0 24 24"><path d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z" /> <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" /></symbol><symbol id="i-zap" viewBox="0 0 24 24"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z" /></symbol><symbol id="i-house" viewBox="0 0 24 24"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" /> <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24"><path d="m12 19-7-7 7-7" /> <path d="M19 12H5" /></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="M12 6v6l4 2" /></symbol><symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M5 22h14" /> <path d="M5 2h14" /> <path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22" /> <path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2" /></symbol><symbol id="i-building-2" viewBox="0 0 24 24"><path d="M10 12h4" /> <path d="M10 8h4" /> <path d="M14 21v-3a2 2 0 0 0-4 0v3" /> <path d="M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2" /> <path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16" /></symbol><symbol id="i-image-up" viewBox="0 0 24 24"><path d="M10.3 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10l-3.1-3.1a2 2 0 0 0-2.814.014L6 21" /> <path d="m14 19.5 3-3 3 3" /> <path d="M17 22v-5.5" /> <circle cx="9" cy="9" r="2" /></symbol><symbol id="i-image" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /> <circle cx="9" cy="9" r="2" /> <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" /></symbol><symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14" /> <path d="M12 5v14" /></symbol><symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" /></symbol><symbol id="i-circle-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <line x1="12" x2="12" y1="8" y2="12" /> <line x1="12" x2="12.01" y1="16" y2="16" /></symbol><symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /> <path d="M12 16v-4" /> <path d="M12 8h.01" /></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /> <circle cx="12" cy="12" r="3" /></symbol><symbol id="i-external-link" viewBox="0 0 24 24"><path d="M15 3h6v6" /> <path d="M10 14 21 3" /> <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /></symbol><symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" /></symbol><symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6" /></symbol><symbol id="i-utensils" viewBox="0 0 24 24"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /> <path d="M7 2v20" /> <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" /></symbol><symbol id="i-coffee" viewBox="0 0 24 24"><path d="M10 2v2" /> <path d="M14 2v2" /> <path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1" /> <path d="M6 2v2" /></symbol><symbol id="i-wine" viewBox="0 0 24 24"><path d="M8 22h8" /> <path d="M7 10h10" /> <path d="M12 15v7" /> <path d="M12 15a5 5 0 0 0 5-5c0-2-.5-4-2-8H9c-1.5 4-2 6-2 8a5 5 0 0 0 5 5Z" /></symbol><symbol id="i-soup" viewBox="0 0 24 24"><path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z" /> <path d="M7 21h10" /> <path d="M19.5 12 22 6" /> <path d="M16.25 3c.27.1.8.53.75 1.36-.06.83-.93 1.2-1 2.02-.05.78.34 1.24.73 1.62" /> <path d="M11.25 3c.27.1.8.53.74 1.36-.05.83-.93 1.2-.98 2.02-.06.78.33 1.24.72 1.62" /> <path d="M6.25 3c.27.1.8.53.75 1.36-.06.83-.93 1.2-1 2.02-.05.78.34 1.24.74 1.62" /></symbol><symbol id="i-salad" viewBox="0 0 24 24"><path d="M7 21h10" /> <path d="M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z" /> <path d="M11.38 12a2.4 2.4 0 0 1-.4-4.77 2.4 2.4 0 0 1 3.2-2.77 2.4 2.4 0 0 1 3.47-.63 2.4 2.4 0 0 1 3.37 3.37 2.4 2.4 0 0 1-1.1 3.7 2.51 2.51 0 0 1 .03 1.1" /> <path d="m13 12 4-4" /> <path d="M10.9 7.25A3.99 3.99 0 0 0 4 10c0 .73.2 1.41.54 2" /></symbol><symbol id="i-cake" viewBox="0 0 24 24"><path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8" /> <path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2-1 2-1" /> <path d="M2 21h20" /> <path d="M7 8v3" /> <path d="M12 8v3" /> <path d="M17 8v3" /> <path d="M7 4h.01" /> <path d="M12 4h.01" /> <path d="M17 4h.01" /></symbol><symbol id="i-dessert" viewBox="0 0 24 24"><path d="M10.162 3.167A10 10 0 0 0 2 13a2 2 0 0 0 4 0v-1a2 2 0 0 1 4 0v4a2 2 0 0 0 4 0v-4a2 2 0 0 1 4 0v1a2 2 0 0 0 4-.006 10 10 0 0 0-8.161-9.826" /> <path d="M20.804 14.869a9 9 0 0 1-17.608 0" /> <circle cx="12" cy="4" r="2" /></symbol><symbol id="i-sandwich" viewBox="0 0 24 24"><path d="m2.37 11.223 8.372-6.777a2 2 0 0 1 2.516 0l8.371 6.777" /> <path d="M21 15a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-5.25" /> <path d="M3 15a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h9" /> <path d="m6.67 15 6.13 4.6a2 2 0 0 0 2.8-.4l3.15-4.2" /> <rect width="20" height="4" x="2" y="11" rx="1" /></symbol><symbol id="i-beef" viewBox="0 0 24 24"><path d="M16.4 13.7A6.5 6.5 0 1 0 6.28 6.6c-1.1 3.13-.78 3.9-3.18 6.08A3 3 0 0 0 5 18c4 0 8.4-1.8 11.4-4.3" /> <path d="m18.5 6 2.19 4.5a6.48 6.48 0 0 1-2.29 7.2C15.4 20.2 11 22 7 22a3 3 0 0 1-2.68-1.66L2.4 16.5" /> <circle cx="12.5" cy="8.5" r="2.5" /></symbol><symbol id="i-fish" viewBox="0 0 24 24"><path d="M6.5 12c.94-3.46 4.94-6 8.5-6 3.56 0 6.06 2.54 7 6-.94 3.47-3.44 6-7 6s-7.56-2.53-8.5-6Z" /> <path d="M18 12v.5" /> <path d="M16 17.93a9.77 9.77 0 0 1 0-11.86" /> <path d="M7 10.67C7 8 5.58 5.97 2.73 5.5c-1 1.5-1 5 .23 6.5-1.24 1.5-1.24 5-.23 6.5C5.58 18.03 7 16 7 13.33" /> <path d="M10.46 7.26C10.2 5.88 9.17 4.24 8 3h5.8a2 2 0 0 1 1.98 1.67l.23 1.4" /> <path d="m16.01 17.93-.23 1.4A2 2 0 0 1 13.8 21H9.5a5.96 5.96 0 0 0 1.49-3.98" /></symbol></svg>
+
+<div id="bildirimler"></div>
+
+<!-- ═══════════ GİRİŞ ═══════════ -->
+<div id="girisEkran">
+  <div class="giris-kutu">
+    <div class="marka">
+      <div class="marka-ikon" id="girisLogo">
+        <svg class="ik ik-xl" style="color:#fff"><use href="#i-zap"/></svg></div>
+      <h1 id="girisAd">Adfix</h1>
+      <p id="girisSlogan">Adisyonu hallet.</p>
+    </div>
+    <div class="hata" id="girisHata"></div>
+    <div class="alan">
+      <label>Kullanıcı Adı</label>
+      <input id="gKullanici" autocomplete="username" autofocus>
+    </div>
+    <div class="alan">
+      <label>Şifre</label>
+      <input id="gSifre" type="password" autocomplete="current-password">
+    </div>
+    <button class="btn btn-tam" onclick="girisYap()">Giriş Yap</button>
+    <div class="demo-not">
+      İlk kurulum hesapları:<br>
+      <code>admin</code> · <code>kasa</code> · <code>garson</code><br>
+      Şifre: <code>adfix2026</code> — <b>giriş sonrası değiştirin</b>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ UYGULAMA ═══════════ -->
+<div id="uygulama">
+  <div class="yan-perde" id="yanPerde" onclick="yanKapat()"></div>
+  <aside class="yan" id="yan">
+    <div class="yan-ust">
+      <div class="yan-marka">
+        <div class="yan-marka-ikon" id="yanLogo">
+          <svg class="ik" style="color:#fff"><use href="#i-zap"/></svg></div>
+        <b id="yanAd">Adfix</b>
+      </div>
+      <div class="yan-kul"><b id="kulAd">—</b><span id="kulRol">—</span></div>
+    </div>
+    <nav class="menu" id="anaMenu"></nav>
+    <div class="yan-alt">
+      <div class="yan-cikis" onclick="cikis()">
+        <svg class="ik"><use href="#i-log-out"/></svg> Çıkış Yap</div>
+    </div>
+  </aside>
+
+  <div class="govde">
+    <header class="ust">
+      <button class="menu-ac" onclick="yanAc()" aria-label="Menü">
+        <svg class="ik ik-b"><use href="#i-menu"/></svg></button>
+      <div>
+        <h2 id="sayfaBaslik">Masalar</h2>
+        <div class="ust-bilgi" id="sayfaAlt"></div>
+      </div>
+      <div class="ust-sag" id="ustAksiyon"></div>
+    </header>
+    <main class="sayfa" id="sayfa"></main>
+  </div>
+</div>
+
+<!-- ═══════════ MODAL ═══════════ -->
+<div class="perde" id="perde" onclick="if(event.target===this)modalKapat()">
+  <div class="modal" id="modal">
+    <div class="modal-ust"><h3 id="modalBaslik"></h3>
+      <button class="modal-kapat" onclick="modalKapat()" aria-label="Kapat">
+        <svg class="ik ik-b"><use href="#i-x"/></svg></button></div>
+    <div class="modal-govde" id="modalGovde"></div>
+    <div class="modal-alt" id="modalAlt"></div>
+  </div>
+</div>
+
+<div id="fisAlani"></div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   Adfix — Adisyon & Masa Yönetim Sistemi
+   Para birimi: her yerde KURUŞ (tam sayı). TL'ye çevirme sadece tl().
+   ════════════════════════════════════════════════════════════════ */
+
+const API = location.origin + '/api';
+
+const S = {
+  token: localStorage.getItem('adfix_token'),
+  kul:   JSON.parse(localStorage.getItem('adfix_kul') || 'null'),
+  rota: 'masalar',
+  plan: null, menu: null, adisyon: null,
+  salon: null, kategori: null,
+  sepet: [],                 // gönderilmemiş sipariş satırları
+  odeme: { tur: 'nakit', giris: '' },
+  zamanlayici: null,
+  mutfakBekleyen: 0,
+  ayar: null,                // işletme adı, logo, adres… (Yönetim → İşletme)
+  gorselTaslak: null,        // ürün/logo düzenleme modalinde bekleyen görsel
+};
+
+/* ─────────── ikon ─────────── */
+/** Gömülü Lucide sprite'ından ikon basar. `ad` sprite'taki simge adı. */
+const ik = (ad, sinif = '') => `<svg class="ik ${sinif}"><use href="#i-${ad}"/></svg>`;
+
+/* ─────────── para & tarih yardımcıları ─────────── */
+const tl = k => (Number(k || 0) / 100).toLocaleString('tr-TR',
+  { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
+const tlSade = k => (Number(k || 0) / 100).toLocaleString('tr-TR',
+  { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+/** "1.234,50" / "1234,5" / "12.50" → kuruş. Türkçe ve İngilizce ayraç ikisini de anlar. */
+function kurusCevir(metin) {
+  let s = String(metin ?? '').replace(/[^\d.,-]/g, '').trim();
+  if (!s) return 0;
+  if (s.includes(',')) s = s.replace(/\./g, '').replace(',', '.');
+  else if (/^\d{1,3}(\.\d{3})+$/.test(s)) s = s.replace(/\./g, '');
+  const f = parseFloat(s);
+  return isNaN(f) ? 0 : Math.round(f * 100);
+}
+
+function saatFmt(zaman) {
+  if (!zaman) return '';
+  return String(zaman).slice(11, 16);
+}
+function tarihFmt(zaman) {
+  if (!zaman) return '';
+  const [y, a, g] = String(zaman).slice(0, 10).split('-');
+  return `${g}.${a}.${y}`;
+}
+function gecenSure(baslangic) {
+  if (!baslangic) return '';
+  const dk = Math.max(0, Math.floor((Date.now() - new Date(String(baslangic).replace(' ', 'T'))) / 60000));
+  if (dk < 60) return dk + ' dk';
+  return Math.floor(dk / 60) + ' sa ' + (dk % 60) + ' dk';
+}
+function bugun() { return new Date().toISOString().slice(0, 10); }
+const kacis = s => String(s ?? '').replace(/[&<>"']/g,
+  c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+/* ─────────── API ─────────── */
+async function istek(yol, secenek = {}) {
+  const bas = { 'Content-Type': 'application/json' };
+  if (S.token) bas['Authorization'] = 'Bearer ' + S.token;
+  const y = await fetch(API + yol, { ...secenek, headers: { ...bas, ...(secenek.headers || {}) } });
+  if (y.status === 401) { cikis(); throw new Error('Oturum süresi doldu'); }
+  const govde = await y.json().catch(() => ({}));
+  if (!y.ok) throw new Error(govde.detail || 'İşlem başarısız (' + y.status + ')');
+  return govde;
+}
+const GET  = y => istek(y);
+const POST = (y, v) => istek(y, { method: 'POST', body: JSON.stringify(v || {}) });
+const PATCH= (y, v) => istek(y, { method: 'PATCH', body: JSON.stringify(v || {}) });
+const SIL  = y => istek(y, { method: 'DELETE' });
+
+/* ─────────── bildirim & modal ─────────── */
+function bildir(mesaj, tip = '') {
+  const d = document.createElement('div');
+  d.className = 'bildirim ' + tip;
+  d.textContent = mesaj;
+  document.getElementById('bildirimler').appendChild(d);
+  setTimeout(() => d.remove(), tip === 'kotu' ? 5200 : 2800);
+}
+const iyi  = m => bildir(m, 'iyi');
+const kotu = m => bildir(m, 'kotu');
+
+function modalAc(baslik, govde, alt = '', genis = false) {
+  document.getElementById('modalBaslik').textContent = baslik;
+  document.getElementById('modalGovde').innerHTML = govde;
+  document.getElementById('modalAlt').innerHTML = alt;
+  document.getElementById('modal').className = 'modal' + (genis ? ' genis' : '');
+  document.getElementById('perde').classList.add('acik');
+}
+function modalKapat() { document.getElementById('perde').classList.remove('acik'); }
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') modalKapat();
+});
+
+/** Basit onay penceresi — yıkıcı işlemlerde zorunlu. */
+function onay(baslik, mesaj, islevAdi, kirmizi = true) {
+  modalAc(baslik, `<p style="line-height:1.65">${mesaj}</p>`,
+    `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn ${kirmizi ? 'btn-kirmizi' : ''}" onclick="${islevAdi}">Onayla</button>`);
+}
+
+/* ─────────── oturum ─────────── */
+async function girisYap() {
+  const k = document.getElementById('gKullanici').value.trim();
+  const s = document.getElementById('gSifre').value;
+  const h = document.getElementById('girisHata');
+  h.style.display = 'none';
+  if (!k || !s) { h.textContent = 'Kullanıcı adı ve şifre gerekli'; h.style.display = 'block'; return; }
+  try {
+    const y = await POST('/kullanici/giris', { kullanici_adi: k, sifre: s });
+    S.token = y.token; S.kul = y.kullanici;
+    localStorage.setItem('adfix_token', y.token);
+    localStorage.setItem('adfix_kul', JSON.stringify(y.kullanici));
+    baslat();
+  } catch (e) { h.textContent = e.message; h.style.display = 'block'; }
+}
+document.getElementById('gSifre').addEventListener('keydown', e => { if (e.key === 'Enter') girisYap(); });
+document.getElementById('gKullanici').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('gSifre').focus(); });
+
+function cikis() {
+  localStorage.removeItem('adfix_token'); localStorage.removeItem('adfix_kul');
+  S.token = null; S.kul = null;
+  clearInterval(S.zamanlayici);
+  document.getElementById('uygulama').style.display = 'none';
+  document.getElementById('girisEkran').style.display = 'flex';
+  girisMarkasiYukle();
+}
+
+const ROL_AD = { garson: 'Garson', kasiyer: 'Kasiyer', yonetici: 'Yönetici' };
+const kasiyerMi = () => S.kul && (S.kul.rol === 'kasiyer' || S.kul.rol === 'yonetici');
+const yoneticiMi = () => S.kul && S.kul.rol === 'yonetici';
+
+/* ─────────── menü & yönlendirme ─────────── */
+const ROTALAR = [
+  { k: 'masalar', ad: 'Masalar',    ikon: 'utensils-crossed', yetki: () => true },
+  { k: 'mutfak',  ad: 'Mutfak',     ikon: 'chef-hat', yetki: () => true,
+    rozet: () => S.mutfakBekleyen },
+  { k: 'gecmis',  ad: 'Adisyonlar', ikon: 'receipt-text', yetki: () => true },
+  { k: 'rapor',   ad: 'Raporlar',   ikon: 'chart-column', yetki: () => kasiyerMi() },
+  { k: 'urunler', ad: 'Menü',       ikon: 'book-open',    yetki: () => yoneticiMi() },
+  { k: 'yonetim', ad: 'Yönetim',    ikon: 'settings',     yetki: () => yoneticiMi() },
+];
+
+function menuCiz() {
+  document.getElementById('anaMenu').innerHTML = ROTALAR.filter(r => r.yetki()).map(r => {
+    const n = r.rozet ? r.rozet() : 0;
+    return `<div class="menu-og ${S.rota === r.k ? 'aktif' : ''}" onclick="git('${r.k}')">
+      ${ik(r.ikon, 'ik-b')}<span>${r.ad}</span>
+      ${n ? `<span class="menu-rozet">${n}</span>` : ''}</div>`;
+  }).join('');
+}
+
+function yanAc() {
+  document.getElementById('yan').classList.add('acik');
+  document.getElementById('yanPerde').classList.add('acik');
+}
+function yanKapat() {
+  document.getElementById('yan').classList.remove('acik');
+  document.getElementById('yanPerde').classList.remove('acik');
+}
+
+function git(rota, veri) {
+  S.rota = rota; yanKapat(); menuCiz();
+  clearInterval(S.zamanlayici);
+  const ciz = {
+    masalar: masalarCiz, adisyon: () => adisyonCiz(veri), mutfak: mutfakCiz,
+    gecmis: gecmisCiz, rapor: raporCiz, urunler: urunlerCiz, yonetim: yonetimCiz,
+  }[rota];
+  if (ciz) ciz();
+}
+
+function baslikYaz(baslik, alt = '', aksiyon = '') {
+  document.getElementById('sayfaBaslik').textContent = baslik;
+  document.getElementById('sayfaAlt').innerHTML = alt;
+  document.getElementById('ustAksiyon').innerHTML = aksiyon;
+}
+
+async function baslat() {
+  document.getElementById('girisEkran').style.display = 'none';
+  document.getElementById('uygulama').style.display = 'flex';
+  document.getElementById('kulAd').textContent = S.kul.ad_soyad;
+  document.getElementById('kulRol').textContent = ROL_AD[S.kul.rol] || S.kul.rol;
+  try {
+    S.menu = await GET('/menu');
+    S.ayar = await GET('/ayar');
+    ayarUygula();
+    await mutfakSayisiTazele();
+  } catch (e) { kotu(e.message); }
+  menuCiz();
+  git('masalar');
+}
+
+/** İşletme adı ve logosunu arayüzün her yerine yansıtır. */
+function ayarUygula() {
+  const a = S.ayar || {};
+  const ad = (a.isletme_adi || 'Adfix').trim() || 'Adfix';
+  document.title = ad + ' — Adfix Adisyon';
+  const yanAd = document.getElementById('yanAd');
+  if (yanAd) yanAd.textContent = ad;
+  const kutu = document.getElementById('yanLogo');
+  if (kutu) kutu.innerHTML = a.logo
+    ? `<img src="${a.logo}" alt="">`
+    : `<svg class="ik" style="color:#fff"><use href="#i-zap"/></svg>`;
+}
+
+/** Giriş ekranı için logo — kimlik doğrulaması gerekmeyen uçtan okunur. */
+async function girisMarkasiYukle() {
+  try {
+    const y = await fetch(API + '/acik/isletme').then(r => r.ok ? r.json() : null);
+    if (!y) return;
+    if (y.ad) {
+      document.getElementById('girisAd').textContent = y.ad;
+      document.title = y.ad + ' — Adfix Adisyon';
+    }
+    document.getElementById('girisSlogan').textContent = y.slogan || 'Adisyonu hallet.';
+    if (y.logo) document.getElementById('girisLogo').innerHTML = `<img src="${y.logo}" alt="">`;
+  } catch (e) { /* logo yoksa varsayılan marka kalır */ }
+}
+
+async function mutfakSayisiTazele() {
+  try {
+    const m = await GET('/adisyon/mutfak');
+    S.mutfakBekleyen = m.length;
+    menuCiz();
+  } catch (e) { /* sessiz */ }
+}
+
+/* açılış — tüm script blokları ayrıştırıldıktan sonra çalışmalı */
+window.addEventListener('DOMContentLoaded', () => {
+  if (S.token && S.kul) baslat();
+  else { document.getElementById('girisEkran').style.display = 'flex'; girisMarkasiYukle(); }
+});
+</script>
+
+<script>
+/* ════════════════ MASA PLANI ════════════════ */
+
+async function masalarCiz() {
+  clearInterval(S.zamanlayici);          // kendi kendini yenilerken interval çoğalmasın
+  baslikYaz('Masalar', 'Yükleniyor…');
+  try { S.plan = await GET('/masa/plan'); }
+  catch (e) { kotu(e.message); return; }
+
+  const p = S.plan;
+  if (!S.salon || !p.salonlar.some(s => s.id === S.salon))
+    S.salon = p.salonlar.length ? p.salonlar[0].id : null;
+
+  baslikYaz('Masalar',
+    `<b>${p.ozet.dolu}</b> / ${p.ozet.toplam_masa} masa dolu · Açık hesap:
+     <b style="color:var(--ana-koyu)">${tl(p.ozet.acik_tutar)}</b>`,
+    `<button class="btn btn-cizgi btn-kucuk" onclick="masalarCiz()">${ik('refresh-cw')} Yenile</button>
+     <button class="btn btn-kucuk" onclick="paketAc()">${ik('plus')} Paket / Gel-Al</button>`);
+
+  const salon = p.salonlar.find(s => s.id === S.salon);
+  let h = '';
+
+  if (p.salonlar.length > 1)
+    h += `<div class="salon-sekme">` + p.salonlar.map(s => {
+      const dolu = s.masalar.filter(m => m.adisyon).length;
+      return `<div class="sekme ${s.id === S.salon ? 'aktif' : ''}"
+        onclick="S.salon=${s.id};masalarCiz()">${kacis(s.ad)}
+        <span style="opacity:.7;font-size:11px"> ${dolu}/${s.masalar.length}</span></div>`;
+    }).join('') + `</div>`;
+
+  if (p.paket.length) {
+    h += `<div class="bolum"><h3>${ik('package')} Paket / Gel-Al <small>${p.paket.length} açık</small></h3>
+      <div class="masa-izgara">` + p.paket.map(a => `
+      <div class="masa dolu" onclick="git('adisyon',${a.adisyon_id})">
+        ${a.bekleyen ? `<span class="masa-rozet">${a.bekleyen} bekliyor</span>` : ''}
+        <div class="masa-ad" style="font-size:15px">#${kacis(a.kod)}</div>
+        <div class="masa-kap">${kacis(a.musteri_ad || (a.tip === 'paket' ? 'Paket' : 'Gel-Al'))}</div>
+        <div class="masa-tutar">${tl(a.kalan)}</div>
+        <div class="masa-satir"><span>${a.urun_adet} ürün</span><span>${gecenSure(a.acilis)}</span></div>
+      </div>`).join('') + `</div></div>`;
+  }
+
+  if (!salon) {
+    h += bosDurum('house', 'Henüz salon tanımlanmamış',
+      yoneticiMi() ? 'Yönetim → Salon & Masa bölümünden ekleyebilirsiniz.' : 'Yöneticinize bildirin.');
+  } else {
+    h += `<div class="bolum"><h3>${kacis(salon.ad)}</h3><div class="masa-izgara">` +
+      (salon.masalar.length ? salon.masalar.map(m => {
+        const a = m.adisyon;
+        if (!a) return `<div class="masa" onclick="masaAc(${m.id},'${kacis(m.ad)}')">
+            <div class="masa-ad">${kacis(m.ad)}</div>
+            <div class="masa-kap">${m.kapasite} kişilik</div>
+            <div class="masa-bos">${ik('plus')} Adisyon aç</div></div>`;
+        const odendi = a.odenen > 0 && a.kalan === 0;
+        return `<div class="masa ${odendi ? 'odendi' : 'dolu'}" onclick="git('adisyon',${a.adisyon_id})">
+          ${a.bekleyen ? `<span class="masa-rozet">${a.bekleyen}</span>` : ''}
+          <div class="masa-ad">${kacis(m.ad)}</div>
+          <div class="masa-kap">#${kacis(a.kod)} · ${a.kisi} kişi</div>
+          <div class="masa-tutar">${tl(a.kalan)}</div>
+          <div class="masa-satir"><span>${a.urun_adet} ürün</span>
+            <span>${ik('clock')} ${gecenSure(a.acilis)}</span></div>
+        </div>`;
+      }).join('') : `<div class="bos-durum">Bu salonda masa yok</div>`) + `</div></div>`;
+  }
+
+  document.getElementById('sayfa').innerHTML = h;
+  S.zamanlayici = setInterval(() => { if (S.rota === 'masalar') masalarCiz(); }, 25000);
+  mutfakSayisiTazele();
+}
+
+function bosDurum(ikon, baslik, alt = '') {
+  return `<div class="bos-durum"><div class="ikon">${ik(ikon, 'ik-xl')}</div>
+    <div style="font-size:15px;font-weight:600;color:#475569">${baslik}</div>
+    <div style="margin-top:5px">${alt}</div></div>`;
+}
+
+async function masaAc(masaId, masaAd) {
+  modalAc(`${masaAd} — Adisyon Aç`,
+    `<div class="alan"><label>Kişi Sayısı</label>
+      <input id="mKisi" type="number" min="1" value="2" inputmode="numeric"></div>
+     <p style="font-size:12px;color:var(--gri)">Adisyon açıldıktan sonra sipariş ekranına geçilir.</p>`,
+    `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn" onclick="masaAcOnay(${masaId})">Adisyon Aç</button>`);
+  setTimeout(() => document.getElementById('mKisi')?.select(), 60);
+}
+
+async function masaAcOnay(masaId) {
+  const kisi = parseInt(document.getElementById('mKisi').value) || 1;
+  try {
+    const a = await POST('/adisyon/ac', { tip: 'masa', masa_id: masaId, kisi });
+    modalKapat(); iyi(`#${a.kod} nolu adisyon açıldı`);
+    git('adisyon', a.id);
+  } catch (e) { kotu(e.message); }
+}
+
+function paketAc() {
+  modalAc('Paket / Gel-Al Adisyonu',
+    `<div class="alan"><label>Tip</label><select id="pTip">
+       <option value="paket">Paket (adrese teslim)</option>
+       <option value="gel_al">Gel-Al</option></select></div>
+     <div class="alan"><label>Müşteri Adı</label><input id="pAd" placeholder="İsteğe bağlı"></div>
+     <div class="alan"><label>Telefon</label><input id="pTel" inputmode="tel" placeholder="İsteğe bağlı"></div>
+     <div class="alan"><label>Adres</label><textarea id="pAdres" rows="2" placeholder="İsteğe bağlı"></textarea></div>`,
+    `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn" onclick="paketAcOnay()">Adisyon Aç</button>`);
+}
+
+async function paketAcOnay() {
+  try {
+    const a = await POST('/adisyon/ac', {
+      tip: document.getElementById('pTip').value,
+      musteri_ad: document.getElementById('pAd').value,
+      musteri_tel: document.getElementById('pTel').value,
+      musteri_adres: document.getElementById('pAdres').value,
+    });
+    modalKapat(); iyi(`#${a.kod} nolu adisyon açıldı`);
+    git('adisyon', a.id);
+  } catch (e) { kotu(e.message); }
+}
+
+/* ════════════════ ADİSYON EKRANI ════════════════ */
+
+async function adisyonCiz(aid) {
+  if (aid) { S.sepet = []; }
+  const id = aid || (S.adisyon && S.adisyon.id);
+  if (!id) return git('masalar');
+  try { S.adisyon = await GET('/adisyon/' + id); }
+  catch (e) { kotu(e.message); return git('masalar'); }
+  adisyonYeniden();
+}
+
+function adisyonYeniden() {
+  const a = S.adisyon, o = a.ozet;
+  const yer = a.masa_ad ? `${a.salon_ad || ''} ${a.masa_ad}`.trim()
+    : (a.tip === 'paket' ? 'Paket' : 'Gel-Al');
+  const kapali = a.durum !== 'acik';
+
+  baslikYaz(`#${a.kod} · ${yer}`,
+    `${a.kisi} kişi · ${a.acan_ad || ''} · açılış ${saatFmt(a.acilis)} (${gecenSure(a.acilis)})
+     ${kapali ? ` · <span class="etiket-durum d-${a.durum}">${a.durum === 'kapali' ? 'Kapandı' : 'İptal'}</span>` : ''}`,
+    `<button class="btn btn-cizgi btn-kucuk" onclick="git('masalar')">${ik('arrow-left')} Masalar</button>
+     <button class="btn btn-cizgi btn-kucuk" onclick="fisYazdir()">${ik('printer')} Fiş</button>`);
+
+  if (!S.kategori || !S.menu.some(k => k.id === S.kategori))
+    S.kategori = S.menu.length ? S.menu[0].id : null;
+
+  document.getElementById('sayfa').innerHTML = `
+    <div class="adisyon-duzen">
+      <div class="urun-panel ${kapali ? 'gizli' : ''}">
+        <div style="margin-bottom:9px">
+          <input id="urunAra" placeholder="Ürün ara…" oninput="urunlerFiltrele()"
+            style="width:100%;padding:10px 13px;border:1.5px solid var(--cizgi);border-radius:10px">
+        </div>
+        <div class="kat-sekme" id="katSekme"></div>
+        <div class="urun-izgara" id="urunIzgara"></div>
+      </div>
+      <div class="sepet-panel" id="sepetPanel"></div>
+    </div>`;
+
+  katSekmeCiz(); urunlerFiltrele(); sepetCiz();
+}
+
+function katSekmeCiz() {
+  document.getElementById('katSekme').innerHTML = S.menu.map(k =>
+    `<div class="sekme ${k.id === S.kategori ? 'aktif' : ''}"
+      onclick="S.kategori=${k.id};document.getElementById('urunAra').value='';katSekmeCiz();urunlerFiltrele()"
+      style="${k.id === S.kategori ? `background:${k.renk};border-color:${k.renk}` : ''}"
+      >${ik(k.ikon || 'utensils')} ${kacis(k.ad)}</div>`).join('');
+}
+
+function urunlerFiltrele() {
+  const q = (document.getElementById('urunAra')?.value || '').toLocaleLowerCase('tr');
+  let liste;
+  if (q) {
+    liste = S.menu.flatMap(k => k.urunler.map(u => ({ ...u, kat: k.ad })))
+      .filter(u => u.ad.toLocaleLowerCase('tr').includes(q));
+  } else {
+    const k = S.menu.find(k => k.id === S.kategori);
+    liste = k ? k.urunler.map(u => ({ ...u, kat: k.ad })) : [];
+  }
+  document.getElementById('urunIzgara').innerHTML = liste.length
+    ? liste.map(u => `<div class="urun" onclick="sepeteEkle(${u.id})">
+        ${urunGorseli(u)}
+        <div class="ad">${kacis(u.ad)}</div>
+        <div class="fy">${tlSade(u.fiyat_kurus)}</div></div>`).join('')
+    : `<div style="grid-column:1/-1;color:var(--gri);padding:22px;text-align:center">Ürün bulunamadı</div>`;
+}
+
+/** Ürün görseli: yüklenmiş fotoğraf varsa onu, yoksa kategorinin renkli ikon karesini basar. */
+function urunGorseli(u) {
+  if (u.gorsel)
+    return `<div class="urun-gorsel"><img src="${u.gorsel}" alt="" loading="lazy"></div>`;
+  const k = S.menu.find(k => k.id === u.kategori_id) || {};
+  const renk = k.renk || '#F97316';
+  return `<div class="urun-gorsel" style="background:${renk}1A;color:${renk}">
+    ${ik(k.ikon || 'utensils')}</div>`;
+}
+
+function urunBul(id) {
+  for (const k of S.menu) { const u = k.urunler.find(u => u.id === id); if (u) return u; }
+  return null;
+}
+
+function sepeteEkle(urunId) {
+  const u = urunBul(urunId);
+  if (!u) return;
+  const v = S.sepet.find(s => s.urun_id === urunId && !s.notu);
+  if (v) v.adet++;
+  else S.sepet.push({ urun_id: urunId, ad: u.ad, birim: u.fiyat_kurus, adet: 1, notu: '' });
+  sepetCiz();
+}
+
+function sepetAdet(i, delta) {
+  S.sepet[i].adet += delta;
+  if (S.sepet[i].adet < 1) S.sepet.splice(i, 1);
+  sepetCiz();
+}
+
+function sepetNot(i) {
+  const s = S.sepet[i];
+  modalAc('Sipariş Notu — ' + s.ad,
+    `<div class="alan"><label>Mutfağa iletilecek not</label>
+      <input id="sNot" value="${kacis(s.notu)}" placeholder="az pişmiş, soğansız, acılı…"></div>`,
+    `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn" onclick="S.sepet[${i}].notu=document.getElementById('sNot').value;modalKapat();sepetCiz()">Kaydet</button>`);
+  setTimeout(() => document.getElementById('sNot')?.focus(), 60);
+}
+
+function sepetCiz() {
+  const a = S.adisyon, o = a.ozet, kapali = a.durum !== 'acik';
+  const bekleyenTutar = S.sepet.reduce((t, s) => t + s.birim * s.adet, 0);
+
+  const satirlar = a.satirlar.map(s => `
+    <div class="sepet-satir ${s.durum === 'ikram' ? 'ikram' : s.durum === 'iptal' ? 'iptal' : ''}">
+      <div class="bilgi">
+        <div class="ad">${kacis(s.ad)}</div>
+        <div class="kck">${s.adet} × ${tlSade(s.birim_kurus)}
+          ${s.notu ? ` · <span style="color:var(--ana-koyu)">${kacis(s.notu)}</span>` : ''}
+          ${s.durum === 'ikram' ? ' · <b style="color:var(--yesil)">İKRAM</b>' : ''}
+          ${s.durum === 'iptal' ? ` · <b style="color:var(--kirmizi)">İPTAL</b>` : ''}
+          ${s.durum === 'bekliyor' && s.mutfak ? ` · <span style="color:var(--sari)">${ik('hourglass')} mutfakta</span>` : ''}
+        </div>
+      </div>
+      <div class="tut">${s.durum === 'ikram' || s.durum === 'iptal' ? '—' : tlSade(s.tutar_kurus)}</div>
+      ${kapali || s.durum === 'iptal' ? '' :
+        `<button class="satir-menu" onclick="satirIslem(${s.id})">⋮</button>`}
+    </div>`).join('');
+
+  const sepetSatirlari = S.sepet.map((s, i) => `
+    <div class="sepet-satir yeni">
+      <div class="bilgi">
+        <div class="ad">${kacis(s.ad)}</div>
+        <div class="kck">${tlSade(s.birim)} ${s.notu ? `· <span style="color:var(--ana-koyu)">${kacis(s.notu)}</span>` : ''}
+          · <a onclick="sepetNot(${i})" style="cursor:pointer;text-decoration:underline">not</a></div>
+      </div>
+      <div class="adet-kutu">
+        <button onclick="sepetAdet(${i},-1)" aria-label="Azalt">${ik('minus')}</button>
+        <span>${s.adet}</span>
+        <button onclick="sepetAdet(${i},1)" aria-label="Artır">${ik('plus')}</button>
+      </div>
+      <div class="tut">${tlSade(s.birim * s.adet)}</div>
+    </div>`).join('');
+
+  const islemler = kapali ? `
+    <button class="btn btn-gri genis" onclick="git('masalar')">Masalara Dön</button>` : `
+    ${S.sepet.length ? `<button class="btn btn-yesil genis" onclick="siparisGonder()">
+        ${ik('bell-ring')} Siparişi Gönder — ${tl(bekleyenTutar)}</button>` : ''}
+    <button class="btn ${o.kalan > 0 ? '' : 'btn-gri'} genis" onclick="odemeAc()"
+      ${kasiyerMi() ? '' : 'disabled title="Kasiyer yetkisi gerekli"'}>${ik('credit-card')} Ödeme Al</button>
+    <button class="btn btn-cizgi btn-kucuk" onclick="iskontoAc()"
+      ${kasiyerMi() ? '' : 'disabled'}>${ik('percent')} İskonto</button>
+    <button class="btn btn-cizgi btn-kucuk" onclick="bolAc()">${ik('calculator')} Hesabı Böl</button>
+    <button class="btn btn-cizgi btn-kucuk" onclick="tasiAc()">${ik('arrow-left-right')} Taşı</button>
+    <button class="btn btn-cizgi btn-kucuk" onclick="birlestirAc()"
+      ${kasiyerMi() ? '' : 'disabled'}>${ik('link')} Birleştir</button>
+    <button class="btn btn-cizgi btn-kucuk" onclick="bilgiAc()">${ik('pencil')} Bilgi</button>
+    <button class="btn ${o.kalan === 0 && o.ara_toplam > 0 ? 'btn-yesil' : 'btn-cizgi'} btn-kucuk"
+      onclick="adisyonKapat()" ${kasiyerMi() ? '' : 'disabled'}>${ik('check')} Hesabı Kapat</button>
+    ${yoneticiMi() ? `<button class="btn btn-cizgi btn-kucuk genis" style="color:var(--kirmizi)"
+      onclick="adisyonIptalAc()">${ik('x')} Adisyonu İptal Et</button>` : ''}`;
+
+  document.getElementById('sepetPanel').innerHTML = `
+    <div class="sepet-ust">
+      <h3>Adisyon #${kacis(a.kod)}</h3>
+      <div class="alt">${a.masa_ad ? kacis(a.masa_ad) : (a.tip === 'paket' ? 'Paket' : 'Gel-Al')}
+        · ${a.kisi} kişi ${a.musteri_ad ? '· ' + kacis(a.musteri_ad) : ''}</div>
+    </div>
+    <div class="sepet-liste">
+      ${satirlar || (S.sepet.length ? '' : `<div style="padding:26px;text-align:center;
+        color:var(--gri);font-size:13px">Henüz sipariş yok.<br>Soldan ürün seçin.</div>`)}
+      ${S.sepet.length ? `<div style="padding:7px 14px;font-size:11px;font-weight:700;
+        color:var(--sari);background:#FFFBEB;border-top:1px solid #FDE68A">
+        GÖNDERİLMEYİ BEKLEYEN</div>${sepetSatirlari}` : ''}
+    </div>
+    <div class="sepet-alt">
+      <div class="top-satir"><span>Ara Toplam</span><span class="para">${tl(o.ara_toplam)}</span></div>
+      ${o.ikram ? `<div class="top-satir yesil"><span>İkram</span><span class="para">−${tl(o.ikram)}</span></div>` : ''}
+      ${o.iskonto ? `<div class="top-satir yesil"><span>İskonto ${a.iskonto_not ? '(' + kacis(a.iskonto_not) + ')' : ''}</span>
+        <span class="para">−${tl(o.iskonto)}</span></div>` : ''}
+      ${o.odenen ? `<div class="top-satir"><span>Ödenen</span><span class="para">${tl(o.odenen)}</span></div>` : ''}
+      <div class="top-satir buyuk"><span>${o.odenen ? 'KALAN' : 'TOPLAM'}</span>
+        <span class="para">${tl(o.odenen ? o.kalan : o.net_toplam)}</span></div>
+      ${bekleyenTutar ? `<div class="top-satir" style="color:var(--sari)">
+        <span>+ Bekleyen sipariş</span><span class="para">${tl(bekleyenTutar)}</span></div>` : ''}
+      <div class="islem-sira">${islemler}</div>
+    </div>`;
+}
+
+async function siparisGonder() {
+  if (!S.sepet.length) return;
+  try {
+    S.adisyon = await POST(`/adisyon/${S.adisyon.id}/siparis`, {
+      satirlar: S.sepet.map(s => ({ urun_id: s.urun_id, adet: s.adet, notu: s.notu })),
+    });
+    const n = S.sepet.length; S.sepet = [];
+    adisyonYeniden(); mutfakSayisiTazele();
+    iyi(`${n} kalem sipariş mutfağa gönderildi`);
+  } catch (e) { kotu(e.message); }
+}
+
+function satirIslem(sid) {
+  const s = S.adisyon.satirlar.find(x => x.id === sid);
+  if (!s) return;
+  modalAc(s.ad, `
+    <div style="font-size:12.5px;color:var(--gri);margin-bottom:14px">
+      ${s.adet} × ${tlSade(s.birim_kurus)} = <b>${tlSade(s.tutar_kurus)}</b>
+      · ekleyen: ${kacis(s.ekleyen_ad || '-')} · ${saatFmt(s.eklenme)}</div>
+    <div class="alan"><label>Adet</label>
+      <input id="iAdet" type="number" min="1" value="${s.adet}" inputmode="numeric"></div>
+    <div class="alan"><label>Not</label><input id="iNot" value="${kacis(s.notu)}"></div>`,
+    `<button class="btn btn-cizgi btn-kucuk" onclick="satirIptalAc(${sid})"
+       style="color:var(--kirmizi);margin-right:auto">${ik('trash-2')} İptal Et</button>
+     ${kasiyerMi() && s.durum !== 'ikram' ? `<button class="btn btn-cizgi btn-kucuk"
+       onclick="satirDurum(${sid},'ikram')" style="color:var(--yesil)">${ik('gift')} İkram</button>` : ''}
+     ${s.durum === 'ikram' ? `<button class="btn btn-cizgi btn-kucuk"
+       onclick="satirDurum(${sid},'hazir')">İkramı Geri Al</button>` : ''}
+     <button class="btn" onclick="satirKaydet(${sid})">Kaydet</button>`);
+}
+
+async function satirKaydet(sid) {
+  const adet = parseInt(document.getElementById('iAdet').value) || 1;
+  const notu = document.getElementById('iNot').value;
+  try {
+    S.adisyon = await PATCH('/adisyon/satir/' + sid, { adet, notu });
+    modalKapat(); adisyonYeniden(); iyi('Satır güncellendi');
+  } catch (e) { kotu(e.message); }
+}
+
+async function satirDurum(sid, durum) {
+  try {
+    S.adisyon = await PATCH('/adisyon/satir/' + sid, { durum });
+    modalKapat(); adisyonYeniden();
+    iyi(durum === 'ikram' ? 'Ürün ikram edildi' : 'Güncellendi');
+  } catch (e) { kotu(e.message); }
+}
+
+function satirIptalAc(sid) {
+  const s = S.adisyon.satirlar.find(x => x.id === sid);
+  modalAc('Satır İptali — ' + s.ad,
+    `<p style="margin-bottom:14px;font-size:13px;line-height:1.6">
+      <b>${s.adet} × ${kacis(s.ad)}</b> adisyondan düşülecek.
+      Kayıt silinmez, iptal olarak işaretlenir ve kim iptal etti raporda görünür.</p>
+     <div class="alan"><label>İptal Sebebi (zorunlu)</label>
+       <input id="iSebep" placeholder="yanlış giriş, müşteri vazgeçti…"></div>`,
+    `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn btn-kirmizi" onclick="satirIptalOnay(${sid})">İptal Et</button>`);
+  setTimeout(() => document.getElementById('iSebep')?.focus(), 60);
+}
+
+async function satirIptalOnay(sid) {
+  const sebep = document.getElementById('iSebep').value.trim();
+  if (!sebep) return kotu('İptal sebebi zorunlu');
+  try {
+    S.adisyon = await PATCH('/adisyon/satir/' + sid, { durum: 'iptal', sebep });
+    modalKapat(); adisyonYeniden(); mutfakSayisiTazele(); iyi('Satır iptal edildi');
+  } catch (e) { kotu(e.message); }
+}
+</script>
+
+<script>
+/* ════════════════ ÖDEME ════════════════ */
+
+const ODEME_AD = { nakit: 'Nakit', kart: 'Kredi Kartı', yemek_ceki: 'Yemek Çeki', acik_hesap: 'Açık Hesap' };
+const ODEME_IK = { nakit: 'banknote', kart: 'credit-card',
+                   yemek_ceki: 'ticket', acik_hesap: 'notebook-pen' };
+/** Ödeme türü ikonu — satır içi kullanım için hazır SVG döner. */
+const odemeIk = t => ik(ODEME_IK[t] || 'credit-card');
+
+function odemeAc() {
+  if (!kasiyerMi()) return kotu('Ödeme almak için kasiyer yetkisi gerekli');
+  const o = S.adisyon.ozet;
+  if (o.kalan <= 0) return kotu('Bu adisyonda ödenecek tutar kalmadı');
+  S.odeme = { tur: 'nakit', giris: String(o.kalan) };
+  odemeCiz();
+}
+
+function odemeCiz() {
+  const a = S.adisyon, o = a.ozet;
+  const girilen = parseInt(S.odeme.giris || '0', 10) || 0;
+  const nakit = S.odeme.tur === 'nakit';
+  const kaydedilecek = Math.min(girilen, o.kalan);
+  const ustu = nakit ? Math.max(0, girilen - o.kalan) : 0;
+
+  const gecmisOdeme = a.odemeler.length ? `
+    <div style="margin-top:16px;border-top:1px solid var(--cizgi);padding-top:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--gri);text-transform:uppercase;
+        letter-spacing:.05em;margin-bottom:7px">Alınan Ödemeler</div>
+      ${a.odemeler.map(p => `<div style="display:flex;justify-content:space-between;
+        align-items:center;font-size:12.5px;padding:5px 0;border-bottom:1px solid #F1F5F9">
+        <span>${odemeIk(p.tur)} ${ODEME_AD[p.tur]}
+          <span style="color:var(--gri)">· ${saatFmt(p.zaman)} · ${kacis(p.alan_ad || '')}</span></span>
+        <span><b class="para">${tl(p.tutar_kurus)}</b>
+        ${yoneticiMi() ? `<button class="satir-menu" title="Ödemeyi sil"
+          onclick="odemeSil(${p.id})">${ik('trash-2')}</button>` : ''}</span></div>`).join('')}
+    </div>` : '';
+
+  modalAc('Ödeme Al — #' + a.kod, `
+    <div class="odeme-ozet">
+      <div class="kalan-et">Kalan Tutar</div>
+      <div class="kalan">${tl(o.kalan)}</div>
+      <div class="detay">Toplam ${tl(o.net_toplam)}${o.odenen ? ` · Ödenen ${tl(o.odenen)}` : ''}
+        ${o.iskonto ? ` · İskonto ${tl(o.iskonto)}` : ''}</div>
+    </div>
+    <div class="tur-sec">
+      ${Object.keys(ODEME_AD).map(t => `<div class="tur ${S.odeme.tur === t ? 'aktif' : ''}"
+        onclick="S.odeme.tur='${t}';odemeCiz()">
+        <span class="tur-ik">${ik(ODEME_IK[t], 'ik-b')}</span>${ODEME_AD[t]}</div>`).join('')}
+    </div>
+    <div class="tutar-goster">${tlSade(girilen)} ₺</div>
+    <div class="hizli-sira">
+      <button class="hizli" onclick="odemeTutar(${o.kalan})">Tam tutar</button>
+      ${[5000, 10000, 20000, 50000].map(v =>
+        `<button class="hizli" onclick="odemeEkle(${v})">+${v / 100}</button>`).join('')}
+      ${o.kalan > 1 ? `<button class="hizli" onclick="odemeTutar(${Math.ceil(o.kalan / 2)})">Yarısı</button>` : ''}
+    </div>
+    <div class="tus-takim">
+      ${[1,2,3,4,5,6,7,8,9].map(n => `<button class="tus" onclick="odemeTus('${n}')">${n}</button>`).join('')}
+      <button class="tus islem" onclick="odemeTus('00')">00</button>
+      <button class="tus" onclick="odemeTus('0')">0</button>
+      <button class="tus islem" onclick="odemeSil2()">${ik('delete')}</button>
+    </div>
+    ${ustu ? `<div class="ustu-kutu"><span>Para üstü</span><b>${tl(ustu)}</b></div>` : ''}
+    ${girilen > o.kalan && !nakit ? `<div class="hata" style="display:block;margin-top:11px">
+      Kalan tutardan fazla ${ODEME_AD[S.odeme.tur].toLowerCase()} ödemesi kaydedilemez.</div>` : ''}
+    ${gecmisOdeme}`,
+    `<button class="btn btn-gri" onclick="modalKapat()">Kapat</button>
+     <button class="btn btn-yesil" ${kaydedilecek > 0 && !(girilen > o.kalan && !nakit) ? '' : 'disabled'}
+       onclick="odemeKaydet()">${tl(kaydedilecek)} Tahsil Et</button>`);
+}
+
+function odemeTus(rakam) {
+  S.odeme.giris = String((S.odeme.giris === '0' ? '' : S.odeme.giris) + rakam).slice(0, 9);
+  odemeCiz();
+}
+function odemeSil2() { S.odeme.giris = S.odeme.giris.slice(0, -1) || '0'; odemeCiz(); }
+function odemeTutar(k) { S.odeme.giris = String(k); odemeCiz(); }
+function odemeEkle(k) { S.odeme.giris = String((parseInt(S.odeme.giris || '0', 10) || 0) + k); odemeCiz(); }
+
+async function odemeKaydet() {
+  const o = S.adisyon.ozet;
+  const girilen = parseInt(S.odeme.giris || '0', 10) || 0;
+  const tutar = Math.min(girilen, o.kalan);
+  if (tutar <= 0) return;
+  const ustu = S.odeme.tur === 'nakit' ? Math.max(0, girilen - o.kalan) : 0;
+  try {
+    S.adisyon = await POST(`/adisyon/${S.adisyon.id}/odeme`,
+      { tur: S.odeme.tur, tutar_kurus: tutar });
+    adisyonYeniden();
+    iyi(`${tl(tutar)} ${ODEME_AD[S.odeme.tur].toLowerCase()} alındı` +
+        (ustu ? ` · Para üstü ${tl(ustu)}` : ''));
+    if (S.adisyon.ozet.kalan === 0) {
+      modalAc('Hesap Tamamlandı',
+        `<p style="line-height:1.7;font-size:14px">
+          <b>#${S.adisyon.kod}</b> adisyonunun tamamı tahsil edildi.
+          ${ustu ? `<br><br>Müşteriye <b style="color:var(--yesil);font-size:17px">${tl(ustu)}</b>
+            para üstü verilecek.` : ''}
+          <br><br>Adisyonu kapatınca masa boşa düşer.</p>`,
+        `<button class="btn btn-cizgi" onclick="fisYazdir()">${ik('printer')} Fiş Yazdır</button>
+         <button class="btn btn-gri" onclick="modalKapat()">Sonra</button>
+         <button class="btn btn-yesil" onclick="adisyonKapat()">Hesabı Kapat</button>`);
+    } else { S.odeme.giris = String(S.adisyon.ozet.kalan); odemeCiz(); }
+  } catch (e) { kotu(e.message); }
+}
+
+async function odemeSil(oid) {
+  try {
+    S.adisyon = await SIL('/adisyon/odeme/' + oid);
+    adisyonYeniden(); S.odeme.giris = String(S.adisyon.ozet.kalan); odemeCiz();
+    iyi('Ödeme kaydı silindi');
+  } catch (e) { kotu(e.message); }
+}
+
+/* ════════════════ İSKONTO / BÖLME / TAŞIMA ════════════════ */
+
+function iskontoAc() {
+  const o = S.adisyon.ozet;
+  modalAc('İskonto — #' + S.adisyon.kod, `
+    <div style="font-size:13px;color:var(--gri);margin-bottom:14px">
+      Ara toplam <b style="color:#0F172A">${tl(o.ara_toplam)}</b>
+      ${o.iskonto ? ` · mevcut iskonto <b style="color:var(--yesil)">${tl(o.iskonto)}</b>` : ''}</div>
+    <div class="hizli-sira" style="margin-bottom:14px">
+      ${[5, 10, 15, 20, 25, 50].map(y => `<button class="hizli"
+        onclick="iskontoUygula('yuzde',${y})">%${y}</button>`).join('')}
+      ${o.iskonto ? `<button class="hizli" style="color:var(--kirmizi)"
+        onclick="iskontoUygula('tutar',0)">İskontoyu kaldır</button>` : ''}
+    </div>
+    <div class="alan"><label>Tutar iskontosu (TL)</label>
+      <input id="isTutar" inputmode="decimal" placeholder="örn. 50,00"></div>
+    <div class="alan"><label>Açıklama</label>
+      <input id="isNot" placeholder="personel indirimi, kampanya…"></div>`,
+    `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn" onclick="iskontoUygula('tutar',kurusCevir(document.getElementById('isTutar').value))">Uygula</button>`);
+}
+
+async function iskontoUygula(tip, deger) {
+  try {
+    const aciklama = document.getElementById('isNot')?.value || '';
+    S.adisyon = await POST(`/adisyon/${S.adisyon.id}/iskonto`, { tip, deger, aciklama });
+    modalKapat(); adisyonYeniden();
+    iyi(deger ? 'İskonto uygulandı' : 'İskonto kaldırıldı');
+  } catch (e) { kotu(e.message); }
+}
+
+async function bolAc(kisi) {
+  const a = S.adisyon;
+  const n = kisi || a.kisi;
+  try {
+    const b = await GET(`/adisyon/${a.id}/bol?kisi=${n}`);
+    modalAc('Hesabı Böl — #' + a.kod, `
+      <div style="display:flex;gap:9px;align-items:center;margin-bottom:16px">
+        <label style="font-size:12.5px;font-weight:600">Kişi sayısı</label>
+        <input id="bKisi" type="number" min="1" value="${n}" inputmode="numeric"
+          style="width:80px;padding:8px 11px;border:1.5px solid var(--cizgi);border-radius:9px">
+        <button class="btn btn-kucuk" onclick="bolAc(parseInt(document.getElementById('bKisi').value)||1)">Hesapla</button>
+      </div>
+      <div style="background:var(--zemin);border-radius:11px;padding:15px">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:9px">
+          <span>Toplam</span><b class="para">${tl(b.net_toplam)}</b></div>
+        ${b.paylar.map((p, i) => `<div style="display:flex;justify-content:space-between;
+          font-size:14px;padding:6px 0;border-top:1px dashed #CBD5E1">
+          <span>${i + 1}. kişi</span><b class="para">${tl(p)}</b></div>`).join('')}
+      </div>
+      <p style="font-size:11.5px;color:var(--gri);margin-top:11px;line-height:1.6">
+        Kuruş artığı ilk kişilere dağıtılır; payların toplamı hesabın tam tutarını verir
+        (kontrol: <b>${tl(b.kontrol_toplam)}</b>).<br>
+        Ödemeleri "Ödeme Al" ekranından parça parça alabilirsiniz.</p>`,
+      `<button class="btn btn-gri" onclick="modalKapat()">Kapat</button>
+       ${kasiyerMi() ? `<button class="btn" onclick="modalKapat();S.odeme={tur:'nakit',giris:'${b.paylar[0]}'};odemeCiz()">
+         İlk payı tahsil et</button>` : ''}`);
+  } catch (e) { kotu(e.message); }
+}
+
+async function tasiAc() {
+  try {
+    const plan = await GET('/masa/plan');
+    const bos = plan.salonlar.flatMap(s => s.masalar.filter(m => !m.adisyon)
+      .map(m => ({ ...m, salon: s.ad })));
+    if (!bos.length) return kotu('Boş masa yok');
+    modalAc('Masayı Taşı — #' + S.adisyon.kod, `
+      <p style="font-size:13px;color:var(--gri);margin-bottom:13px">
+        Adisyon seçilen boş masaya taşınır. Siparişler ve ödemeler aynen gider.</p>
+      <div class="alan"><label>Hedef Masa</label><select id="tMasa">
+        ${bos.map(m => `<option value="${m.id}">${kacis(m.salon)} — ${kacis(m.ad)}
+          (${m.kapasite} kişilik)</option>`).join('')}</select></div>`,
+      `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+       <button class="btn" onclick="tasiOnay()">Taşı</button>`);
+  } catch (e) { kotu(e.message); }
+}
+
+async function tasiOnay() {
+  try {
+    S.adisyon = await POST(`/adisyon/${S.adisyon.id}/tasi`,
+      { hedef_masa_id: parseInt(document.getElementById('tMasa').value) });
+    modalKapat(); adisyonYeniden(); iyi('Adisyon taşındı');
+  } catch (e) { kotu(e.message); }
+}
+
+async function birlestirAc() {
+  try {
+    const liste = (await GET('/adisyon/acik')).filter(a => a.id !== S.adisyon.id);
+    if (!liste.length) return kotu('Birleştirilecek başka açık adisyon yok');
+    modalAc('Adisyon Birleştir', `
+      <p style="font-size:13px;color:var(--gri);margin-bottom:13px;line-height:1.6">
+        Seçilen adisyonun tüm siparişleri, ödemeleri ve kişi sayısı
+        <b>#${kacis(S.adisyon.kod)}</b> üzerine aktarılır; kaynak masa boşalır.
+        Bu işlem geri alınamaz.</p>
+      <div class="alan"><label>Buraya taşınacak adisyon</label><select id="bAdisyon">
+        ${liste.map(a => `<option value="${a.id}">#${kacis(a.kod)} —
+          ${kacis(a.masa_ad || (a.tip === 'paket' ? 'Paket' : 'Gel-Al'))}
+          · ${tlSade(a.ozet.net_toplam)} ₺ · ${a.kisi} kişi</option>`).join('')}</select></div>`,
+      `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+       <button class="btn" onclick="birlestirOnay()">Birleştir</button>`);
+  } catch (e) { kotu(e.message); }
+}
+
+async function birlestirOnay() {
+  try {
+    S.adisyon = await POST(`/adisyon/${S.adisyon.id}/birlestir`,
+      { kaynak_adisyon_id: parseInt(document.getElementById('bAdisyon').value) });
+    modalKapat(); adisyonYeniden(); iyi('Adisyonlar birleştirildi');
+  } catch (e) { kotu(e.message); }
+}
+
+function bilgiAc() {
+  const a = S.adisyon;
+  modalAc('Adisyon Bilgileri — #' + a.kod, `
+    <div class="alan"><label>Kişi Sayısı</label>
+      <input id="dKisi" type="number" min="1" value="${a.kisi}" inputmode="numeric"></div>
+    <div class="alan"><label>Müşteri Adı</label>
+      <input id="dAd" value="${kacis(a.musteri_ad)}"></div>
+    <div class="alan"><label>Telefon</label>
+      <input id="dTel" value="${kacis(a.musteri_tel)}" inputmode="tel"></div>
+    <div class="alan"><label>Adres</label>
+      <textarea id="dAdres" rows="2">${kacis(a.musteri_adres)}</textarea></div>
+    <div class="alan"><label>Adisyon Notu</label>
+      <input id="dNot" value="${kacis(a.aciklama)}" placeholder="doğum günü, rezervasyon…"></div>`,
+    `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn" onclick="bilgiKaydet()">Kaydet</button>`);
+}
+
+async function bilgiKaydet() {
+  try {
+    S.adisyon = await PATCH(`/adisyon/${S.adisyon.id}/bilgi`, {
+      kisi: parseInt(document.getElementById('dKisi').value) || 1,
+      musteri_ad: document.getElementById('dAd').value,
+      musteri_tel: document.getElementById('dTel').value,
+      musteri_adres: document.getElementById('dAdres').value,
+      aciklama: document.getElementById('dNot').value,
+    });
+    modalKapat(); adisyonYeniden(); iyi('Bilgiler güncellendi');
+  } catch (e) { kotu(e.message); }
+}
+
+async function adisyonKapat() {
+  const o = S.adisyon.ozet;
+  if (o.kalan > 0) return kotu(`Ödenmemiş ${tl(o.kalan)} var — önce tahsil edin`);
+  try {
+    await POST(`/adisyon/${S.adisyon.id}/kapat`);
+    modalKapat(); iyi(`#${S.adisyon.kod} kapatıldı · ${tl(o.net_toplam)}`);
+    git('masalar');
+  } catch (e) { kotu(e.message); }
+}
+
+function adisyonIptalAc() {
+  modalAc('Adisyonu İptal Et', `
+    <p style="line-height:1.65;font-size:13.5px">
+      <b>#${kacis(S.adisyon.kod)}</b> adisyonunun tüm satırları iptal edilecek ve masa boşalacak.
+      Ciroya girmez. Alınmış ödeme varsa önce silinmelidir.</p>
+    <div class="alan" style="margin-top:14px"><label>İptal Sebebi (zorunlu)</label>
+      <input id="aiSebep" placeholder="müşteri gitti, yanlış açıldı…"></div>`,
+    `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn btn-kirmizi" onclick="adisyonIptalOnay()">Adisyonu İptal Et</button>`);
+}
+
+async function adisyonIptalOnay() {
+  const sebep = document.getElementById('aiSebep').value.trim();
+  if (!sebep) return kotu('İptal sebebi zorunlu');
+  try {
+    await POST(`/adisyon/${S.adisyon.id}/iptal`, { sebep });
+    modalKapat(); iyi('Adisyon iptal edildi'); git('masalar');
+  } catch (e) { kotu(e.message); }
+}
+
+/* ════════════════ FİŞ ════════════════ */
+
+function fisYazdir() {
+  const a = S.adisyon, o = a.ozet;
+  const sat = a.satirlar.filter(s => s.durum !== 'iptal');
+  const ay = S.ayar || {};
+  document.getElementById('fisAlani').innerHTML = `
+    ${ay.logo ? `<div class="fis-orta"><img class="fis-logo" src="${ay.logo}" alt=""></div>` : ''}
+    <div class="fis-baslik">${kacis(ay.isletme_adi ? ay.isletme_adi.toLocaleUpperCase('tr') : 'ADFIX')}</div>
+    ${ay.slogan ? `<div class="fis-orta fis-kucuk">${kacis(ay.slogan)}</div>` : ''}
+    ${ay.adres  ? `<div class="fis-orta fis-kucuk">${kacis(ay.adres)}</div>` : ''}
+    ${ay.telefon ? `<div class="fis-orta fis-kucuk">Tel: ${kacis(ay.telefon)}</div>` : ''}
+    <div class="fis-orta fis-kucuk">Adisyon Fişi (mali değeri yoktur)</div>
+    <div class="fis-ayrac"></div>
+    <div class="fis-sat"><span>Adisyon</span><span>#${kacis(a.kod)}</span></div>
+    <div class="fis-sat"><span>${a.masa_ad ? 'Masa' : 'Tip'}</span>
+      <span>${kacis(a.masa_ad || (a.tip === 'paket' ? 'Paket' : 'Gel-Al'))}</span></div>
+    <div class="fis-sat"><span>Kişi</span><span>${a.kisi}</span></div>
+    <div class="fis-sat"><span>Tarih</span><span>${tarihFmt(a.acilis)} ${saatFmt(a.acilis)}</span></div>
+    <div class="fis-sat"><span>Personel</span><span>${kacis(a.acan_ad || '-')}</span></div>
+    ${a.musteri_ad ? `<div class="fis-sat"><span>Müşteri</span><span>${kacis(a.musteri_ad)}</span></div>` : ''}
+    ${a.musteri_tel ? `<div class="fis-sat"><span>Telefon</span><span>${kacis(a.musteri_tel)}</span></div>` : ''}
+    <div class="fis-ayrac"></div>
+    ${sat.map(s => `
+      <div class="fis-sat"><span>${s.adet} x ${kacis(s.ad)}</span>
+        <span>${s.durum === 'ikram' ? 'İKRAM' : tlSade(s.tutar_kurus)}</span></div>
+      ${s.notu ? `<div class="fis-kucuk">   (${kacis(s.notu)})</div>` : ''}`).join('')}
+    <div class="fis-ayrac"></div>
+    <div class="fis-sat"><span>Ara Toplam</span><span>${tlSade(o.ara_toplam)}</span></div>
+    ${o.ikram ? `<div class="fis-sat"><span>İkram</span><span>-${tlSade(o.ikram)}</span></div>` : ''}
+    ${o.iskonto ? `<div class="fis-sat"><span>İskonto</span><span>-${tlSade(o.iskonto)}</span></div>` : ''}
+    <div class="fis-ayrac"></div>
+    <div class="fis-sat fis-buyuk"><span>TOPLAM</span><span>${tlSade(o.net_toplam)} TL</span></div>
+    ${a.odemeler.map(p => `<div class="fis-sat fis-kucuk"><span>${ODEME_AD[p.tur]}</span>
+      <span>${tlSade(p.tutar_kurus)}</span></div>`).join('')}
+    ${o.kalan > 0 ? `<div class="fis-sat"><span>KALAN</span><span>${tlSade(o.kalan)} TL</span></div>` : ''}
+    ${a.kisi > 1 ? `<div class="fis-ayrac"></div>
+      <div class="fis-sat fis-kucuk"><span>Kişi başı (${a.kisi})</span>
+        <span>${tlSade(Math.ceil(o.net_toplam / a.kisi))}</span></div>` : ''}
+    <div class="fis-ayrac"></div>
+    <div class="fis-orta fis-kucuk">${kacis(ay.fis_alt_not || 'Afiyet olsun · Teşekkür ederiz')}<br>
+      ${new Date().toLocaleString('tr-TR')}</div>`;
+  window.print();
+}
+</script>
+
+<script>
+/* ════════════════ MUTFAK EKRANI ════════════════ */
+
+async function mutfakCiz() {
+  clearInterval(S.zamanlayici);          // kendi kendini yenilerken interval çoğalmasın
+  let liste;
+  try { liste = await GET('/adisyon/mutfak'); }
+  catch (e) { return kotu(e.message); }
+  S.mutfakBekleyen = liste.length; menuCiz();
+
+  const gruplar = {};
+  liste.forEach(s => { (gruplar[s.adisyon_id] ||= { ...s, satirlar: [] }).satirlar.push(s); });
+  const kartlar = Object.values(gruplar);
+
+  baslikYaz('Mutfak', `<b>${liste.length}</b> kalem hazırlanmayı bekliyor · ekran 15 sn'de bir yenilenir`,
+    `<button class="btn btn-cizgi btn-kucuk" onclick="mutfakCiz()">${ik('refresh-cw')} Yenile</button>`);
+
+  document.getElementById('sayfa').innerHTML = kartlar.length ? `
+    <div class="mutfak-izgara">` + kartlar.map(k => {
+      const dk = Math.max(...k.satirlar.map(s => s.bekleme_dk || 0));
+      const sinif = dk >= 20 ? 'gecikti' : dk >= 10 ? 'uyari' : '';
+      return `<div class="fis-kart ${sinif}">
+        <div class="fis-ust">
+          <div>
+            <div class="fis-masa">${kacis(k.masa_ad || (k.tip === 'paket' ? 'Paket' : 'Gel-Al'))}</div>
+            <div class="fis-garson">#${kacis(k.kod)} · ${kacis(k.ekleyen_ad || '')}</div>
+          </div>
+          <div class="fis-sure ${dk >= 20 ? 'gec' : ''}">${dk} dk</div>
+        </div>
+        ${k.satirlar.map(s => `<div class="fis-urun">
+          <span class="adet">${s.adet}</span>${kacis(s.ad)}
+          ${s.notu ? `<div class="fis-not">${ik('corner-down-right')} ${kacis(s.notu)}</div>` : ''}</div>`).join('')}
+        <div class="fis-alt">
+          <span class="fis-garson">${saatFmt(k.satirlar[0].eklenme)}</span>
+          <button class="btn btn-yesil btn-kucuk"
+            onclick="mutfakHazir([${k.satirlar.map(s => s.id).join(',')}])">${ik('check')} Hazır</button>
+        </div></div>`;
+    }).join('') + `</div>`
+    : bosDurum('party-popper', 'Mutfak temiz!', 'Bekleyen sipariş yok.');
+
+  S.zamanlayici = setInterval(() => { if (S.rota === 'mutfak') mutfakCiz(); }, 15000);
+}
+
+async function mutfakHazir(idler) {
+  try {
+    for (const id of idler) await POST(`/adisyon/satir/${id}/hazir`);
+    iyi(idler.length + ' kalem hazır olarak işaretlendi');
+    mutfakCiz();
+  } catch (e) { kotu(e.message); }
+}
+
+/* ════════════════ ADİSYON GEÇMİŞİ ════════════════ */
+
+async function gecmisCiz(bas, bit) {
+  bas ||= bugun(); bit ||= bugun();
+  baslikYaz('Adisyonlar', 'Kapanmış ve iptal edilmiş adisyonlar', `
+    <input type="date" id="gBas" value="${bas}" style="padding:6px 9px;border:1.5px solid var(--cizgi);border-radius:8px">
+    <input type="date" id="gBit" value="${bit}" style="padding:6px 9px;border:1.5px solid var(--cizgi);border-radius:8px">
+    <button class="btn btn-kucuk" onclick="gecmisCiz(document.getElementById('gBas').value,document.getElementById('gBit').value)">Getir</button>`);
+  let liste;
+  try { liste = await GET(`/adisyon/gecmis?bas=${bas}&bit=${bit}`); }
+  catch (e) { return kotu(e.message); }
+
+  const kapali = liste.filter(a => a.durum === 'kapali');
+  const ciro = kapali.reduce((t, a) => t + a.ozet.net_toplam, 0);
+
+  document.getElementById('sayfa').innerHTML = `
+    <div class="kart-sira">
+      <div class="ozet-kart"><div class="etiket">Kapanan Adisyon</div>
+        <div class="deger">${kapali.length}</div></div>
+      <div class="ozet-kart vurgu"><div class="etiket">Toplam Ciro</div>
+        <div class="deger">${tl(ciro)}</div></div>
+      <div class="ozet-kart"><div class="etiket">Ortalama Adisyon</div>
+        <div class="deger">${tl(kapali.length ? Math.round(ciro / kapali.length) : 0)}</div></div>
+      <div class="ozet-kart"><div class="etiket">İptal</div>
+        <div class="deger">${liste.length - kapali.length}</div></div>
+    </div>
+    <div class="tablo-sar"><table>
+      <thead><tr><th>No</th><th>Yer</th><th>Durum</th><th>Açılış</th><th>Kapanış</th>
+        <th class="sag">Tutar</th><th class="sag">Ödenen</th><th>Kapatan</th><th></th></tr></thead>
+      <tbody>${liste.length ? liste.map(a => `<tr>
+        <td><b>#${kacis(a.kod)}</b></td>
+        <td>${kacis(a.masa_ad || (a.tip === 'paket' ? 'Paket' : 'Gel-Al'))}</td>
+        <td><span class="etiket-durum d-${a.durum}">${a.durum === 'kapali' ? 'Kapandı' : 'İptal'}</span></td>
+        <td>${tarihFmt(a.acilis)} ${saatFmt(a.acilis)}</td>
+        <td>${a.kapanis ? saatFmt(a.kapanis) : '—'}</td>
+        <td class="sag para">${tl(a.ozet.net_toplam)}</td>
+        <td class="sag para">${tl(a.ozet.odenen)}</td>
+        <td>${kacis(a.kapatan_ad || '—')}</td>
+        <td><button class="btn btn-cizgi btn-kucuk" onclick="gecmisDetay(${a.id})">Detay</button></td>
+      </tr>`).join('') : `<tr><td colspan="9" style="text-align:center;padding:26px;color:var(--gri)">
+        Bu tarih aralığında adisyon yok</td></tr>`}</tbody>
+    </table></div>`;
+}
+
+async function gecmisDetay(aid) {
+  try {
+    const a = await GET('/adisyon/' + aid), o = a.ozet;
+    modalAc(`Adisyon #${a.kod}`, `
+      <div style="font-size:12.5px;color:var(--gri);margin-bottom:13px;line-height:1.7">
+        ${kacis(a.masa_ad || (a.tip === 'paket' ? 'Paket' : 'Gel-Al'))} · ${a.kisi} kişi ·
+        ${tarihFmt(a.acilis)} ${saatFmt(a.acilis)}${a.kapanis ? ' – ' + saatFmt(a.kapanis) : ''}<br>
+        Açan: ${kacis(a.acan_ad || '-')}${a.kapatan_ad ? ' · Kapatan: ' + kacis(a.kapatan_ad) : ''}
+        ${a.iptal_sebep ? `<br><b style="color:var(--kirmizi)">İptal: ${kacis(a.iptal_sebep)}</b>` : ''}
+      </div>
+      <div class="tablo-sar"><table><tbody>
+        ${a.satirlar.map(s => `<tr${s.durum === 'iptal' ? ' style="opacity:.55;text-decoration:line-through"' : ''}>
+          <td>${s.adet} × ${kacis(s.ad)}${s.notu ? `<br><small style="color:var(--gri)">${kacis(s.notu)}</small>` : ''}</td>
+          <td class="sag para">${s.durum === 'ikram' ? '<b style="color:var(--yesil)">İKRAM</b>'
+            : s.durum === 'iptal' ? '—' : tl(s.tutar_kurus)}</td></tr>`).join('')}
+      </tbody></table></div>
+      <div style="margin-top:14px">
+        <div class="top-satir"><span>Ara Toplam</span><span class="para">${tl(o.ara_toplam)}</span></div>
+        ${o.ikram ? `<div class="top-satir yesil"><span>İkram</span><span class="para">−${tl(o.ikram)}</span></div>` : ''}
+        ${o.iskonto ? `<div class="top-satir yesil"><span>İskonto</span><span class="para">−${tl(o.iskonto)}</span></div>` : ''}
+        <div class="top-satir buyuk"><span>TOPLAM</span><span class="para">${tl(o.net_toplam)}</span></div>
+        ${a.odemeler.map(p => `<div class="top-satir"><span>${odemeIk(p.tur)} ${ODEME_AD[p.tur]}
+          · ${saatFmt(p.zaman)}</span><span class="para">${tl(p.tutar_kurus)}</span></div>`).join('')}
+      </div>`,
+      `<button class="btn btn-gri" onclick="modalKapat()">Kapat</button>
+       <button class="btn btn-cizgi" onclick="S.adisyon=window._gecmisA;fisYazdir()">${ik('printer')} Fiş</button>`, true);
+    window._gecmisA = a;
+  } catch (e) { kotu(e.message); }
+}
+
+/* ════════════════ RAPORLAR ════════════════ */
+
+async function raporCiz(bas, bit) {
+  bas ||= bugun(); bit ||= bugun();
+  baslikYaz('Raporlar', 'Ciro, ürün ve personel analizi', `
+    <input type="date" id="rBas" value="${bas}" style="padding:6px 9px;border:1.5px solid var(--cizgi);border-radius:8px">
+    <input type="date" id="rBit" value="${bit}" style="padding:6px 9px;border:1.5px solid var(--cizgi);border-radius:8px">
+    <button class="btn btn-kucuk" onclick="raporCiz(document.getElementById('rBas').value,document.getElementById('rBit').value)">Getir</button>
+    <button class="btn btn-cizgi btn-kucuk" onclick="raporHizli(7)">Son 7 gün</button>
+    <button class="btn btn-cizgi btn-kucuk" onclick="raporHizli(30)">Son 30 gün</button>`);
+
+  let r, gs;
+  try {
+    r = await GET(`/rapor/ozet?bas=${bas}&bit=${bit}`);
+    gs = await GET('/rapor/gun-sonu/onizleme');
+  } catch (e) { return kotu(e.message); }
+
+  const enCok = Math.max(1, ...r.urunler.map(u => u.adet));
+  const odemeToplam = Object.values(r.odeme).reduce((a, b) => a + b, 0);
+
+  document.getElementById('sayfa').innerHTML = `
+    <div class="kart-sira">
+      <div class="ozet-kart vurgu"><div class="etiket">Net Ciro</div>
+        <div class="deger">${tl(r.net_kurus)}</div>
+        <div class="alt">${r.adisyon_sayisi} adisyon · ${r.kisi_sayisi} kişi</div></div>
+      <div class="ozet-kart"><div class="etiket">Ortalama Adisyon</div>
+        <div class="deger">${tl(r.ortalama_adisyon)}</div>
+        <div class="alt">kişi başı ${tl(r.kisi_basi)}</div></div>
+      <div class="ozet-kart"><div class="etiket">İskonto + İkram</div>
+        <div class="deger" style="color:var(--sari)">${tl(r.iskonto_kurus + r.ikram_kurus)}</div>
+        <div class="alt">iskonto ${tlSade(r.iskonto_kurus)} · ikram ${tlSade(r.ikram_kurus)}</div></div>
+      <div class="ozet-kart"><div class="etiket">İptaller</div>
+        <div class="deger" style="color:var(--kirmizi)">${tl(r.iptal_kurus)}</div>
+        <div class="alt">${r.iptal_adisyon} adisyon iptali</div></div>
+    </div>
+
+    <div class="bolum"><h3>${ik('credit-card')} Ödeme Dağılımı <small>toplam ${tl(odemeToplam)}</small></h3>
+      <div class="kart-sira">
+        ${Object.entries(r.odeme).map(([t, v]) => `<div class="ozet-kart">
+          <div class="etiket">${odemeIk(t)} ${ODEME_AD[t]}</div>
+          <div class="deger" style="font-size:19px">${tl(v)}</div>
+          <div class="alt">%${odemeToplam ? Math.round(v * 100 / odemeToplam) : 0}</div></div>`).join('')}
+      </div></div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px">
+      <div class="bolum"><h3>${ik('flame')} En Çok Satanlar</h3>
+        <div class="tablo-sar"><table>
+          <thead><tr><th>Ürün</th><th class="orta">Adet</th><th class="sag">Tutar</th></tr></thead>
+          <tbody>${r.urunler.length ? r.urunler.map(u => `<tr>
+            <td><div>${kacis(u.ad)}</div>
+              <div style="height:3px;background:var(--ana);border-radius:2px;margin-top:4px;
+                width:${Math.round(u.adet * 100 / enCok)}%"></div></td>
+            <td class="orta"><b>${u.adet}</b></td>
+            <td class="sag para">${tl(u.tutar)}</td></tr>`).join('')
+            : `<tr><td colspan="3" style="text-align:center;padding:22px;color:var(--gri)">Veri yok</td></tr>`}
+          </tbody></table></div></div>
+
+      <div class="bolum"><h3>${ik('users')} Personel Performansı</h3>
+        <div class="tablo-sar"><table>
+          <thead><tr><th>Personel</th><th class="orta">Adisyon</th><th class="sag">Ciro</th></tr></thead>
+          <tbody>${r.personel.length ? r.personel.map(p => `<tr>
+            <td>${kacis(p.ad)}</td><td class="orta">${p.adisyon}</td>
+            <td class="sag para">${tl(p.tutar)}</td></tr>`).join('')
+            : `<tr><td colspan="3" style="text-align:center;padding:22px;color:var(--gri)">Veri yok</td></tr>`}
+          </tbody></table></div></div>
+
+      <div class="bolum"><h3>${ik('layers')} Kategori Kırılımı</h3>
+        <div class="tablo-sar"><table>
+          <thead><tr><th>Kategori</th><th class="orta">Adet</th><th class="sag">Tutar</th></tr></thead>
+          <tbody>${r.kategoriler.length ? r.kategoriler.map(k => `<tr>
+            <td>${kacis(k.ad)}</td><td class="orta">${k.adet}</td>
+            <td class="sag para">${tl(k.tutar)}</td></tr>`).join('')
+            : `<tr><td colspan="3" style="text-align:center;padding:22px;color:var(--gri)">Veri yok</td></tr>`}
+          </tbody></table></div></div>
+
+      <div class="bolum"><h3>${ik('calendar')} Günlük Ciro</h3>
+        <div class="tablo-sar"><table>
+          <thead><tr><th>Gün</th><th class="orta">Adisyon</th><th class="sag">Tahsilat</th></tr></thead>
+          <tbody>${r.gunler.length ? r.gunler.map(g => `<tr>
+            <td>${tarihFmt(g.gun)}</td><td class="orta">${g.adisyon}</td>
+            <td class="sag para">${tl(g.tutar)}</td></tr>`).join('')
+            : `<tr><td colspan="3" style="text-align:center;padding:22px;color:var(--gri)">Veri yok</td></tr>`}
+          </tbody></table></div></div>
+    </div>
+
+    <div class="bolum"><h3>${ik('lock')} Gün Sonu (Z Raporu)</h3>
+      <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;padding:16px">
+        ${gs.adisyon_sayisi ? `
+          <div style="font-size:13px;color:var(--gri);margin-bottom:12px">
+            Henüz gün sonuna girmemiş <b style="color:#0F172A">${gs.adisyon_sayisi}</b> kapalı adisyon var.</div>
+          <div class="kart-sira" style="margin-bottom:12px">
+            <div class="ozet-kart"><div class="etiket">Net</div><div class="deger" style="font-size:19px">${tl(gs.net_kurus)}</div></div>
+            <div class="ozet-kart"><div class="etiket">${ik('banknote')} Nakit</div><div class="deger" style="font-size:19px">${tl(gs.nakit_kurus)}</div></div>
+            <div class="ozet-kart"><div class="etiket">${ik('credit-card')} Kart</div><div class="deger" style="font-size:19px">${tl(gs.kart_kurus)}</div></div>
+            <div class="ozet-kart"><div class="etiket">${ik('ticket')} Çek</div><div class="deger" style="font-size:19px">${tl(gs.ceki_kurus)}</div></div>
+          </div>
+          ${gs.acik_adisyonlar.length ? `<div class="hata" style="display:block">
+            ${ik('triangle-alert')} <b>${gs.acik_adisyonlar.length}</b> açık adisyon var
+            (${gs.acik_adisyonlar.map(a => '#' + kacis(a.kod) + ' ' + kacis(a.masa_ad || '')).join(', ')}).
+            Gün sonu alırsanız bunlar yarına devreder.</div>` : ''}
+          ${yoneticiMi() ? `<button class="btn btn-koyu" onclick="gunSonuAl(${gs.acik_adisyonlar.length})">
+            ${ik('lock')} Gün Sonunu Al</button>` : `<div style="font-size:12px;color:var(--gri)">
+            Gün sonu almak için yönetici yetkisi gerekli.</div>`}
+        ` : `<div style="font-size:13px;color:var(--gri)">
+          Gün sonuna girecek kapanmış adisyon yok.
+          ${gs.son_gun_sonu ? `Son gün sonu: <b>${tarihFmt(gs.son_gun_sonu.tarih)}
+          ${saatFmt(gs.son_gun_sonu.kapanis)}</b> · ${tl(gs.son_gun_sonu.net_kurus)}` : ''}</div>`}
+        <div style="margin-top:13px"><button class="btn btn-cizgi btn-kucuk" onclick="gunSonuListe()">
+          ${ik('scroll-text')} Geçmiş Gün Sonları</button></div>
+      </div></div>`;
+}
+
+function raporHizli(gun) {
+  const bit = new Date(), bas = new Date(Date.now() - (gun - 1) * 86400000);
+  raporCiz(bas.toISOString().slice(0, 10), bit.toISOString().slice(0, 10));
+}
+
+function gunSonuAl(acikSayi) {
+  onay('Gün Sonu Al',
+    `Kapanmış tüm adisyonlar tek bir gün sonu kaydına mühürlenecek ve bir daha ciroya girmeyecek.
+     ${acikSayi ? `<br><br><b style="color:var(--kirmizi)">${acikSayi} açık adisyon</b> var;
+     bunlar kapanınca bir SONRAKİ gün sonuna yazılacak.` : ''}
+     <br><br>Devam edilsin mi?`,
+    `gunSonuOnay(${acikSayi ? 1 : 0})`, false);
+}
+
+async function gunSonuOnay(zorla) {
+  try {
+    const g = await POST('/rapor/gun-sonu', { zorla });
+    modalKapat(); iyi(`Gün sonu alındı · ${tl(g.net_kurus)}`);
+    gunSonuDetay(g.id);
+  } catch (e) { modalKapat(); kotu(e.message); }
+}
+
+async function gunSonuListe() {
+  try {
+    const liste = await GET('/rapor/gun-sonu/liste');
+    modalAc('Geçmiş Gün Sonları', liste.length ? `
+      <div class="tablo-sar"><table>
+        <thead><tr><th>Tarih</th><th class="orta">Adisyon</th><th class="sag">Net</th><th></th></tr></thead>
+        <tbody>${liste.map(g => `<tr>
+          <td>${tarihFmt(g.tarih)}<br><small style="color:var(--gri)">${saatFmt(g.kapanis)} · ${kacis(g.kapatan_ad || '')}</small></td>
+          <td class="orta">${g.adisyon_sayisi}</td>
+          <td class="sag para">${tl(g.net_kurus)}</td>
+          <td><button class="btn btn-cizgi btn-kucuk" onclick="gunSonuDetay(${g.id})">Aç</button></td>
+        </tr>`).join('')}</tbody></table></div>`
+      : '<p style="color:var(--gri)">Henüz gün sonu alınmamış.</p>',
+      `<button class="btn btn-gri" onclick="modalKapat()">Kapat</button>`, true);
+  } catch (e) { kotu(e.message); }
+}
+
+async function gunSonuDetay(gid) {
+  try {
+    const g = await GET('/rapor/gun-sonu/' + gid);
+    modalAc(`Gün Sonu — ${tarihFmt(g.tarih)}`, `
+      <div class="odeme-ozet">
+        <div class="kalan-et">Net Ciro</div><div class="kalan">${tl(g.net_kurus)}</div>
+        <div class="detay">${g.adisyon_sayisi} adisyon · ${saatFmt(g.kapanis)} ·
+          ${kacis(g.kapatan_ad || '')}</div></div>
+      <div class="tablo-sar" style="margin-bottom:14px"><table><tbody>
+        <tr><td>Brüt Satış</td><td class="sag para">${tl(g.brut_kurus)}</td></tr>
+        <tr><td>İskonto</td><td class="sag para" style="color:var(--sari)">−${tl(g.iskonto_kurus)}</td></tr>
+        <tr><td>İkram</td><td class="sag para" style="color:var(--sari)">${tl(g.ikram_kurus)}</td></tr>
+        <tr><td><b>Net</b></td><td class="sag para"><b>${tl(g.net_kurus)}</b></td></tr>
+        <tr><td>${ik('banknote')} Nakit</td><td class="sag para">${tl(g.nakit_kurus)}</td></tr>
+        <tr><td>${ik('credit-card')} Kart</td><td class="sag para">${tl(g.kart_kurus)}</td></tr>
+        <tr><td>${ik('ticket')} Yemek Çeki</td><td class="sag para">${tl(g.ceki_kurus)}</td></tr>
+        <tr><td>${ik('notebook-pen')} Açık Hesap</td><td class="sag para">${tl(g.acik_kurus)}</td></tr>
+      </tbody></table></div>
+      <h3 style="font-size:13px;margin-bottom:8px">En Çok Satanlar</h3>
+      <div class="tablo-sar"><table><tbody>
+        ${g.urunler.map(u => `<tr><td>${kacis(u.ad)}</td><td class="orta">${u.adet}</td>
+          <td class="sag para">${tl(u.tutar)}</td></tr>`).join('')}
+      </tbody></table></div>`,
+      `<button class="btn btn-gri" onclick="modalKapat()">Kapat</button>
+       <button class="btn btn-cizgi" onclick="window.print()">${ik('printer')} Yazdır</button>`, true);
+  } catch (e) { kotu(e.message); }
+}
+</script>
+
+<script>
+/* ════════════════ MENÜ YÖNETİMİ ════════════════ */
+
+let _tamMenu = [];                       // pasifler dahil tam menü (düzenleme formları için)
+
+async function urunlerCiz() {
+  baslikYaz('Menü', 'Kategori ve ürün yönetimi',
+    `<button class="btn btn-cizgi btn-kucuk" onclick="kategoriDuzenle()">+ Kategori</button>
+     <button class="btn btn-kucuk" onclick="urunDuzenle()">+ Ürün</button>`);
+  let tam;
+  try { tam = await GET('/menu?hepsi=1'); S.menu = await GET('/menu'); }
+  catch (e) { return kotu(e.message); }
+  _tamMenu = tam;
+
+  document.getElementById('sayfa').innerHTML = tam.length ? tam.map(k => `
+    <div class="bolum">
+      <h3>
+        <span style="width:26px;height:26px;border-radius:7px;background:${k.renk}1A;
+          color:${k.renk};display:inline-flex;align-items:center;justify-content:center">
+          ${ik(k.ikon || 'utensils')}</span>
+        ${kacis(k.ad)}
+        <small>${k.urunler.length} ürün</small>
+        ${k.aktif ? '' : '<span class="etiket-durum d-pasif">pasif</span>'}
+        <button class="btn btn-cizgi btn-kucuk" style="margin-left:auto"
+          onclick="kategoriDuzenle(${k.id})">Düzenle</button>
+        <button class="btn btn-cizgi btn-kucuk" onclick="urunDuzenle(null,${k.id})">+ Ürün</button>
+      </h3>
+      <div class="tablo-sar"><table>
+        <thead><tr><th style="width:54px"></th><th>Ürün</th><th class="sag">Fiyat</th>
+          <th class="orta">Mutfak</th><th class="orta">Durum</th><th></th></tr></thead>
+        <tbody>${k.urunler.length ? k.urunler.map(u => `<tr>
+          <td><div class="gorsel-onizleme" style="width:40px;height:40px;border-radius:8px;
+            ${u.gorsel ? '' : `background:${k.renk}1A;color:${k.renk}`}">
+            ${u.gorsel ? `<img src="${u.gorsel}" alt="">` : ik(k.ikon || 'utensils')}</div></td>
+          <td><b>${kacis(u.ad)}</b>${u.aciklama ? `<br><small style="color:var(--gri)">${kacis(u.aciklama)}</small>` : ''}</td>
+          <td class="sag para">${tl(u.fiyat_kurus)}</td>
+          <td class="orta">${u.mutfak ? ik('chef-hat') : '—'}</td>
+          <td class="orta"><span class="etiket-durum ${u.aktif ? 'd-kapali' : 'd-pasif'}">
+            ${u.aktif ? 'aktif' : 'pasif'}</span></td>
+          <td class="sag">
+            <button class="btn btn-cizgi btn-kucuk" onclick="urunDuzenle(${u.id})">Düzenle</button>
+            <button class="btn btn-cizgi btn-kucuk" style="color:var(--kirmizi)"
+              onclick="urunSil(${u.id},'${kacis(u.ad).replace(/'/g, "\\'")}')">Sil</button></td>
+        </tr>`).join('') : `<tr><td colspan="6" style="color:var(--gri);padding:16px">
+          Bu kategoride ürün yok</td></tr>`}</tbody>
+      </table></div>
+    </div>`).join('') : bosDurum('book-open', 'Menü boş', 'Önce bir kategori ekleyin.');
+}
+
+function kategoriDuzenle(kid) {
+  const k = kid ? _katBul(kid) : { ad: '', renk: '#F97316', sira: 0, aktif: 1 };
+  modalAc(kid ? 'Kategori Düzenle' : 'Yeni Kategori', `
+    <div class="alan"><label>Kategori Adı</label><input id="kAd" value="${kacis(k.ad)}"></div>
+    <div class="alan"><label>İkon <span style="font-weight:400;text-transform:none">
+      (fotoğrafı olmayan ürünlerde görünür)</span></label>
+      <div class="hizli-sira" id="kIkonSecim">${KATEGORI_IKONLARI.map(i =>
+        `<button type="button" class="hizli" data-ikon="${i}"
+          style="${i === (k.ikon || 'utensils') ? 'border-color:var(--ana);background:var(--ana-acik);color:var(--ana-koyu)' : ''}"
+          onclick="kategoriIkonSec('${i}')">${ik(i, 'ik-b')}</button>`).join('')}</div>
+      <input type="hidden" id="kIkon" value="${k.ikon || 'utensils'}"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px">
+      <div class="alan"><label>Renk</label>
+        <input id="kRenk" type="color" value="${k.renk}" style="height:42px;padding:3px"></div>
+      <div class="alan"><label>Sıra</label>
+        <input id="kSira" type="number" value="${k.sira}" inputmode="numeric"></div>
+      <div class="alan"><label>Durum</label><select id="kAktif">
+        <option value="1" ${k.aktif ? 'selected' : ''}>Aktif</option>
+        <option value="0" ${k.aktif ? '' : 'selected'}>Pasif</option></select></div>
+    </div>`,
+    `${kid ? `<button class="btn btn-cizgi btn-kucuk" style="color:var(--kirmizi);margin-right:auto"
+       onclick="kategoriSil(${kid})">Sil</button>` : ''}
+     <button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn" onclick="kategoriKaydet(${kid || 0})">Kaydet</button>`);
+}
+
+function _katBul(kid) {
+  for (const k of _tamMenu) if (k.id === kid) return k;
+  return { ad: '', renk: '#F97316', sira: 0, aktif: 1 };
+}
+function _urunBulTam(uid) {
+  for (const k of _tamMenu) { const u = k.urunler.find(u => u.id === uid); if (u) return u; }
+  return null;
+}
+
+async function kategoriKaydet(kid) {
+  const v = {
+    ad: document.getElementById('kAd').value.trim(),
+    renk: document.getElementById('kRenk').value,
+    ikon: document.getElementById('kIkon').value || 'utensils',
+    sira: parseInt(document.getElementById('kSira').value) || 0,
+    aktif: parseInt(document.getElementById('kAktif').value),
+  };
+  if (!v.ad) return kotu('Kategori adı zorunlu');
+  try {
+    kid ? await PATCH('/menu/kategori/' + kid, v) : await POST('/menu/kategori', v);
+    modalKapat(); iyi('Kategori kaydedildi'); urunlerCiz();
+  } catch (e) { kotu(e.message); }
+}
+
+function kategoriSil(kid) {
+  onay('Kategoriyi Sil',
+    'Kategori ve içindeki ürünler silinecek. Geçmiş adisyonlarda kullanılmışsa silinmez, pasife alınır.',
+    `kategoriSilOnay(${kid})`);
+}
+async function kategoriSilOnay(kid) {
+  try { const y = await SIL('/menu/kategori/' + kid); modalKapat(); iyi(y.mesaj); urunlerCiz(); }
+  catch (e) { kotu(e.message); }
+}
+
+function urunDuzenle(uid, katId) {
+  const u = uid ? _urunBulTam(uid) : null;
+  const v = u || { kategori_id: katId || (_tamMenu[0] || {}).id, ad: '', fiyat_kurus: 0,
+                   aciklama: '', mutfak: 1, sira: 0, aktif: 1 };
+  if (!_tamMenu.length) return kotu('Önce bir kategori ekleyin');
+  S.gorselTaslak = v.gorsel || '';
+  modalAc(uid ? 'Ürün Düzenle' : 'Yeni Ürün', `
+    <div class="alan"><label>Ürün Görseli</label>
+      <div class="gorsel-kutu">
+        <div class="gorsel-onizleme" id="uGorselOnizleme">${
+          v.gorsel ? `<img src="${v.gorsel}" alt="">` : ik('image', 'ik-xl')}</div>
+        <div style="flex:1;min-width:0">
+          <input type="file" id="uGorselDosya" accept="image/*" style="display:none"
+            onchange="urunGorselSec(this)">
+          <button class="btn btn-cizgi btn-kucuk" type="button"
+            onclick="document.getElementById('uGorselDosya').click()">
+            ${ik('image-up')} Fotoğraf Seç</button>
+          <button class="btn btn-cizgi btn-kucuk" type="button" id="uGorselSil"
+            style="color:var(--kirmizi);${v.gorsel ? '' : 'display:none'}"
+            onclick="urunGorselKaldir()">${ik('trash-2')} Kaldır</button>
+          <div style="font-size:11px;color:var(--gri);margin-top:7px;line-height:1.5">
+            Otomatik olarak 500 px'e küçültülür. Görsel yoksa kategori ikonu görünür.</div>
+        </div>
+      </div></div>
+    <div class="alan"><label>Kategori</label><select id="uKat">
+      ${_tamMenu.map(k => `<option value="${k.id}" ${k.id === v.kategori_id ? 'selected' : ''}>
+        ${kacis(k.ad)}</option>`).join('')}</select></div>
+    <div class="alan"><label>Ürün Adı</label><input id="uAd" value="${kacis(v.ad)}"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+      <div class="alan"><label>Fiyat (TL)</label>
+        <input id="uFiyat" inputmode="decimal" value="${v.fiyat_kurus ? tlSade(v.fiyat_kurus) : ''}"
+          placeholder="örn. 185,00"></div>
+      <div class="alan"><label>Sıra</label>
+        <input id="uSira" type="number" value="${v.sira}" inputmode="numeric"></div>
+    </div>
+    <div class="alan"><label>Açıklama</label>
+      <input id="uAciklama" value="${kacis(v.aciklama)}" placeholder="isteğe bağlı"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+      <div class="alan"><label>Mutfak Ekranı</label><select id="uMutfak">
+        <option value="1" ${v.mutfak ? 'selected' : ''}>Mutfağa düşsün</option>
+        <option value="0" ${v.mutfak ? '' : 'selected'}>Düşmesin (içecek vb.)</option></select></div>
+      <div class="alan"><label>Durum</label><select id="uAktif">
+        <option value="1" ${v.aktif ? 'selected' : ''}>Aktif</option>
+        <option value="0" ${v.aktif ? '' : 'selected'}>Pasif</option></select></div>
+    </div>`,
+    `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn" onclick="urunKaydet(${uid || 0})">Kaydet</button>`);
+}
+
+async function urunKaydet(uid) {
+  const v = {
+    kategori_id: parseInt(document.getElementById('uKat').value),
+    ad: document.getElementById('uAd').value.trim(),
+    fiyat_kurus: kurusCevir(document.getElementById('uFiyat').value),
+    aciklama: document.getElementById('uAciklama').value.trim(),
+    gorsel: S.gorselTaslak || '',
+    mutfak: parseInt(document.getElementById('uMutfak').value),
+    sira: parseInt(document.getElementById('uSira').value) || 0,
+    aktif: parseInt(document.getElementById('uAktif').value),
+  };
+  if (!v.ad) return kotu('Ürün adı zorunlu');
+  try {
+    uid ? await PATCH('/menu/urun/' + uid, v) : await POST('/menu/urun', v);
+    modalKapat(); iyi('Ürün kaydedildi'); urunlerCiz();
+  } catch (e) { kotu(e.message); }
+}
+
+function urunSil(uid, ad) {
+  onay('Ürünü Sil', `<b>${ad}</b> silinecek. Geçmiş adisyonlarda geçiyorsa silinmez, pasife alınır.`,
+    `urunSilOnay(${uid})`);
+}
+async function urunSilOnay(uid) {
+  try { const y = await SIL('/menu/urun/' + uid); modalKapat(); iyi(y.mesaj); urunlerCiz(); }
+  catch (e) { kotu(e.message); }
+}
+
+/* ════════════════ YÖNETİM ════════════════ */
+
+let _yonetimSekme = 'isletme';
+
+async function yonetimCiz(sekme) {
+  _yonetimSekme = sekme || _yonetimSekme;
+  baslikYaz('Yönetim', 'Salon, masa, kullanıcı ve işlem kaydı');
+  document.getElementById('sayfa').innerHTML = `
+    <div class="salon-sekme">
+      ${[['isletme', 'building-2', 'İşletme & Logo'], ['masa', 'armchair', 'Salon & Masa'],
+         ['qr', 'qr-code', 'QR Menü'], ['kullanici', 'user', 'Kullanıcılar'],
+         ['log', 'scroll-text', 'İşlem Kaydı'], ['hesap', 'key-round', 'Hesabım']]
+        .map(([k, i, ad]) => `<div class="sekme ${_yonetimSekme === k ? 'aktif' : ''}"
+          onclick="yonetimCiz('${k}')">${ik(i)} ${ad}</div>`).join('')}
+    </div><div id="yonetimGovde"></div>`;
+  ({ isletme: yIsletme, masa: yMasa, qr: yQr, kullanici: yKullanici,
+     log: yLog, hesap: yHesap }[_yonetimSekme])();
+}
+
+async function yMasa() {
+  let salonlar;
+  try { salonlar = await GET('/masa/salonlar'); }
+  catch (e) { return kotu(e.message); }
+  window._salonlar = salonlar;
+  document.getElementById('yonetimGovde').innerHTML = `
+    <div style="margin-bottom:14px">
+      <button class="btn btn-kucuk" onclick="salonDuzenle()">+ Salon</button>
+      ${salonlar.length ? `<button class="btn btn-cizgi btn-kucuk" onclick="masaDuzenle()">+ Masa</button>
+        <button class="btn btn-cizgi btn-kucuk" onclick="topluMasaAc()">${ik('zap')} Toplu Masa Ekle</button>` : ''}
+    </div>
+    ${salonlar.map(s => `<div class="bolum">
+      <h3>${kacis(s.ad)} <small>${s.masalar.length} masa</small>
+        ${s.aktif ? '' : '<span class="etiket-durum d-pasif">pasif</span>'}
+        <button class="btn btn-cizgi btn-kucuk" style="margin-left:auto"
+          onclick="salonDuzenle(${s.id})">Düzenle</button></h3>
+      <div class="masa-izgara">
+        ${s.masalar.map(m => `<div class="masa" style="min-height:auto;cursor:pointer"
+          onclick="masaDuzenle(${m.id})">
+          <div class="masa-ad" style="font-size:16px">${kacis(m.ad)}</div>
+          <div class="masa-kap">${m.kapasite} kişilik ${m.aktif ? '' : '· pasif'}</div>
+        </div>`).join('') || '<div style="color:var(--gri)">Masa yok</div>'}
+      </div></div>`).join('') || bosDurum('house', 'Salon yok', 'Önce bir salon ekleyin.')}`;
+}
+
+function salonDuzenle(sid) {
+  const s = sid ? (window._salonlar || []).find(x => x.id === sid) : { ad: '', sira: 0, aktif: 1 };
+  modalAc(sid ? 'Salon Düzenle' : 'Yeni Salon', `
+    <div class="alan"><label>Salon Adı</label><input id="sAd" value="${kacis(s.ad)}"
+      placeholder="İç Salon, Bahçe, Teras…"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+      <div class="alan"><label>Sıra</label><input id="sSira" type="number" value="${s.sira}"></div>
+      <div class="alan"><label>Durum</label><select id="sAktif">
+        <option value="1" ${s.aktif ? 'selected' : ''}>Aktif</option>
+        <option value="0" ${s.aktif ? '' : 'selected'}>Pasif</option></select></div></div>`,
+    `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn" onclick="salonKaydet(${sid || 0})">Kaydet</button>`);
+}
+
+async function salonKaydet(sid) {
+  const v = { ad: document.getElementById('sAd').value.trim(),
+              sira: parseInt(document.getElementById('sSira').value) || 0,
+              aktif: parseInt(document.getElementById('sAktif').value) };
+  if (!v.ad) return kotu('Salon adı zorunlu');
+  try {
+    sid ? await PATCH('/masa/salon/' + sid, v) : await POST('/masa/salon', v);
+    modalKapat(); iyi('Salon kaydedildi'); yMasa();
+  } catch (e) { kotu(e.message); }
+}
+
+function masaDuzenle(mid) {
+  const salonlar = window._salonlar || [];
+  let m = { salon_id: (salonlar[0] || {}).id, ad: '', kapasite: 4, sira: 0, aktif: 1 };
+  if (mid) for (const s of salonlar) { const x = s.masalar.find(x => x.id === mid); if (x) m = x; }
+  modalAc(mid ? 'Masa Düzenle' : 'Yeni Masa', `
+    <div class="alan"><label>Salon</label><select id="mSalon">
+      ${salonlar.map(s => `<option value="${s.id}" ${s.id === m.salon_id ? 'selected' : ''}>
+        ${kacis(s.ad)}</option>`).join('')}</select></div>
+    <div class="alan"><label>Masa Adı / No</label><input id="mAd" value="${kacis(m.ad)}"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px">
+      <div class="alan"><label>Kapasite</label><input id="mKap" type="number" min="1" value="${m.kapasite}"></div>
+      <div class="alan"><label>Sıra</label><input id="mSira" type="number" value="${m.sira}"></div>
+      <div class="alan"><label>Durum</label><select id="mAktif">
+        <option value="1" ${m.aktif ? 'selected' : ''}>Aktif</option>
+        <option value="0" ${m.aktif ? '' : 'selected'}>Pasif</option></select></div></div>`,
+    `${mid ? `<button class="btn btn-cizgi btn-kucuk" style="color:var(--kirmizi);margin-right:auto"
+       onclick="masaSil(${mid})">Sil</button>` : ''}
+     <button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn" onclick="masaKaydet(${mid || 0})">Kaydet</button>`);
+}
+
+async function masaKaydet(mid) {
+  const v = { salon_id: parseInt(document.getElementById('mSalon').value),
+              ad: document.getElementById('mAd').value.trim(),
+              kapasite: parseInt(document.getElementById('mKap').value) || 4,
+              sira: parseInt(document.getElementById('mSira').value) || 0,
+              aktif: parseInt(document.getElementById('mAktif').value) };
+  if (!v.ad) return kotu('Masa adı zorunlu');
+  try {
+    mid ? await PATCH('/masa/masa/' + mid, v) : await POST('/masa/masa', v);
+    modalKapat(); iyi('Masa kaydedildi'); yMasa();
+  } catch (e) { kotu(e.message); }
+}
+
+async function masaSil(mid) {
+  try { const y = await SIL('/masa/masa/' + mid); modalKapat(); iyi(y.mesaj); yMasa(); }
+  catch (e) { kotu(e.message); }
+}
+
+function topluMasaAc() {
+  const salonlar = window._salonlar || [];
+  modalAc('Toplu Masa Ekle', `
+    <p style="font-size:12.5px;color:var(--gri);margin-bottom:13px">
+      Ön ek + numara ile seri masa oluşturur. Örn: ön ek "B", 1'den 8'e → B1…B8</p>
+    <div class="alan"><label>Salon</label><select id="tmSalon">
+      ${salonlar.map(s => `<option value="${s.id}">${kacis(s.ad)}</option>`).join('')}</select></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:9px">
+      <div class="alan"><label>Ön Ek</label><input id="tmOn" value="M" maxlength="4"></div>
+      <div class="alan"><label>Başlangıç</label><input id="tmBas" type="number" value="1" min="1"></div>
+      <div class="alan"><label>Bitiş</label><input id="tmBit" type="number" value="10" min="1"></div>
+      <div class="alan"><label>Kapasite</label><input id="tmKap" type="number" value="4" min="1"></div>
+    </div>`,
+    `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn" onclick="topluMasaOnay()">Oluştur</button>`);
+}
+
+async function topluMasaOnay() {
+  const salon = parseInt(document.getElementById('tmSalon').value);
+  const on = document.getElementById('tmOn').value.trim();
+  const bas = parseInt(document.getElementById('tmBas').value) || 1;
+  const bit = parseInt(document.getElementById('tmBit').value) || 1;
+  const kap = parseInt(document.getElementById('tmKap').value) || 4;
+  if (bit < bas) return kotu('Bitiş numarası başlangıçtan küçük olamaz');
+  if (bit - bas > 199) return kotu('Tek seferde en fazla 200 masa eklenebilir');
+  try {
+    for (let i = bas; i <= bit; i++)
+      await POST('/masa/masa', { salon_id: salon, ad: on + i, kapasite: kap, sira: i, aktif: 1 });
+    modalKapat(); iyi(`${bit - bas + 1} masa eklendi`); yMasa();
+  } catch (e) { kotu(e.message); }
+}
+
+async function yKullanici() {
+  let liste;
+  try { liste = await GET('/kullanici/liste'); }
+  catch (e) { return kotu(e.message); }
+  window._kullanicilar = liste;
+  document.getElementById('yonetimGovde').innerHTML = `
+    <div style="margin-bottom:14px"><button class="btn btn-kucuk"
+      onclick="kullaniciDuzenle()">+ Kullanıcı</button></div>
+    <div class="tablo-sar"><table>
+      <thead><tr><th>Ad Soyad</th><th>Kullanıcı Adı</th><th>Rol</th>
+        <th class="orta">Durum</th><th></th></tr></thead>
+      <tbody>${liste.map(k => `<tr>
+        <td><b>${kacis(k.ad_soyad)}</b></td><td>${kacis(k.kullanici_adi)}</td>
+        <td>${ROL_AD[k.rol] || k.rol}</td>
+        <td class="orta"><span class="etiket-durum ${k.aktif ? 'd-kapali' : 'd-pasif'}">
+          ${k.aktif ? 'aktif' : 'pasif'}</span></td>
+        <td class="sag"><button class="btn btn-cizgi btn-kucuk"
+          onclick="kullaniciDuzenle(${k.id})">Düzenle</button></td>
+      </tr>`).join('')}</tbody></table></div>
+    <p style="font-size:11.5px;color:var(--gri);margin-top:11px;line-height:1.7">
+      <b>Garson:</b> adisyon açar, sipariş girer, kendi girdiği bekleyen satırı iptal eder.<br>
+      <b>Kasiyer:</b> + ikram, iskonto, her satırın iptali, ödeme alma, hesap kapatma, birleştirme.<br>
+      <b>Yönetici:</b> + menü, masa düzeni, kullanıcılar, ödeme silme, adisyon iptali, gün sonu.</p>`;
+}
+
+function kullaniciDuzenle(kid) {
+  const k = kid ? (window._kullanicilar || []).find(x => x.id === kid)
+                : { ad_soyad: '', kullanici_adi: '', rol: 'garson', aktif: 1 };
+  modalAc(kid ? 'Kullanıcı Düzenle' : 'Yeni Kullanıcı', `
+    <div class="alan"><label>Ad Soyad</label><input id="uyAd" value="${kacis(k.ad_soyad)}"></div>
+    <div class="alan"><label>Kullanıcı Adı</label>
+      <input id="uyKul" value="${kacis(k.kullanici_adi)}" autocomplete="off"></div>
+    <div class="alan"><label>Şifre ${kid ? '(boş bırakılırsa değişmez)' : ''}</label>
+      <input id="uySifre" type="password" autocomplete="new-password"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+      <div class="alan"><label>Rol</label><select id="uyRol">
+        ${Object.entries(ROL_AD).map(([r, ad]) =>
+          `<option value="${r}" ${k.rol === r ? 'selected' : ''}>${ad}</option>`).join('')}</select></div>
+      <div class="alan"><label>Durum</label><select id="uyAktif">
+        <option value="1" ${k.aktif ? 'selected' : ''}>Aktif</option>
+        <option value="0" ${k.aktif ? '' : 'selected'}>Pasif</option></select></div></div>`,
+    `<button class="btn btn-gri" onclick="modalKapat()">Vazgeç</button>
+     <button class="btn" onclick="kullaniciKaydet(${kid || 0})">Kaydet</button>`);
+}
+
+async function kullaniciKaydet(kid) {
+  const v = { ad_soyad: document.getElementById('uyAd').value.trim(),
+              kullanici_adi: document.getElementById('uyKul').value.trim(),
+              sifre: document.getElementById('uySifre').value || null,
+              rol: document.getElementById('uyRol').value,
+              aktif: parseInt(document.getElementById('uyAktif').value) };
+  if (!v.ad_soyad || !v.kullanici_adi) return kotu('Ad soyad ve kullanıcı adı zorunlu');
+  try {
+    kid ? await PATCH('/kullanici/' + kid, v) : await POST('/kullanici/ekle', v);
+    modalKapat(); iyi('Kullanıcı kaydedildi'); yKullanici();
+  } catch (e) { kotu(e.message); }
+}
+
+async function yLog() {
+  let liste;
+  try { liste = await GET('/kullanici/log?limit=300'); }
+  catch (e) { return kotu(e.message); }
+  document.getElementById('yonetimGovde').innerHTML = `
+    <p style="font-size:12px;color:var(--gri);margin-bottom:11px">
+      Para ve iptal hareketleri kalıcı olarak kaydedilir. Kasa farkı çıkarsa buradan izlenir.</p>
+    <div class="tablo-sar" style="max-height:calc(100vh - 270px)"><table>
+      <thead><tr><th>Zaman</th><th>Kullanıcı</th><th>İşlem</th><th>Detay</th></tr></thead>
+      <tbody>${liste.map(l => `<tr>
+        <td style="white-space:nowrap">${tarihFmt(l.zaman)} ${saatFmt(l.zaman)}</td>
+        <td>${kacis(l.kullanici_ad || '—')}</td>
+        <td><code style="font-size:11.5px;background:var(--zemin);padding:1px 6px;border-radius:4px">
+          ${kacis(l.islem)}</code></td>
+        <td>${kacis(l.detay)}</td></tr>`).join('')}</tbody></table></div>`;
+}
+
+function yHesap() {
+  document.getElementById('yonetimGovde').innerHTML = `
+    <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;
+      padding:20px;max-width:420px">
+      <h3 style="font-size:15px;margin-bottom:14px">Şifre Değiştir</h3>
+      <div class="alan"><label>Mevcut Şifre</label><input id="hEski" type="password"></div>
+      <div class="alan"><label>Yeni Şifre (en az 6 karakter)</label><input id="hYeni" type="password"></div>
+      <div class="alan"><label>Yeni Şifre (tekrar)</label><input id="hYeni2" type="password"></div>
+      <button class="btn btn-tam" onclick="sifreDegistir()">Şifreyi Güncelle</button>
+    </div>`;
+}
+
+async function sifreDegistir() {
+  const eski = document.getElementById('hEski').value;
+  const yeni = document.getElementById('hYeni').value;
+  if (yeni !== document.getElementById('hYeni2').value) return kotu('Yeni şifreler eşleşmiyor');
+  if (yeni.length < 6) return kotu('Yeni şifre en az 6 karakter olmalı');
+  try { await POST('/kullanici/sifre', { eski, yeni }); iyi('Şifre güncellendi'); yHesap(); }
+  catch (e) { kotu(e.message); }
+}
+</script>
+
+<script>
+/* ════════════════ GÖRSEL YÜKLEME ════════════════ */
+
+/** Kategori ikon seçeneği — menü yönetiminde tıklanarak seçilir. */
+const KATEGORI_IKONLARI = ['utensils', 'soup', 'salad', 'sandwich', 'beef', 'fish',
+  'cake', 'dessert', 'coffee', 'wine', 'flame', 'package'];
+
+function kategoriIkonSec(ad) {
+  document.getElementById('kIkon').value = ad;
+  document.querySelectorAll('#kIkonSecim .hizli').forEach(b => {
+    b.style.cssText = b.dataset.ikon === ad
+      ? 'border-color:var(--ana);background:var(--ana-acik);color:var(--ana-koyu)' : '';
+  });
+}
+
+/**
+ * Seçilen dosyayı tarayıcıda küçültüp data URI döndürür.
+ * Sunucuya ham fotoğraf GİTMEZ: 4 MB'lık telefon fotoğrafı ~30 KB'a iner.
+ * @param enBoy  uzun kenar piksel sınırı
+ * @param kalite JPEG kalitesi (0-1)
+ * @param tip    'image/jpeg' (fotoğraf) ya da 'image/png' (şeffaf logo)
+ */
+function gorselKucult(dosya, enBoy, kalite, tip = 'image/jpeg') {
+  return new Promise((coz, hata) => {
+    if (!dosya.type.startsWith('image/')) return hata(new Error('Bu bir görsel dosyası değil'));
+    const okuyucu = new FileReader();
+    okuyucu.onerror = () => hata(new Error('Dosya okunamadı'));
+    okuyucu.onload = () => {
+      const im = new Image();
+      im.onerror = () => hata(new Error('Görsel açılamadı (bozuk dosya olabilir)'));
+      im.onload = () => {
+        const oran = Math.min(1, enBoy / Math.max(im.width, im.height));
+        const g = Math.max(1, Math.round(im.width * oran));
+        const y = Math.max(1, Math.round(im.height * oran));
+        const tuval = document.createElement('canvas');
+        tuval.width = g; tuval.height = y;
+        const ct = tuval.getContext('2d');
+        if (tip === 'image/jpeg') { ct.fillStyle = '#fff'; ct.fillRect(0, 0, g, y); }
+        ct.drawImage(im, 0, 0, g, y);
+        coz(tuval.toDataURL(tip, kalite));
+      };
+      im.src = okuyucu.result;
+    };
+    okuyucu.readAsDataURL(dosya);
+  });
+}
+
+async function urunGorselSec(girdi) {
+  const d = girdi.files && girdi.files[0];
+  if (!d) return;
+  try {
+    const uri = await gorselKucult(d, 500, 0.72, 'image/jpeg');
+    S.gorselTaslak = uri;
+    document.getElementById('uGorselOnizleme').innerHTML = `<img src="${uri}" alt="">`;
+    document.getElementById('uGorselSil').style.display = '';
+  } catch (e) { kotu(e.message); }
+  girdi.value = '';
+}
+
+function urunGorselKaldir() {
+  S.gorselTaslak = '';
+  document.getElementById('uGorselOnizleme').innerHTML = ik('image', 'ik-xl');
+  document.getElementById('uGorselSil').style.display = 'none';
+}
+
+/* ════════════════ YÖNETİM → İŞLETME & LOGO ════════════════ */
+
+async function yIsletme() {
+  try { S.ayar = await GET('/ayar'); } catch (e) { return kotu(e.message); }
+  const a = S.ayar;
+  S.gorselTaslak = a.logo || '';
+  document.getElementById('yonetimGovde').innerHTML = `
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));
+      gap:16px;align-items:start">
+      <div>
+      <div class="bolum">
+        <h3>${ik('image-up')} Logo</h3>
+        <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;padding:16px">
+          <div style="display:flex;gap:16px;align-items:center">
+            <div class="logo-onizleme" id="logoOnizleme">${
+              a.logo ? `<img src="${a.logo}" alt="">` : ik('image', 'ik-xl')}</div>
+            <div style="flex:1;min-width:0">
+              <input type="file" id="logoDosya" accept="image/*" style="display:none"
+                onchange="logoSec(this)">
+              <button class="btn btn-cizgi btn-kucuk" onclick="document.getElementById('logoDosya').click()">
+                ${ik('image-up')} Logo Seç</button>
+              <button class="btn btn-cizgi btn-kucuk" id="logoSil" style="color:var(--kirmizi);${
+                a.logo ? '' : 'display:none'}" onclick="logoKaldir()">${ik('trash-2')} Kaldır</button>
+              <div style="font-size:11.5px;color:var(--gri);margin-top:9px;line-height:1.6">
+                PNG şeffaflığı korunur, 400 px'e küçültülür.<br>
+                Logo şurada görünür: giriş ekranı, sol üst köşe, <b>fiş çıktısı</b> ve QR menüsü.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bolum">
+        <h3>${ik('printer')} Fiş Önizleme <small>çıktı böyle görünür</small></h3>
+        <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;padding:18px;
+          display:flex;justify-content:center">
+          <div style="width:280px;font-family:'Courier New',monospace;font-size:12px;
+            border:1px dashed var(--cizgi);padding:14px;border-radius:8px">
+            ${a.logo ? `<div style="text-align:center;margin-bottom:6px">
+              <img src="${a.logo}" style="max-height:52px;max-width:150px;object-fit:contain"></div>` : ''}
+            <div style="text-align:center;font-weight:bold;font-size:15px">
+              ${kacis(a.isletme_adi ? a.isletme_adi.toLocaleUpperCase('tr') : 'ADFIX')}</div>
+            ${a.slogan ? `<div style="text-align:center;font-size:10px">${kacis(a.slogan)}</div>` : ''}
+            ${a.adres ? `<div style="text-align:center;font-size:10px">${kacis(a.adres)}</div>` : ''}
+            ${a.telefon ? `<div style="text-align:center;font-size:10px">Tel: ${kacis(a.telefon)}</div>` : ''}
+            <div style="border-top:1px dashed #000;margin:7px 0"></div>
+            <div style="display:flex;justify-content:space-between"><span>1 x Adana Kebap</span><span>320,00</span></div>
+            <div style="display:flex;justify-content:space-between"><span>2 x Ayran</span><span>70,00</span></div>
+            <div style="border-top:1px dashed #000;margin:7px 0"></div>
+            <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:14px">
+              <span>TOPLAM</span><span>390,00 TL</span></div>
+            <div style="border-top:1px dashed #000;margin:7px 0"></div>
+            <div style="text-align:center;font-size:10px">${kacis(a.fis_alt_not || '')}</div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      <div class="bolum">
+        <h3>${ik('building-2')} İşletme Bilgileri</h3>
+        <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;padding:16px">
+          <div class="alan"><label>İşletme Adı</label>
+            <input id="ayAd" value="${kacis(a.isletme_adi)}" placeholder="Örn. Sofra Restoran"></div>
+          <div class="alan"><label>Slogan</label>
+            <input id="aySlogan" value="${kacis(a.slogan)}" placeholder="İsteğe bağlı"></div>
+          <div class="alan"><label>Adres</label>
+            <textarea id="ayAdres" rows="2">${kacis(a.adres)}</textarea></div>
+          <div class="alan"><label>Telefon</label>
+            <input id="ayTel" value="${kacis(a.telefon)}" inputmode="tel"></div>
+          <div class="alan"><label>Fiş Alt Notu</label>
+            <input id="ayFisNot" value="${kacis(a.fis_alt_not)}"></div>
+          <button class="btn btn-tam" onclick="ayarKaydet()">${ik('check')} Kaydet</button>
+        </div>
+      </div>
+    </div>
+`;
+}
+
+async function logoSec(girdi) {
+  const d = girdi.files && girdi.files[0];
+  if (!d) return;
+  try {
+    // Önce PNG dener (şeffaflık korunsun); dosya büyürse JPEG'e düşer.
+    let uri = await gorselKucult(d, 400, 0.9, 'image/png');
+    if (uri.length > 550000) uri = await gorselKucult(d, 400, 0.85, 'image/jpeg');
+    S.gorselTaslak = uri;
+    document.getElementById('logoOnizleme').innerHTML = `<img src="${uri}" alt="">`;
+    document.getElementById('logoSil').style.display = '';
+    await ayarKaydet(true);
+  } catch (e) { kotu(e.message); }
+  girdi.value = '';
+}
+
+async function logoKaldir() {
+  S.gorselTaslak = '';
+  await ayarKaydet(true);
+}
+
+async function ayarKaydet(sessiz) {
+  try {
+    S.ayar = await PATCH('/ayar', {
+      isletme_adi: document.getElementById('ayAd').value,
+      slogan:      document.getElementById('aySlogan').value,
+      adres:       document.getElementById('ayAdres').value,
+      telefon:     document.getElementById('ayTel').value,
+      fis_alt_not: document.getElementById('ayFisNot').value,
+      logo:        S.gorselTaslak || '',
+    });
+    ayarUygula();
+    iyi(sessiz ? 'Logo güncellendi' : 'İşletme bilgileri kaydedildi');
+    yIsletme();
+  } catch (e) { kotu(e.message); }
+}
+
+/* ════════════════ YÖNETİM → QR MENÜ ════════════════ */
+
+async function yQr() {
+  let salonlar, agBilgi;
+  try {
+    S.ayar = await GET('/ayar');
+    salonlar = await GET('/masa/salonlar');
+    agBilgi = await GET('/ayar/ag');
+  } catch (e) { return kotu(e.message); }
+  window._salonlar = salonlar;
+  window._agBilgi = agBilgi;
+
+  // Karekodların işaret edeceği adres. Ayar boşsa sunucunun bulduğu yerel ağ
+  // adresini kullan — location.origin localhost olabilir ve telefonda açılmaz.
+  const taban = S.ayar.qr_taban_url || agBilgi.onerilen || location.origin;
+  const yerelMi = a => /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:|\/|$)/i.test(a);
+  const bozuk = yerelMi(taban);
+  const ayarsiz = !S.ayar.qr_taban_url;
+
+  document.getElementById('yonetimGovde').innerHTML = `
+    ${bozuk ? `
+      <div style="background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:12px;
+        padding:16px;margin-bottom:16px">
+        <div style="display:flex;gap:10px;align-items:flex-start">
+          <span style="color:var(--kirmizi);margin-top:2px">${ik('triangle-alert', 'ik-b')}</span>
+          <div>
+            <b style="color:#B91C1C">Bu karekodlar telefonda ÇALIŞMAZ</b>
+            <div style="font-size:12.5px;color:#7F1D1D;margin-top:5px;line-height:1.65">
+              Adres <code>${kacis(taban)}</code> — <code>localhost</code> her cihazın
+              "kendisi" demektir; müşterinin telefonu bu adreste kendi telefonunu arar.
+              Aşağıdan bu bilgisayarın yerel ağ adresini seçin.</div>
+          </div>
+        </div>
+      </div>` : `
+      <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:12px;
+        padding:13px 16px;margin-bottom:16px;display:flex;gap:10px;align-items:center">
+        <span style="color:var(--yesil)">${ik('check', 'ik-b')}</span>
+        <div style="font-size:13px;color:#166534">
+          Karekodlar <b>${kacis(taban)}</b> adresini gösteriyor${ayarsiz
+            ? ' <span style="opacity:.75">(sunucunun bulduğu adres — kalıcı olması için kaydedin)</span>'
+            : ''}.
+        </div>
+      </div>`}
+
+    <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;
+      padding:16px;margin-bottom:18px">
+      <div class="alan" style="margin-bottom:12px">
+        <label>QR Adresi <span style="font-weight:400;text-transform:none">
+          — müşterinin telefonunun açacağı adres</span></label>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <input id="qrTaban" value="${kacis(S.ayar.qr_taban_url || '')}"
+            placeholder="${kacis(agBilgi.onerilen || 'http://192.168.1.20:8002')}"
+            style="flex:1;min-width:250px">
+          <button class="btn btn-kucuk" onclick="qrTabanKaydet()">${ik('check')} Kaydet</button>
+        </div>
+      </div>
+
+      <div style="font-size:11.5px;font-weight:700;color:var(--gri);text-transform:uppercase;
+        letter-spacing:.05em;margin-bottom:7px">Bu bilgisayarın ağ adresleri</div>
+      ${agBilgi.adaylar.length ? `<div class="hizli-sira" style="margin-bottom:10px">
+        ${agBilgi.adaylar.map(a => `<button class="hizli"
+          style="${a === taban ? 'border-color:var(--ana);background:var(--ana-acik);color:var(--ana-koyu)' : ''}"
+          onclick="qrTabanSec('${a}')">${ik('check')} ${kacis(a)}</button>`).join('')}
+      </div>` : `<div style="font-size:12.5px;color:var(--kirmizi);margin-bottom:10px">
+        Yerel ağ adresi bulunamadı — bilgisayar bir ağa bağlı değil gibi görünüyor.</div>`}
+
+      <div style="font-size:11.5px;color:var(--gri);line-height:1.7">
+        Doğru adresi seçip <b>Kaydet</b>'e basın, sonra karekodları yazdırın.
+        Telefonun kasayla <b>aynı Wi-Fi ağında</b> olması gerekir.
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;
+      padding:16px;margin-bottom:18px">
+      <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px">
+        ${ik('triangle-alert')}<b style="font-size:14px">Telefonda açılmıyorsa</b>
+      </div>
+      <div style="font-size:12.5px;line-height:1.9;color:#334155">
+        <b>1 · Windows Güvenlik Duvarı</b> — en sık sebep budur. Kasadaki bilgisayarda
+        <code>Adfix\\guvenlik-duvari.bat</code> dosyasına <b>sağ tık → Yönetici olarak
+        çalıştır</b> deyin. Elle yapmak isterseniz, yönetici komut isteminde:
+        <div style="display:flex;gap:7px;align-items:center;margin:6px 0 10px">
+          <code id="fwKomut" style="flex:1;background:var(--zemin);padding:8px 10px;
+            border-radius:7px;font-size:11px;overflow-x:auto;white-space:nowrap">netsh advfirewall firewall add rule name="Adfix 8002" dir=in action=allow protocol=TCP localport=8002</code>
+          <button class="btn btn-cizgi btn-kucuk" onclick="komutKopyala()">Kopyala</button>
+        </div>
+        <b>2 · Telefon mobil veride olmasın</b> — Wi-Fi açık ve kasayla aynı ağda olmalı.<br>
+        <b>3 · Misafir ağı / cihaz yalıtımı</b> — çoğu modemde "Misafir Wi-Fi" cihazların
+        birbirini görmesini engeller. Telefonu ana Wi-Fi ağına alın.<br>
+        <b>4 · Adresi telefonda elle deneyin</b> — telefonun tarayıcısına
+        <code>${kacis(taban)}/menu</code> yazın. Açılıyorsa sorun karekodda değil,
+        karekod okuyucudadır (bazı kameralar http adreslerini açmaz; Chrome ya da
+        Safari'nin kendi QR okuyucusunu kullanın).
+      </div>
+    </div>
+
+    <div class="bolum">
+      <h3>${ik('qr-code')} Genel Menü Karekodu
+        <small>kapıya, vitrine ya da menü tutucuya</small>
+        <button class="btn btn-cizgi btn-kucuk" style="margin-left:auto"
+          onclick="qrYazdir()">${ik('printer')} Tümünü Yazdır</button></h3>
+      <div class="qr-izgara" id="qrGenel"></div>
+    </div>
+
+    ${salonlar.filter(s => s.masalar.length).map(s => `
+      <div class="bolum"><h3>${ik('armchair')} ${kacis(s.ad)}
+        <small>${s.masalar.length} masa</small></h3>
+        <div class="qr-izgara" id="qrSalon${s.id}"></div></div>`).join('')}`;
+
+  qrBas('qrGenel', [{ ad: S.ayar.isletme_adi || 'Menü', alt: 'Genel karekod',
+                      url: `${taban}/menu` }]);
+  for (const s of salonlar) {
+    if (!s.masalar.length) continue;
+    qrBas(`qrSalon${s.id}`, s.masalar.filter(m => m.aktif).map(m => ({
+      ad: m.ad, alt: `${s.ad} — ${m.ad}`, url: `${taban}/menu?masa=${m.id}` })));
+  }
+}
+
+function qrTabanSec(adres) {
+  document.getElementById('qrTaban').value = adres;
+  qrTabanKaydet();
+}
+
+function komutKopyala() {
+  const metin = document.getElementById('fwKomut').textContent;
+  navigator.clipboard?.writeText(metin)
+    .then(() => iyi('Komut panoya kopyalandı'))
+    .catch(() => kotu('Kopyalanamadı — komutu elle seçip kopyalayın'));
+}
+
+/** Kartları önce iskeletle basar, QR'ları sunucudan tek tek çeker (SVG). */
+async function qrBas(hedefId, liste) {
+  const kutu = document.getElementById(hedefId);
+  if (!kutu) return;
+  kutu.innerHTML = liste.map((x, i) => `<div class="qr-kart">
+    <div class="qr-ad">${kacis(x.ad)}</div>
+    <div id="${hedefId}_${i}" style="min-height:150px;display:flex;align-items:center;
+      justify-content:center;color:var(--gri);font-size:12px">…</div>
+    <div class="qr-alt">${kacis(x.alt)}<br>${kacis(x.url)}</div>
+  </div>`).join('');
+  for (let i = 0; i < liste.length; i++) {
+    try {
+      const svg = await fetch(API + '/acik/qr?veri=' + encodeURIComponent(liste[i].url))
+        .then(r => r.ok ? r.text() : Promise.reject(new Error('QR üretilemedi')));
+      document.getElementById(`${hedefId}_${i}`).innerHTML = svg;
+    } catch (e) {
+      document.getElementById(`${hedefId}_${i}`).textContent = 'QR üretilemedi';
+    }
+  }
+}
+
+async function qrTabanKaydet() {
+  try {
+    S.ayar = await PATCH('/ayar', { qr_taban_url: document.getElementById('qrTaban').value });
+    iyi('QR adresi kaydedildi'); yQr();
+  } catch (e) { kotu(e.message); }
+}
+
+function qrYazdir() {
+  // Yazdırırken sadece QR kartları kalsın diye sayfayı geçici olarak sadeleştir.
+  const eski = document.getElementById('fisAlani').innerHTML;
+  document.getElementById('fisAlani').innerHTML =
+    `<div style="font-family:sans-serif">${document.getElementById('yonetimGovde').innerHTML}</div>`;
+  const stil = document.createElement('style');
+  stil.id = 'qrYazdirStil';
+  stil.textContent = `@media print{ #fisAlani{width:auto!important;font-family:sans-serif!important}
+    #fisAlani .qr-izgara{display:grid;grid-template-columns:repeat(3,1fr);gap:10mm}
+    #fisAlani .qr-kart{border:1px solid #999;padding:6mm;text-align:center}
+    #fisAlani .alan,#fisAlani button,#fisAlani input{display:none!important} }`;
+  document.head.appendChild(stil);
+  window.print();
+  setTimeout(() => {
+    document.getElementById('fisAlani').innerHTML = eski;
+    document.getElementById('qrYazdirStil')?.remove();
+  }, 700);
+}
+</script>
+
+</body>
+</html>
