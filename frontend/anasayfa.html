@@ -4,81 +4,490 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Adfix — Adisyon Sistemi</title>
-<meta name="theme-color" content="#F97316">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F97316'/%3E%3Ctext y='72' x='50' font-size='58' text-anchor='middle'%3E%F0%9F%A7%A8%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#8052ff">
+<meta name="description" content="Masa yönetimi, QR menü, mutfak ekranı ve raporlar. Restoranınızı kolayca yönetin.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%238052ff'/%3E%3Ctext y='68' x='50' font-size='52' text-anchor='middle' fill='%23fff' font-weight='700' font-family='system-ui'%3EA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--ana:#F97316;--ana-koyu:#C2410C;--ana-acik:#FFF7ED;--koyu:#0F172A;--koyu2:#1E293B;--gri:#64748B;--cizgi:#E2E8F0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  background:var(--koyu);color:#E2E8F0;min-height:100vh;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;padding:24px 16px}
 
-.kapsam{width:100%;max-width:440px;text-align:center}
+:root{
+  --ana:#8052ff;
+  --amber:#ffb829;
+  --zemin:#000000;
+  --kart:#111111;
+  --gri:#9a9a9a;
+  --cizgi:#1f1f1f;
+  --r:24px;
+}
 
-.logo{width:72px;height:72px;background:var(--ana);border-radius:18px;
-  display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;
-  box-shadow:0 8px 32px rgba(249,115,22,.3)}
-.logo svg{width:36px;height:36px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+html{scroll-behavior:smooth}
 
-h1{font-size:32px;font-weight:700;margin-bottom:6px;color:#fff}
-.slogan{color:var(--gri);font-size:15px;margin-bottom:36px}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--zemin);
+  color:#fff;
+  font-weight:300;
+  line-height:1.6;
+  min-height:100vh;
+}
 
-.isletme-liste{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+a{text-decoration:none;color:inherit}
 
-.isletme-btn{display:flex;align-items:center;gap:14px;padding:16px 20px;
-  background:var(--koyu2);border:1.5px solid #334155;border-radius:14px;
-  cursor:pointer;transition:all .15s;text-decoration:none;color:inherit;text-align:left}
-.isletme-btn:hover{border-color:var(--ana);background:#1a2744;transform:translateY(-1px);
-  box-shadow:0 4px 16px rgba(249,115,22,.15)}
-.isletme-btn:active{transform:translateY(0)}
+/* ─── Nav ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 40px;
+  z-index:100;
+  background:rgba(0,0,0,.8);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,.05);
+}
 
-.isletme-ikon{width:44px;height:44px;background:var(--ana);border-radius:12px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  font-size:20px;color:#fff;font-weight:700}
+.nav-logo{
+  font-size:20px;
+  font-weight:800;
+  letter-spacing:-.04em;
+  color:#fff;
+}
+.nav-logo span{color:var(--ana)}
+
+.nav-giris{
+  padding:9px 22px;
+  background:var(--ana);
+  color:#fff;
+  border-radius:9999px;
+  font-size:14px;
+  font-weight:500;
+  transition:opacity .15s;
+  letter-spacing:-.01em;
+}
+.nav-giris:hover{opacity:.85}
+
+/* ─── Hero ─── */
+.hero{
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:120px 24px 80px;
+  position:relative;
+  overflow:hidden;
+}
+
+.hero-glow{
+  position:absolute;
+  width:800px;height:600px;
+  border-radius:50%;
+  background:radial-gradient(ellipse, rgba(128,82,255,.12) 0%, transparent 70%);
+  pointer-events:none;
+  top:40%;left:50%;
+  transform:translate(-50%,-50%);
+}
+
+.hero-rozet{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:7px 18px;
+  background:rgba(128,82,255,.1);
+  border:1px solid rgba(128,82,255,.2);
+  border-radius:9999px;
+  font-size:13px;
+  color:var(--ana);
+  font-weight:500;
+  margin-bottom:36px;
+  position:relative;
+}
+
+.hero h1{
+  font-size:clamp(56px, 9vw, 104px);
+  font-weight:900;
+  letter-spacing:-.05em;
+  line-height:1;
+  margin-bottom:28px;
+  position:relative;
+}
+
+.hero h1 .vurgu{color:var(--ana)}
+
+.hero-alt{
+  font-size:clamp(16px, 2vw, 19px);
+  color:var(--gri);
+  max-width:480px;
+  margin:0 auto 52px;
+  line-height:1.7;
+  position:relative;
+}
+
+.hero-butonlar{
+  display:flex;gap:12px;flex-wrap:wrap;justify-content:center;
+  position:relative;
+}
+
+.btn-birincil{
+  padding:15px 40px;
+  background:var(--ana);
+  color:#fff;
+  border-radius:9999px;
+  font-size:16px;
+  font-weight:600;
+  transition:opacity .15s, transform .15s;
+  letter-spacing:-.02em;
+}
+.btn-birincil:hover{opacity:.88;transform:translateY(-1px)}
+
+.btn-ikincil{
+  padding:15px 40px;
+  color:var(--gri);
+  border-radius:9999px;
+  font-size:16px;
+  font-weight:400;
+  transition:color .15s;
+  border:1px solid var(--cizgi);
+  letter-spacing:-.01em;
+}
+.btn-ikincil:hover{color:#fff;border-color:#333}
+
+/* ─── Özellikler ─── */
+.ozellikler{
+  padding:100px 24px;
+  max-width:1200px;
+  margin:0 auto;
+}
+
+.bolum-ust{
+  text-align:center;
+  margin-bottom:56px;
+}
+.bolum-ust h2{
+  font-size:clamp(30px, 4vw, 44px);
+  font-weight:800;
+  letter-spacing:-.04em;
+  margin-bottom:12px;
+}
+.bolum-ust p{
+  color:var(--gri);
+  font-size:16px;
+}
+
+.ozellik-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  gap:12px;
+}
+
+.ozellik-kart{
+  background:var(--kart);
+  border-radius:var(--r);
+  padding:28px 28px 32px;
+  transition:background .15s;
+}
+.ozellik-kart:hover{background:#171717}
+
+.ozellik-ikon{
+  width:44px;height:44px;
+  background:rgba(128,82,255,.1);
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:18px;
+}
+.ozellik-ikon svg{
+  width:20px;height:20px;
+  stroke:var(--ana);fill:none;
+  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+}
+
+.ozellik-kart h3{
+  font-size:16px;
+  font-weight:600;
+  letter-spacing:-.02em;
+  margin-bottom:8px;
+}
+.ozellik-kart p{
+  color:var(--gri);
+  font-size:13px;
+  line-height:1.7;
+}
+
+/* ─── Stat şeridi ─── */
+.stat-serit{
+  max-width:1200px;
+  margin:0 auto 100px;
+  padding:0 24px;
+}
+
+.stat-ic{
+  background:var(--kart);
+  border-radius:var(--r);
+  padding:48px 40px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
+  gap:32px;
+  text-align:center;
+}
+
+.stat-sayi{
+  font-size:38px;
+  font-weight:800;
+  letter-spacing:-.04em;
+  color:var(--amber);
+  line-height:1;
+  margin-bottom:6px;
+}
+.stat-ad{
+  color:var(--gri);
+  font-size:13px;
+  font-weight:400;
+}
+
+/* ─── Giriş bölümü ─── */
+.giris-bolum{
+  padding:80px 24px 120px;
+  max-width:480px;
+  margin:0 auto;
+}
+
+.giris-bolum .bolum-ust{margin-bottom:36px}
+
+#liste{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.isletme-btn{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 18px;
+  background:var(--kart);
+  border-radius:var(--r);
+  cursor:pointer;
+  transition:background .15s, transform .1s;
+  color:inherit;
+}
+.isletme-btn:hover{background:#1a1a1a;transform:translateY(-1px)}
+.isletme-btn:active{transform:none;background:#1c1c1c}
+
+.isletme-ikon{
+  width:42px;height:42px;
+  background:var(--ana);
+  border-radius:13px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  font-size:17px;font-weight:700;color:#fff;
+  letter-spacing:-.02em;
+}
 
 .isletme-bilgi{flex:1;min-width:0}
-.isletme-ad{font-size:16px;font-weight:600;color:#fff;margin-bottom:2px}
-.isletme-slug{font-size:12px;color:var(--gri);font-family:monospace}
+.isletme-ad{font-size:14px;font-weight:600;color:#fff;margin-bottom:2px}
+.isletme-slug{font-size:11px;color:var(--gri);font-family:monospace}
 
-.isletme-ok{color:var(--gri);transition:color .15s}
-.isletme-btn:hover .isletme-ok{color:var(--ana)}
+.isletme-ok svg{
+  width:16px;height:16px;
+  stroke:var(--gri);fill:none;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  transition:stroke .15s;
+}
+.isletme-btn:hover .isletme-ok svg{stroke:var(--ana)}
 
-.ayirici{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--gri);font-size:13px}
-.ayirici::before,.ayirici::after{content:'';flex:1;height:1px;background:#334155}
+.ayirici{
+  display:flex;align-items:center;gap:12px;
+  margin:18px 0;
+  color:var(--gri);font-size:12px;
+}
+.ayirici::before,.ayirici::after{content:'';flex:1;height:1px;background:var(--cizgi)}
 
 .kod-alan{display:flex;gap:8px}
-.kod-alan input{flex:1;padding:14px 16px;border:1.5px solid #334155;border-radius:12px;
-  background:var(--koyu2);color:#fff;font-size:15px;outline:none;transition:border-color .15s}
+
+.kod-alan input{
+  flex:1;
+  padding:13px 18px;
+  background:var(--kart);
+  border:1px solid var(--cizgi);
+  border-radius:var(--r);
+  color:#fff;font-size:14px;outline:none;
+  transition:border-color .15s;
+  font-family:inherit;font-weight:400;
+}
 .kod-alan input:focus{border-color:var(--ana)}
-.kod-alan input::placeholder{color:#475569}
-.kod-alan button{padding:14px 24px;background:var(--ana);color:#fff;border:none;
-  border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;
-  transition:filter .15s}
-.kod-alan button:hover{filter:brightness(1.1)}
+.kod-alan input::placeholder{color:#444}
 
-.hata{color:#F87171;font-size:13px;margin-top:8px;min-height:20px}
-.bos-mesaj{color:var(--gri);font-size:14px;padding:24px;text-align:center}
+.kod-alan button{
+  padding:13px 22px;
+  background:var(--ana);
+  color:#fff;
+  border:none;
+  border-radius:var(--r);
+  font-size:14px;font-weight:600;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:opacity .15s;
+  font-family:inherit;
+  letter-spacing:-.01em;
+}
+.kod-alan button:hover{opacity:.85}
 
-.alt{margin-top:40px;font-size:12px;color:#475569}
-.alt a{color:var(--gri);text-decoration:none}
-.alt a:hover{color:var(--ana)}
+.hata{color:#ff6b6b;font-size:12px;margin-top:8px;min-height:18px}
 
-.yukle{color:var(--gri);font-size:14px;padding:24px}
+.yukle{color:var(--gri);font-size:14px;padding:24px;text-align:center}
+
+.bos-mesaj{
+  text-align:center;
+  color:var(--gri);
+  font-size:14px;
+  padding:28px;
+  background:var(--kart);
+  border-radius:var(--r);
+  line-height:1.7;
+}
+
+/* ─── Footer ─── */
+footer{
+  border-top:1px solid var(--cizgi);
+  padding:28px 24px;
+  text-align:center;
+  color:#444;
+  font-size:12px;
+}
+
+/* ─── Responsive ─── */
+@media(max-width:640px){
+  nav{padding:14px 20px}
+  .hero{padding:90px 20px 60px}
+  .hero-butonlar{flex-direction:column;align-items:stretch}
+  .btn-birincil,.btn-ikincil{text-align:center}
+  .ozellikler{padding:72px 20px}
+  .stat-ic{padding:32px 24px;gap:24px}
+  .stat-sayi{font-size:30px}
+  .giris-bolum{padding:60px 20px 80px}
+  .bolum-ust h2{font-size:26px}
+}
 </style>
 </head>
 <body>
-<div class="kapsam">
-  <div class="logo">
-    <svg viewBox="0 0 24 24"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/></svg>
-  </div>
-  <h1>Adfix</h1>
-  <p class="slogan">Adisyonu hallet.</p>
 
-  <div id="liste" class="isletme-liste">
-    <div class="yukle">Yukleniyor...</div>
+<!-- ─── Nav ─── -->
+<nav>
+  <div class="nav-logo">Ad<span>fix</span></div>
+  <a href="#giris" class="nav-giris">Giriş Yap</a>
+</nav>
+
+<!-- ─── Hero ─── -->
+<section class="hero">
+  <div class="hero-glow"></div>
+
+  <div class="hero-rozet">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+    Adisyon & Masa Yönetim Sistemi
   </div>
 
-  <div class="ayirici">veya isletme kodu girin</div>
+  <h1>Adisyonu<br><span class="vurgu">hallet.</span></h1>
+
+  <p class="hero-alt">Masa yönetimi, QR menü, mutfak ekranı ve raporlar.<br>Restoranınızı tek panelden yönetin.</p>
+
+  <div class="hero-butonlar">
+    <a href="#giris" class="btn-birincil">İşletmenize Giriş Yapın</a>
+    <a href="#ozellikler" class="btn-ikincil">Özellikler</a>
+  </div>
+</section>
+
+<!-- ─── Özellikler ─── -->
+<section class="ozellikler" id="ozellikler">
+  <div class="bolum-ust">
+    <h2>Her şeyin <span style="color:var(--ana)">kontrolü</span> sizde</h2>
+    <p>Mutfaktan kasaya, masadan menüye — tek sistem, sıfır karmaşa.</p>
+  </div>
+
+  <div class="ozellik-grid">
+    <div class="ozellik-kart">
+      <div class="ozellik-ikon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <h3>Masa Yönetimi</h3>
+      <p>Salon haritası üzerinden masaları anlık takip edin. Adisyon aç, ürün ekle, tahsilat al.</p>
+    </div>
+
+    <div class="ozellik-kart">
+      <div class="ozellik-ikon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </div>
+      <h3>QR Menü & Sipariş</h3>
+      <p>Müşteri masadan QR okutarak menüyü görsün ve sipariş versin. Garson çağırma özelliği dahil.</p>
+    </div>
+
+    <div class="ozellik-kart">
+      <div class="ozellik-ikon">
+        <svg viewBox="0 0 24 24"><path d="M15 11h.01M11 15h.01M16 16h.01M5 3H3v18h18V3H5z"/><path d="M9 3v18M15 3v4M15 11v8"/></svg>
+      </div>
+      <h3>Mutfak Ekranı (KDS)</h3>
+      <p>Gelen siparişleri mutfak ekranında görün ve hazırlayın. Her satırın durumunu güncelleyin.</p>
+    </div>
+
+    <div class="ozellik-kart">
+      <div class="ozellik-ikon">
+        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+      </div>
+      <h3>Raporlar</h3>
+      <p>Günlük, haftalık, aylık ciro raporları. En çok satan ürünler ve saatlik satış grafiği.</p>
+    </div>
+
+    <div class="ozellik-kart">
+      <div class="ozellik-ikon">
+        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+      <h3>Rol Tabanlı Erişim</h3>
+      <p>Garson, kasiyer ve yönetici rolleri. Her kullanıcı sadece yetkili olduğu ekranları görür.</p>
+    </div>
+
+    <div class="ozellik-kart">
+      <div class="ozellik-ikon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <h3>Çoklu İşletme</h3>
+      <p>Birden fazla şube veya işletmeyi tek sunucudan yönetin. Her işletme izole veritabanında çalışır.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Stat şeridi ─── -->
+<div class="stat-serit">
+  <div class="stat-ic">
+    <div>
+      <div class="stat-sayi">0 ₺</div>
+      <div class="stat-ad">SaaS aboneliği yok</div>
+    </div>
+    <div>
+      <div class="stat-sayi">%100</div>
+      <div class="stat-ad">Veriler sizin</div>
+    </div>
+    <div>
+      <div class="stat-sayi">7/24</div>
+      <div class="stat-ad">Çevrimdışı çalışır</div>
+    </div>
+    <div>
+      <div class="stat-sayi">&lt;1 s</div>
+      <div class="stat-ad">Sayfa yükleme süresi</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── Giriş ─── -->
+<section class="giris-bolum" id="giris">
+  <div class="bolum-ust">
+    <h2>Giriş Yapın</h2>
+    <p style="color:var(--gri);font-size:15px">İşletmenizi seçin veya kodu girin.</p>
+  </div>
+
+  <div id="liste">
+    <div class="yukle">Yükleniyor…</div>
+  </div>
+
+  <div class="ayirici">veya işletme kodu girin</div>
 
   <div class="kod-alan">
     <input id="kodInput" placeholder="ornek-kafe" autocomplete="off" autocapitalize="off"
@@ -87,9 +496,12 @@ h1{font-size:32px;font-weight:700;margin-bottom:6px;color:#fff}
     <button onclick="kodGit()">Git</button>
   </div>
   <div class="hata" id="hata"></div>
+</section>
 
-  <div class="alt">Adfix &mdash; Adisyon Sistemi</div>
-</div>
+<!-- ─── Footer ─── -->
+<footer>
+  &copy; 2026 Adfix &mdash; Adisyon &amp; Masa Yönetim Sistemi
+</footer>
 
 <script>
 async function yukle() {
@@ -99,7 +511,7 @@ async function yukle() {
     if (!r.ok) throw new Error();
     const liste = await r.json();
     if (!liste.length) {
-      el.innerHTML = '<div class="bos-mesaj">Henuz isletme eklenmemis.<br>Merkez panelden ekleyin.</div>';
+      el.innerHTML = '<div class="bos-mesaj">Henüz kayıtlı işletme yok.<br>Merkez panelden ekleyebilirsiniz.</div>';
       return;
     }
     el.innerHTML = liste.map(i => `
@@ -109,9 +521,9 @@ async function yukle() {
           <div class="isletme-ad">${esc(i.ad)}</div>
           <div class="isletme-slug">/i/${esc(i.slug)}/</div>
         </div>
-        <svg class="isletme-ok" width="20" height="20" viewBox="0 0 24 24" fill="none"
-          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="m9 18 6-6-6-6"/></svg>
+        <div class="isletme-ok">
+          <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
+        </div>
       </a>`).join('');
   } catch (e) {
     el.innerHTML = '';
@@ -121,8 +533,8 @@ async function yukle() {
 function kodGit() {
   const kod = document.getElementById('kodInput').value.trim();
   const hata = document.getElementById('hata');
-  if (!kod) { hata.textContent = 'Isletme kodunu girin'; return; }
-  if (kod.length < 2) { hata.textContent = 'Kod en az 2 karakter olmali'; return; }
+  if (!kod) { hata.textContent = 'İşletme kodunu girin'; return; }
+  if (kod.length < 2) { hata.textContent = 'Kod en az 2 karakter olmalı'; return; }
   hata.textContent = '';
   location.href = '/i/' + encodeURIComponent(kod) + '/';
 }
