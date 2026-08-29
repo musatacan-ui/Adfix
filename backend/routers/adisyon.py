@@ -229,7 +229,7 @@ def mutfak(mevcut: dict = Depends(auth.token_dogrula)):
     """Mutfak ekranı — hazırlanmayı bekleyen siparişler (en eski üstte)."""
     conn = db.get_conn()
     rows = [dict(x) for x in conn.execute("""
-        SELECT s.id, s.adisyon_id, s.ad, s.adet, s.notu, s.eklenme,
+        SELECT s.id, s.adisyon_id, s.ad, s.adet, s.notu, s.eklenme, s.mutfak,
                a.kod, a.tip, m.ad AS masa_ad, k.ad_soyad AS ekleyen_ad,
                CAST((julianday('now','localtime') - julianday(s.eklenme)) * 1440 AS INTEGER)
                    AS bekleme_dk
@@ -237,7 +237,7 @@ def mutfak(mevcut: dict = Depends(auth.token_dogrula)):
         JOIN adisyonlar a  ON a.id = s.adisyon_id
         LEFT JOIN masalar m ON m.id = a.masa_id
         LEFT JOIN kullanicilar k ON k.id = s.ekleyen_id
-        WHERE s.durum='bekliyor' AND s.mutfak=1 AND a.durum='acik'
+        WHERE s.durum='bekliyor' AND a.durum='acik'
         ORDER BY s.id""")]
     conn.close()
     return rows

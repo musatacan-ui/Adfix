@@ -552,7 +552,7 @@ const yoneticiMi = () => S.kul && S.kul.rol === 'yonetici';
 /* ─────────── menü & yönlendirme ─────────── */
 const ROTALAR = [
   { k: 'masalar', ad: 'Masalar',    ikon: 'utensils-crossed', yetki: () => true },
-  { k: 'mutfak',  ad: 'Mutfak',     ikon: 'chef-hat', yetki: () => true,
+  { k: 'mutfak',  ad: 'Mutfak & Bar', ikon: 'chef-hat', yetki: () => true,
     rozet: () => S.mutfakBekleyen },
   { k: 'gecmis',  ad: 'Adisyonlar', ikon: 'receipt-text', yetki: () => true },
   { k: 'rapor',   ad: 'Raporlar',   ikon: 'chart-column', yetki: () => kasiyerMi() },
@@ -1365,21 +1365,22 @@ function fisYazdir() {
 /* ════════════════ MUTFAK EKRANI ════════════════ */
 
 async function mutfakCiz() {
-  clearInterval(S.zamanlayici);          // kendi kendini yenilerken interval çoğalmasın
+  clearInterval(S.zamanlayici);
   let liste;
   try { liste = await GET('/adisyon/mutfak'); }
   catch (e) { return kotu(e.message); }
   S.mutfakBekleyen = liste.length; menuCiz();
 
-  const gruplar = {};
-  liste.forEach(s => { (gruplar[s.adisyon_id] ||= { ...s, satirlar: [] }).satirlar.push(s); });
-  const kartlar = Object.values(gruplar);
+  const mutfakListe = liste.filter(s => s.mutfak === 1);
+  const barListe = liste.filter(s => s.mutfak === 0);
 
-  baslikYaz('Mutfak', `<b>${liste.length}</b> kalem hazırlanmayı bekliyor · ekran 15 sn'de bir yenilenir`,
+  baslikYaz('Mutfak & Bar', `<b>${liste.length}</b> kalem bekliyor · 15 sn'de bir yenilenir`,
     `<button class="btn btn-cizgi btn-kucuk" onclick="mutfakCiz()">${ik('refresh-cw')} Yenile</button>`);
 
-  document.getElementById('sayfa').innerHTML = kartlar.length ? `
-    <div class="mutfak-izgara">` + kartlar.map(k => {
+  function kartlarHTML(items, hazirFn) {
+    const gruplar = {};
+    items.forEach(s => { (gruplar[s.adisyon_id] ||= { ...s, satirlar: [] }).satirlar.push(s); });
+    return Object.values(gruplar).map(k => {
       const dk = Math.max(...k.satirlar.map(s => s.bekleme_dk || 0));
       const sinif = dk >= 20 ? 'gecikti' : dk >= 10 ? 'uyari' : '';
       return `<div class="fis-kart ${sinif}">
@@ -1398,8 +1399,27 @@ async function mutfakCiz() {
           <button class="btn btn-yesil btn-kucuk"
             onclick="mutfakHazir([${k.satirlar.map(s => s.id).join(',')}])">${ik('check')} Hazır</button>
         </div></div>`;
-    }).join('') + `</div>`
-    : bosDurum('party-popper', 'Mutfak temiz!', 'Bekleyen sipariş yok.');
+    }).join('');
+  }
+
+  if (!liste.length) {
+    document.getElementById('sayfa').innerHTML = bosDurum('party-popper', 'Mutfak & Bar temiz!', 'Bekleyen sipariş yok.');
+  } else {
+    let h = '';
+    if (mutfakListe.length) {
+      h += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+        <span style="font-size:16px;font-weight:700;color:#fff">${ik('chef-hat')} Mutfak</span>
+        <span style="background:#F97316;color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px">${mutfakListe.length}</span></div>
+        <div class="mutfak-izgara">${kartlarHTML(mutfakListe)}</div>`;
+    }
+    if (barListe.length) {
+      h += `<div style="display:flex;align-items:center;gap:8px;margin:${mutfakListe.length ? '24px' : '0'} 0 12px">
+        <span style="font-size:16px;font-weight:700;color:#fff">${ik('wine')} Bar</span>
+        <span style="background:#8B5CF6;color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px">${barListe.length}</span></div>
+        <div class="mutfak-izgara">${kartlarHTML(barListe)}</div>`;
+    }
+    document.getElementById('sayfa').innerHTML = h;
+  }
 
   S.zamanlayici = setInterval(() => { if (S.rota === 'mutfak') mutfakCiz(); }, 15000);
 }
@@ -1815,7 +1835,7 @@ function urunDuzenle(uid, katId) {
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
       <div class="alan"><label>Mutfak Ekranı</label><select id="uMutfak">
         <option value="1" ${v.mutfak ? 'selected' : ''}>Mutfağa düşsün</option>
-        <option value="0" ${v.mutfak ? '' : 'selected'}>Düşmesin (içecek vb.)</option></select></div>
+        <option value="0" ${v.mutfak ? '' : 'selected'}>Bar'a düşsün</option></select></div>
       <div class="alan"><label>Durum</label><select id="uAktif">
         <option value="1" ${v.aktif ? 'selected' : ''}>Aktif</option>
         <option value="0" ${v.aktif ? '' : 'selected'}>Pasif</option></select></div>
