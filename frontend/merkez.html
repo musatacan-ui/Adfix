@@ -61,12 +61,13 @@ a{color:var(--mavi);text-decoration:none}a:hover{text-decoration:underline}
       <div class="row">
         <div>
           <label>Isletme Adi</label>
-          <input type="text" id="yeniAd" placeholder="Ornek Kafe">
+          <input type="text" id="yeniAd" placeholder="Ornek Kafe"
+                 oninput="if(!slugElle)document.getElementById('yeniSlug').value=slugYap(this.value)">
         </div>
         <div>
           <label>URL Kodu (slug)</label>
           <input type="text" id="yeniSlug" placeholder="ornek-kafe"
-                 oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'-')">
+                 oninput="slugElle=true;this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'-')">
         </div>
       </div>
       <div class="row">
@@ -95,6 +96,14 @@ a{color:var(--mavi);text-decoration:none}a:hover{text-decoration:underline}
 <script>
 const API = location.origin + '/api/merkez';
 let TOKEN = localStorage.getItem('adfix_merkez_token');
+let slugElle = false;
+
+function slugYap(ad) {
+  const tr = {'ç':'c','ş':'s','ğ':'g','ı':'i','ö':'o','ü':'u',
+              'Ç':'c','Ş':'s','Ğ':'g','İ':'i','Ö':'o','Ü':'u'};
+  return ad.toLowerCase().replace(/[çşğıöüÇŞĞİÖÜ]/g, c=>tr[c]||c)
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').substring(0,50);
+}
 
 function baslik(){ return {'Content-Type':'application/json','Authorization':'Bearer '+TOKEN}; }
 
@@ -171,6 +180,7 @@ async function isletmeOlustur() {
       <a href="${url}" target="_blank">${url}</a></div>`;
     document.getElementById('yeniAd').value = '';
     document.getElementById('yeniSlug').value = '';
+    slugElle = false;
     listeYukle();
   } catch(e) { el.innerHTML = '<div class="hata">'+esc(e.message)+'</div>'; }
 }
