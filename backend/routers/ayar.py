@@ -26,6 +26,7 @@ class AyarForm(BaseModel):
     logo:         Optional[str] = None
     fis_alt_not:  Optional[str] = None
     qr_taban_url: Optional[str] = None
+    qr_siparis_acik: Optional[str] = None
 
 
 @router.get("/ag")

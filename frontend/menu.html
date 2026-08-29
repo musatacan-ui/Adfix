@@ -2,24 +2,27 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
 <title>Menü</title>
 <meta name="theme-color" content="#F97316">
-<meta name="description" content="Dijital menü">
+<meta name="description" content="Dijital menü ve sipariş">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F97316'/%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
   --ana:#F97316; --ana-koyu:#C2410C; --ana-acik:#FFF7ED;
   --metin:#1C1917; --soluk:#78716C; --cizgi:#E7E5E4; --zemin:#FAFAF9; --kart:#fff;
+  --yesil:#16A34A; --uyari:#CA8A04; --kirmizi:#DC2626;
 }
 @media(prefers-color-scheme:dark){
   :root{--metin:#FAFAF9; --soluk:#A8A29E; --cizgi:#292524; --zemin:#0C0A09; --kart:#1C1917;
         --ana-acik:#292018}
 }
+html,body{overscroll-behavior-y:contain}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   background:var(--zemin);color:var(--metin);line-height:1.5;
-  padding-bottom:calc(28px + env(safe-area-inset-bottom))}
+  padding-bottom:calc(90px + env(safe-area-inset-bottom))}
+button{font-family:inherit;font-size:14px;cursor:pointer}
 .ik{width:1.05em;height:1.05em;fill:none;stroke:currentColor;stroke-width:2;
   stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;flex-shrink:0}
 
@@ -41,7 +44,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 .arac{position:sticky;top:0;z-index:10;background:var(--zemin);
   border-bottom:1px solid var(--cizgi);padding:11px 0 0}
 .ara-sar{padding:0 16px 10px;position:relative}
-.ara-sar .ik{position:absolute;left:28px;top:50%;transform:translateY(-60%);color:var(--soluk)}
+.ara-sar>.ik{position:absolute;left:28px;top:50%;transform:translateY(-60%);color:var(--soluk)}
 #ara{width:100%;padding:11px 14px 11px 40px;border:1.5px solid var(--cizgi);
   border-radius:24px;font-size:15px;background:var(--kart);color:var(--metin);
   font-family:inherit}
@@ -62,7 +65,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 .bolum-bas h2{font-size:18px;font-weight:800;letter-spacing:-.3px}
 .urunler{display:flex;flex-direction:column;gap:10px}
 .urun{background:var(--kart);border:1px solid var(--cizgi);border-radius:15px;
-  padding:11px;display:flex;gap:13px;align-items:center}
+  padding:11px;display:flex;gap:13px;align-items:center;position:relative}
 .urun-gor{width:82px;height:82px;border-radius:11px;overflow:hidden;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;background:var(--zemin)}
 .urun-gor img{width:100%;height:100%;object-fit:cover}
@@ -73,8 +76,117 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 .urun-fiyat{font-size:16px;font-weight:800;color:var(--ana-koyu);margin-top:6px;
   white-space:nowrap}
 @media(prefers-color-scheme:dark){.urun-fiyat{color:#FB923C}}
+.urun-ekle{background:var(--ana);color:#fff;border:none;width:38px;height:38px;
+  border-radius:12px;font-size:0;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:transform .12s}
+.urun-ekle .ik{width:18px;height:18px;stroke-width:2.5}
+.urun-ekle:active{transform:scale(.88)}
+.urun.secili{border-color:var(--ana);box-shadow:0 0 0 3px rgba(249,115,22,.12)}
+.urun-adet{position:absolute;top:6px;right:6px;background:var(--ana);color:#fff;
+  font-size:11px;font-weight:800;padding:2px 8px;border-radius:12px;min-width:22px;
+  text-align:center;box-shadow:0 2px 5px rgba(249,115,22,.4)}
 
-/* ── alt bilgi / durumlar ── */
+/* ── alt bar (sepet çubuğu) ── */
+.alt-bar{position:fixed;bottom:0;left:0;right:0;z-index:15;background:var(--ana);
+  color:#fff;padding:13px 18px calc(13px + env(safe-area-inset-bottom));
+  box-shadow:0 -10px 24px rgba(0,0,0,.15);display:none;
+  cursor:pointer;transition:transform .18s ease-out}
+.alt-bar.acik{display:flex;align-items:center;gap:14px;animation:kalk .25s ease-out}
+@keyframes kalk{from{transform:translateY(60px)}}
+.alt-bar-sayi{background:rgba(255,255,255,.22);border:1.5px solid rgba(255,255,255,.35);
+  min-width:38px;height:38px;padding:0 10px;border-radius:11px;display:flex;
+  align-items:center;justify-content:center;font-weight:800;font-size:16px}
+.alt-bar-orta{flex:1;min-width:0}
+.alt-bar-yaz{font-size:13px;opacity:.85}
+.alt-bar-tut{font-size:19px;font-weight:800;letter-spacing:-.3px}
+.alt-bar-git{background:rgba(0,0,0,.15);border:none;color:#fff;padding:10px 14px;
+  border-radius:11px;font-weight:700;display:flex;align-items:center;gap:6px;font-size:14px}
+
+/* ── durum takip düğmesi ── */
+.durum-btn{position:fixed;top:calc(20px + env(safe-area-inset-top));right:14px;z-index:12;
+  background:rgba(255,255,255,.22);color:#fff;border:1px solid rgba(255,255,255,.35);
+  padding:8px 12px;border-radius:11px;font-weight:600;font-size:12.5px;
+  backdrop-filter:blur(6px);display:none;align-items:center;gap:6px}
+.durum-btn.acik{display:inline-flex}
+
+/* ── perde (sepet + durum modalleri) ── */
+.perde{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.5);
+  display:none;align-items:flex-end;backdrop-filter:blur(3px)}
+.perde.acik{display:flex}
+.sayfa{background:var(--kart);border-radius:20px 20px 0 0;width:100%;
+  max-height:88vh;overflow-y:auto;overscroll-behavior:contain;
+  animation:kayik .25s ease-out;display:flex;flex-direction:column}
+@keyframes kayik{from{transform:translateY(90%)}}
+.sayfa-ust{position:sticky;top:0;background:var(--kart);border-bottom:1px solid var(--cizgi);
+  padding:14px 18px;display:flex;align-items:center;justify-content:space-between;z-index:2}
+.sayfa-ust h3{font-size:17px;font-weight:800;letter-spacing:-.3px}
+.kapat{background:var(--zemin);border:none;color:var(--metin);width:34px;height:34px;
+  border-radius:11px;display:flex;align-items:center;justify-content:center}
+.sayfa-icerik{padding:16px 18px;flex:1}
+.sayfa-alt{position:sticky;bottom:0;background:var(--kart);border-top:1px solid var(--cizgi);
+  padding:14px 18px calc(14px + env(safe-area-inset-bottom));display:flex;
+  flex-direction:column;gap:10px}
+
+/* ── sepet öğeleri ── */
+.sp-satir{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--cizgi)}
+.sp-satir:last-child{border-bottom:none}
+.sp-gor{width:52px;height:52px;border-radius:9px;overflow:hidden;flex-shrink:0;
+  background:var(--zemin);display:flex;align-items:center;justify-content:center}
+.sp-gor img{width:100%;height:100%;object-fit:cover}
+.sp-bilgi{flex:1;min-width:0}
+.sp-ad{font-size:14.5px;font-weight:700}
+.sp-ack{font-size:12px;color:var(--soluk);margin-top:2px}
+.sp-not-btn{background:none;border:1px dashed var(--cizgi);color:var(--soluk);
+  padding:3px 9px;font-size:11.5px;border-radius:8px;margin-top:6px}
+.sp-not-btn.dolu{border-style:solid;color:var(--ana-koyu);border-color:var(--ana)}
+.sp-sag{display:flex;flex-direction:column;align-items:flex-end;gap:8px;justify-content:space-between}
+.sp-fy{font-weight:800;color:var(--ana-koyu);font-size:14px;white-space:nowrap}
+@media(prefers-color-scheme:dark){.sp-fy{color:#FB923C}}
+.sayac{display:flex;align-items:center;background:var(--zemin);border-radius:10px;padding:3px}
+.sayac button{width:30px;height:30px;border:none;background:var(--kart);border-radius:8px;
+  color:var(--metin);display:flex;align-items:center;justify-content:center;font-size:0}
+.sayac button .ik{width:16px;height:16px;stroke-width:2.5}
+.sayac span{padding:0 10px;font-weight:700;min-width:26px;text-align:center}
+
+.tutar-sat{display:flex;justify-content:space-between;padding:10px 0;font-size:14px}
+.tutar-sat.buyuk{padding-top:14px;font-size:20px;font-weight:800;
+  border-top:1px dashed var(--cizgi);margin-top:6px}
+.gonder{background:var(--ana);color:#fff;border:none;width:100%;padding:15px;
+  border-radius:14px;font-size:16px;font-weight:800;letter-spacing:-.2px;
+  display:flex;align-items:center;justify-content:center;gap:8px}
+.gonder:disabled{opacity:.55}
+.gonder .ik{width:18px;height:18px;stroke-width:2.5}
+.gonder.yesil{background:var(--yesil)}
+.sepet-bos{text-align:center;padding:40px 20px;color:var(--soluk)}
+.sepet-bos .ik{width:44px;height:44px;opacity:.4;margin-bottom:10px}
+
+/* ── sipariş durumu ── */
+.d-satir{display:flex;justify-content:space-between;align-items:center;
+  padding:11px 12px;background:var(--zemin);border-radius:11px;margin-bottom:7px}
+.d-satir .ad{font-weight:600;font-size:14px}
+.d-satir .kck{font-size:12px;color:var(--soluk);margin-top:2px}
+.d-etk{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:9px;
+  text-transform:uppercase;letter-spacing:.04em;display:inline-flex;align-items:center;gap:4px}
+.d-etk .ik{width:11px;height:11px;stroke-width:3}
+.d-bekliyor{background:#FEF3C7;color:#92400E}
+.d-hazir{background:#DCFCE7;color:#166534}
+.d-ikram{background:#DBEAFE;color:#1E40AF}
+@media(prefers-color-scheme:dark){
+  .d-bekliyor{background:#3F2A0A;color:#FBBF24}
+  .d-hazir{background:#052E1A;color:#4ADE80}
+  .d-ikram{background:#1E2545;color:#93C5FD}
+}
+
+/* ── başarı / hata bildirimi ── */
+.bildirim{position:fixed;bottom:calc(115px + env(safe-area-inset-bottom));left:16px;right:16px;
+  z-index:200;background:var(--yesil);color:#fff;padding:14px 18px;border-radius:14px;
+  font-weight:600;font-size:14px;box-shadow:0 15px 40px rgba(0,0,0,.25);
+  display:flex;align-items:center;gap:10px;animation:cikar .3s ease-out;text-align:left}
+.bildirim.hata{background:var(--kirmizi)}
+.bildirim .ik{width:22px;height:22px;stroke-width:2.5;flex-shrink:0}
+@keyframes cikar{from{opacity:0;transform:translateY(30px)}}
+
+/* ── genel ── */
 .alt{margin:34px 16px 0;padding:20px;background:var(--kart);border:1px solid var(--cizgi);
   border-radius:15px;text-align:center;font-size:13px;color:var(--soluk);line-height:1.8}
 .alt a{color:var(--ana-koyu);text-decoration:none;font-weight:600}
@@ -88,6 +200,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 @media(min-width:640px){
   body{max-width:680px;margin:0 auto;box-shadow:0 0 60px rgba(0,0,0,.07)}
   .urunler{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+  .alt-bar,.perde,.bildirim,.durum-btn{max-width:680px;left:auto;right:auto;
+    margin-left:auto;margin-right:auto}
 }
 </style>
 </head>
@@ -113,6 +227,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
 <symbol id="i-phone" viewBox="0 0 24 24"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/></symbol>
 <symbol id="i-utensils-crossed" viewBox="0 0 24 24"><path d="m16 2-2.3 2.3a3 3 0 0 0 0 4.2l1.8 1.8a3 3 0 0 0 4.2 0L22 8"/><path d="M15 15 3.3 3.3a4.2 4.2 0 0 0 0 6l7.3 7.3c.7.7 2 .7 2.8 0L15 15Zm0 0 7 7"/><path d="M2.1 21.8 13 11"/><path d="m9 11 3 3"/></symbol>
 <symbol id="i-triangle-alert" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+<symbol id="i-plus" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/></symbol>
+<symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+<symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+<symbol id="i-bell-ring" viewBox="0 0 24 24"><path d="M10.268 21a2 2 0 0 0 3.464 0"/><path d="M22 8c0-2.3-.8-4.3-2-6"/><path d="M3.262 15.326A1 1 0 0 0 4 17h16a1 1 0 0 0 .74-1.673C19.41 13.956 18 12.499 18 8A6 6 0 0 0 6 8c0 4.499-1.411 5.956-2.738 7.326"/><path d="M4 2C2.8 3.7 2 5.7 2 8"/></symbol>
+<symbol id="i-shopping-bag" viewBox="0 0 24 24"><path d="M16 10a4 4 0 0 1-8 0"/><path d="M3.103 6.034h17.794"/><path d="M3.4 5.467a2 2 0 0 0-.4 1.2V20a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6.667a2 2 0 0 0-.4-1.2l-2-2.667A2 2 0 0 0 17 2H7a2 2 0 0 0-1.6.8z"/></symbol>
+<symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
+<symbol id="i-hourglass" viewBox="0 0 24 24"><path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/></symbol>
+<symbol id="i-circle-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></symbol>
+<symbol id="i-trash-2" viewBox="0 0 24 24"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol>
+<symbol id="i-receipt-text" viewBox="0 0 24 24"><path d="M13 16H8"/><path d="M14 8H8"/><path d="M16 12H8"/><path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z"/></symbol>
+<symbol id="i-check-check" viewBox="0 0 24 24"><path d="M18 6 7 17l-5-5"/><path d="m22 10-7.5 7.5L13 16"/></symbol>
 </svg>
 
 <div id="kok">
@@ -120,41 +246,98 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
     <div>Menü yükleniyor…</div></div>
 </div>
 
+<button class="durum-btn" id="durumBtn" onclick="durumAc()"><svg class="ik"><use href="#i-receipt-text"/></svg>
+  Siparişim <span id="durumSayi"></span></button>
+
+<div class="alt-bar" id="altBar" onclick="sepetAc()">
+  <div class="alt-bar-sayi" id="sepetSayi">0</div>
+  <div class="alt-bar-orta">
+    <div class="alt-bar-yaz">Sepetim</div>
+    <div class="alt-bar-tut" id="sepetTutar">0,00 ₺</div>
+  </div>
+  <button class="alt-bar-git" onclick="event.stopPropagation();sepetAc()">
+    Sepete git <svg class="ik" style="transform:rotate(-90deg)"><use href="#i-chevron-down"/></svg></button>
+</div>
+
+<div class="perde" id="perde"></div>
+<div id="bildirim"></div>
+
 <script>
-/* ════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════════════════
    Adfix — müşteri menüsü (karekod ile açılır)
-   Salt okunur: yalnızca /api/acik/* uçlarını kullanır.
+   Sadece /api/acik/* uçlarını kullanır.
+   Sipariş: sadece MASA QR'ından (menu.html?masa=<id>). Genel karekod ise
+   yalnızca gösterim modu.
    Fiyatlar kuruş gelir, gösterimde TL'ye çevrilir.
-   ════════════════════════════════════════════════════════════ */
+   ══════════════════════════════════════════════════════════════════════ */
 const API = location.origin + '/api/acik';
-const D = { menu: null, kategori: null, masa: null, arama: '' };
+const D = {
+  menu: null,          // /acik/menu yanıtı
+  kategori: null,      // seçili kategori id (null = hepsi)
+  arama: '',
+  masaId: null,        // URL'den, ör. ?masa=3
+  masa: null,          // { ad, salon }
+  sepet: [],           // [{urun_id, ad, birim, adet, notu, gorsel, k(kat_id)}]
+  durum: null,         // /acik/masa/{id}/durum yanıtı
+  durumZaman: null,    // sipariş sonrası durum yenileme aralığı
+};
 
 const tl = k => (Number(k || 0) / 100).toLocaleString('tr-TR',
   { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ₺';
 const kacis = s => String(s ?? '').replace(/[&<>"']/g,
   c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const ik = (ad, st = '') => `<svg class="ik" style="${st}"><use href="#i-${ad}"/></svg>`;
+const ik = ad => `<svg class="ik"><use href="#i-${ad}"/></svg>`;
 
+/* ───────── ağ ───────── */
+async function api(yol, secenek) {
+  const y = await fetch(API + yol, secenek);
+  const govde = await y.json().catch(() => ({}));
+  if (!y.ok) throw new Error(govde.detail || 'İşlem başarısız');
+  return govde;
+}
+
+/* ───────── açılış ───────── */
 async function yukle() {
   const p = new URLSearchParams(location.search);
-  const masaId = p.get('masa');
+  D.masaId = p.get('masa') ? parseInt(p.get('masa')) : null;
   try {
-    D.menu = await fetch(API + '/menu').then(r => {
-      if (!r.ok) throw new Error('Menü alınamadı');
-      return r.json();
-    });
+    D.menu = await api('/menu');
   } catch (e) {
     document.getElementById('kok').innerHTML = `<div class="durum">
       ${ik('triangle-alert')}<div style="font-size:15px;font-weight:600">Menüye ulaşılamadı</div>
       <div style="margin-top:6px">İnternet bağlantınızı kontrol edip sayfayı yenileyin.</div></div>`;
     return;
   }
-  if (masaId) {
-    try { D.masa = await fetch(`${API}/masa/${encodeURIComponent(masaId)}`)
-      .then(r => r.ok ? r.json() : null); } catch (e) { /* masa adı olmasa da menü açılır */ }
+  if (D.masaId) {
+    try { D.masa = await api(`/masa/${D.masaId}`); }
+    catch (e) { /* masa adı olmasa da menü açılır */ }
   }
+  sepetiOku();
+  await durumYukle();
   D.kategori = null;
   ciz();
+  sepetBariGoster();
+}
+
+/* ───────── sepet kalıcılığı (kullanıcı sekmeyi yenilerse kaybolmasın) ───────── */
+const _sepetAnahtar = () => `adfix_sepet_${D.masaId || 'genel'}`;
+function sepetYaz() {
+  try { localStorage.setItem(_sepetAnahtar(), JSON.stringify(D.sepet)); } catch (e) {}
+}
+function sepetiOku() {
+  try {
+    const s = localStorage.getItem(_sepetAnahtar());
+    if (s) D.sepet = JSON.parse(s) || [];
+  } catch (e) { D.sepet = []; }
+}
+
+/* ───────── ana ekran ───────── */
+function urunBul(id) {
+  for (const k of D.menu.kategoriler) {
+    const u = k.urunler.find(u => u.id === id);
+    if (u) return { ...u, kat: k };
+  }
+  return null;
 }
 
 function ciz() {
@@ -173,6 +356,9 @@ function ciz() {
   } else {
     gosterilecek = D.kategori ? kategoriler.filter(k => k.id === D.kategori) : kategoriler;
   }
+
+  const sepetteki = id => D.sepet.find(s => s.urun_id === id && !s.notu)?.adet || 0;
+  const siparisVerilebilir = m.siparis_acik && D.masaId;
 
   document.getElementById('kok').innerHTML = `
     <header class="ust">
@@ -194,6 +380,16 @@ function ciz() {
       </div>
     </div>
 
+    ${!m.siparis_acik && D.masaId ? `<div style="margin:16px 16px 0;padding:12px 14px;
+      background:#FEF3C7;color:#92400E;border-radius:12px;font-size:13px;
+      display:flex;gap:9px;align-items:flex-start">${ik('triangle-alert')}
+      <div><b>Sadece görüntüleme.</b> Bu işletme şu an QR ile sipariş almıyor —
+      sipariş vermek için garsona sesleniniz.</div></div>` : ''}
+    ${!D.masaId && m.siparis_acik ? `<div style="margin:16px 16px 0;padding:12px 14px;
+      background:#DBEAFE;color:#1E40AF;border-radius:12px;font-size:13px;
+      display:flex;gap:9px;align-items:flex-start">${ik('triangle-alert')}
+      <div>Genel karekodu okuttunuz. Sipariş vermek için masanızdaki karekodu okutun.</div></div>` : ''}
+
     ${gosterilecek.length ? gosterilecek.map(k => `
       <section class="bolum">
         <div class="bolum-bas">
@@ -202,16 +398,22 @@ function ciz() {
           <h2>${kacis(k.ad)}</h2>
         </div>
         <div class="urunler">
-          ${k.urunler.map(u => `<article class="urun">
-            <div class="urun-gor" ${u.gorsel ? '' : `style="background:${k.renk}1A;color:${k.renk}"`}>
-              ${u.gorsel ? `<img src="${u.gorsel}" alt="${kacis(u.ad)}" loading="lazy">`
-                         : ik(k.ikon || 'utensils')}</div>
-            <div class="urun-bilgi">
-              <div class="urun-ad">${kacis(u.ad)}</div>
-              ${u.aciklama ? `<div class="urun-ack">${kacis(u.aciklama)}</div>` : ''}
-              <div class="urun-fiyat">${tl(u.fiyat_kurus)}</div>
-            </div>
-          </article>`).join('')}
+          ${k.urunler.map(u => { const n = sepetteki(u.id); return `
+            <article class="urun ${n ? 'secili' : ''}"
+              onclick="urunSec(${u.id})">
+              ${n ? `<span class="urun-adet">${n}</span>` : ''}
+              <div class="urun-gor" ${u.gorsel ? '' : `style="background:${k.renk}1A;color:${k.renk}"`}>
+                ${u.gorsel ? `<img src="${u.gorsel}" alt="${kacis(u.ad)}" loading="lazy">`
+                           : ik(k.ikon || 'utensils')}</div>
+              <div class="urun-bilgi">
+                <div class="urun-ad">${kacis(u.ad)}</div>
+                ${u.aciklama ? `<div class="urun-ack">${kacis(u.aciklama)}</div>` : ''}
+                <div class="urun-fiyat">${tl(u.fiyat_kurus)}</div>
+              </div>
+              ${siparisVerilebilir ? `<button class="urun-ekle"
+                onclick="event.stopPropagation();urunEkle(${u.id})" aria-label="Sepete ekle">
+                ${ik('plus')}</button>` : ''}
+            </article>`; }).join('')}
         </div>
       </section>`).join('')
       : `<div class="durum">${ik('search')}
@@ -228,7 +430,7 @@ function ciz() {
   document.querySelectorAll('.sekme').forEach(el => el.addEventListener('click', () => {
     const k = parseInt(el.dataset.k);
     D.kategori = k || null; D.arama = '';
-    ciz();
+    ciz(); sepetBariGoster();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }));
 
@@ -236,11 +438,309 @@ function ciz() {
   ara.addEventListener('input', e => {
     D.arama = e.target.value;
     const kon = e.target.selectionStart;
-    ciz();
+    ciz(); sepetBariGoster();
     const y = document.getElementById('ara');
     y.focus(); y.setSelectionRange(kon, kon);
   });
 }
+
+/* ───────── sepet ───────── */
+function urunSec(id) {
+  const m = D.menu;
+  if (!m.siparis_acik || !D.masaId) return;
+  urunEkle(id);
+}
+
+function urunEkle(id) {
+  const m = D.menu;
+  if (!m.siparis_acik || !D.masaId) {
+    if (!D.masaId) bildir('Sipariş için masadaki karekodu okutun', 'hata');
+    return;
+  }
+  const u = urunBul(id);
+  if (!u) return;
+  const v = D.sepet.find(s => s.urun_id === id && !s.notu);
+  if (v) v.adet++;
+  else D.sepet.push({ urun_id: id, ad: u.ad, birim: u.fiyat_kurus, adet: 1, notu: '',
+                      gorsel: u.gorsel, k: u.kat.id });
+  sepetYaz(); sepetBariGoster();
+  document.querySelector(`.urun[onclick*="${id}"]`)?.classList.add('secili');
+  const kutu = document.querySelector(`.urun[onclick*="${id}"] .urun-adet`);
+  if (kutu) kutu.textContent = v ? v.adet : 1;
+  else {
+    const kart = document.querySelector(`.urun[onclick*="${id}"]`);
+    if (kart) kart.insertAdjacentHTML('afterbegin', `<span class="urun-adet">1</span>`);
+  }
+}
+
+function sepetAdet(idx, delta) {
+  D.sepet[idx].adet += delta;
+  if (D.sepet[idx].adet < 1) D.sepet.splice(idx, 1);
+  sepetYaz();
+  if (document.getElementById('perde').classList.contains('acik')) sepetCiz();
+  else ciz();
+  sepetBariGoster();
+}
+
+function sepetToplam() {
+  return D.sepet.reduce((t, s) => t + s.birim * s.adet, 0);
+}
+function sepetAdetToplam() {
+  return D.sepet.reduce((t, s) => t + s.adet, 0);
+}
+
+function sepetBariGoster() {
+  const bar = document.getElementById('altBar');
+  const say = sepetAdetToplam();
+  if (say > 0 && D.masaId && D.menu?.siparis_acik) {
+    bar.classList.add('acik');
+    document.getElementById('sepetSayi').textContent = say;
+    document.getElementById('sepetTutar').textContent = tl(sepetToplam());
+  } else {
+    bar.classList.remove('acik');
+  }
+}
+
+/* ───────── sepet ekranı (modal) ───────── */
+function sepetAc() {
+  sepetCiz();
+  document.getElementById('perde').classList.add('acik');
+  document.body.style.overflow = 'hidden';
+}
+
+function sepetKapat() {
+  document.getElementById('perde').classList.remove('acik');
+  document.body.style.overflow = '';
+}
+
+function sepetCiz() {
+  const toplam = sepetToplam();
+  const kutu = document.getElementById('perde');
+  kutu.innerHTML = `
+    <div class="sayfa" onclick="event.stopPropagation()">
+      <div class="sayfa-ust">
+        <h3>${ik('shopping-bag')} Sepetim
+          ${D.sepet.length ? `<span style="color:var(--soluk);font-weight:500;font-size:14px">
+          · ${sepetAdetToplam()} kalem</span>` : ''}</h3>
+        <button class="kapat" onclick="sepetKapat()" aria-label="Kapat">${ik('x')}</button>
+      </div>
+      <div class="sayfa-icerik">
+        ${D.sepet.length ? D.sepet.map((s, i) => {
+          const kat = D.menu.kategoriler.find(k => k.id === s.k) || {};
+          return `<div class="sp-satir">
+            <div class="sp-gor" ${s.gorsel ? '' : `style="background:${kat.renk}1A;color:${kat.renk}"`}>
+              ${s.gorsel ? `<img src="${s.gorsel}" alt="">` : ik(kat.ikon || 'utensils')}</div>
+            <div class="sp-bilgi">
+              <div class="sp-ad">${kacis(s.ad)}</div>
+              <div class="sp-ack">${tl(s.birim)}</div>
+              <button class="sp-not-btn ${s.notu ? 'dolu' : ''}" onclick="notEkle(${i})">
+                ${s.notu ? '📝 ' + kacis(s.notu) : '+ Not ekle'}</button>
+            </div>
+            <div class="sp-sag">
+              <div class="sp-fy">${tl(s.birim * s.adet)}</div>
+              <div class="sayac">
+                <button onclick="sepetAdet(${i}, -1)" aria-label="Azalt">${ik(s.adet > 1 ? 'minus' : 'trash-2')}</button>
+                <span>${s.adet}</span>
+                <button onclick="sepetAdet(${i}, 1)" aria-label="Artır">${ik('plus')}</button>
+              </div>
+            </div>
+          </div>`;
+        }).join('') : `<div class="sepet-bos">${ik('shopping-bag')}
+          <div style="font-size:15px;font-weight:600">Sepetiniz boş</div>
+          <div style="margin-top:5px;font-size:13px">Menüden ürün seçin</div></div>`}
+      </div>
+      ${D.sepet.length ? `<div class="sayfa-alt">
+        <div class="tutar-sat"><span>Ara Toplam</span><b>${tl(toplam)}</b></div>
+        <div class="tutar-sat buyuk"><span>Toplam</span><span>${tl(toplam)}</span></div>
+        <button class="gonder" id="gonderBtn" onclick="siparisiGonder()">
+          ${ik('bell-ring')} Garson Çağır — Siparişi Gönder</button>
+        <p style="font-size:11.5px;color:var(--soluk);text-align:center;line-height:1.5">
+          Siparişiniz mutfağa iletilir, garsonunuz hesabı masaya getirir.
+          Ödeme masada garson aracılığıyla yapılır.</p>
+      </div>` : ''}
+    </div>`;
+}
+
+function notEkle(idx) {
+  const s = D.sepet[idx];
+  const mevcut = s.notu || '';
+  const not = prompt(`Sipariş notu — ${s.ad}\n(az pişmiş, soğansız, acılı…)`, mevcut);
+  if (not === null) return;
+  s.notu = not.trim().slice(0, 200);
+  sepetYaz();
+  sepetCiz();
+}
+
+/* ───────── sipariş gönderme ───────── */
+async function siparisiGonder() {
+  const btn = document.getElementById('gonderBtn');
+  btn.disabled = true;
+  btn.innerHTML = `${ik('hourglass')} Gönderiliyor…`;
+  try {
+    const y = await api(`/masa/${D.masaId}/siparis`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        satirlar: D.sepet.map(s => ({ urun_id: s.urun_id, adet: s.adet, notu: s.notu }))
+      })
+    });
+    D.sepet = [];
+    sepetYaz();
+    sepetKapat();
+    ciz(); sepetBariGoster();
+    D.durum = y;
+    durumBtnGuncelle();
+    basariCiz(y);
+    durumYenileBaslat();
+  } catch (e) {
+    btn.disabled = false;
+    btn.innerHTML = `${ik('bell-ring')} Garson Çağır — Siparişi Gönder`;
+    bildir(e.message || 'Sipariş gönderilemedi', 'hata');
+  }
+}
+
+function basariCiz(y) {
+  const kutu = document.getElementById('perde');
+  kutu.innerHTML = `
+    <div class="sayfa" onclick="event.stopPropagation()">
+      <div class="sayfa-ust">
+        <h3 style="color:var(--yesil)">${ik('circle-check')} Siparişiniz Alındı</h3>
+        <button class="kapat" onclick="sepetKapat()">${ik('x')}</button>
+      </div>
+      <div class="sayfa-icerik" style="text-align:center">
+        <div style="width:80px;height:80px;background:#DCFCE7;color:var(--yesil);
+          border-radius:24px;display:flex;align-items:center;justify-content:center;
+          margin:12px auto 20px">
+          <svg class="ik" style="width:44px;height:44px;stroke-width:2.5">
+            <use href="#i-check-check"/></svg></div>
+        <h2 style="font-size:22px;margin-bottom:8px">Teşekkürler!</h2>
+        <p style="color:var(--soluk);font-size:14px;line-height:1.7;margin-bottom:20px">
+          Siparişiniz mutfağa iletildi. Garsonunuz sizinle ilgilenecek.<br>
+          Adisyon numaranız: <b style="color:var(--metin);font-size:16px">#${kacis(y.kod)}</b></p>
+        <div style="background:var(--zemin);border-radius:14px;padding:14px;text-align:left">
+          <div style="font-size:12px;font-weight:700;color:var(--soluk);
+            text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px">Toplam</div>
+          <div style="font-size:24px;font-weight:800;color:var(--ana-koyu)">${tl(y.toplam)}</div>
+        </div>
+      </div>
+      <div class="sayfa-alt">
+        <button class="gonder yesil" onclick="sepetKapat();durumAc()">
+          ${ik('receipt-text')} Siparişimi Takip Et</button>
+      </div>
+    </div>`;
+  document.getElementById('perde').classList.add('acik');
+  document.body.style.overflow = 'hidden';
+}
+
+/* ───────── sipariş durumu (yenilenerek) ───────── */
+async function durumYukle() {
+  if (!D.masaId) return;
+  try { D.durum = await api(`/masa/${D.masaId}/durum`); }
+  catch (e) { /* durum alınamayabilir, önemli değil */ }
+  durumBtnGuncelle();
+}
+
+function durumBtnGuncelle() {
+  const btn = document.getElementById('durumBtn');
+  const say = D.durum?.satirlar?.length || 0;
+  if (say && D.masaId) {
+    btn.classList.add('acik');
+    document.getElementById('durumSayi').textContent = '· ' + say;
+  } else {
+    btn.classList.remove('acik');
+  }
+}
+
+function durumYenileBaslat() {
+  clearInterval(D.durumZaman);
+  D.durumZaman = setInterval(() => {
+    durumYukle().then(() => {
+      if (document.getElementById('perde').classList.contains('acik') &&
+          document.querySelector('#perde h3')?.textContent?.includes('Sipariş')) {
+        durumCiz();
+      }
+    });
+  }, 20000);
+}
+
+function durumAc() {
+  durumYukle().then(() => {
+    durumCiz();
+    document.getElementById('perde').classList.add('acik');
+    document.body.style.overflow = 'hidden';
+    durumYenileBaslat();
+  });
+}
+
+function durumCiz() {
+  const d = D.durum || { satirlar: [] };
+  const bekleyen = d.satirlar.filter(s => s.durum === 'bekliyor').length;
+  const hazir = d.satirlar.filter(s => s.durum === 'hazir').length;
+  const kutu = document.getElementById('perde');
+  kutu.innerHTML = `
+    <div class="sayfa" onclick="event.stopPropagation()">
+      <div class="sayfa-ust">
+        <h3>${ik('receipt-text')} Siparişimin Durumu
+          ${d.kod ? `<span style="color:var(--soluk);font-weight:500;font-size:14px">
+          · #${kacis(d.kod)}</span>` : ''}</h3>
+        <button class="kapat" onclick="sepetKapat();clearInterval(D.durumZaman)">
+          ${ik('x')}</button>
+      </div>
+      <div class="sayfa-icerik">
+        ${d.satirlar.length ? `
+          ${bekleyen || hazir ? `<div style="display:flex;gap:8px;margin-bottom:14px">
+            ${bekleyen ? `<div style="flex:1;background:#FEF3C7;color:#92400E;padding:11px;
+              border-radius:11px;text-align:center">
+              <div style="font-size:22px;font-weight:800">${bekleyen}</div>
+              <div style="font-size:11.5px;font-weight:700">HAZIRLANIYOR</div></div>` : ''}
+            ${hazir ? `<div style="flex:1;background:#DCFCE7;color:#166534;padding:11px;
+              border-radius:11px;text-align:center">
+              <div style="font-size:22px;font-weight:800">${hazir}</div>
+              <div style="font-size:11.5px;font-weight:700">HAZIR</div></div>` : ''}
+          </div>` : ''}
+          ${d.satirlar.map(s => `
+            <div class="d-satir">
+              <div style="flex:1;min-width:0">
+                <div class="ad">${s.adet} × ${kacis(s.ad)}</div>
+                ${s.notu ? `<div class="kck">${kacis(s.notu)}</div>` : ''}
+              </div>
+              ${s.durum === 'ikram'
+                ? `<span class="d-etk d-ikram">${ik('circle-check')} İKRAM</span>`
+                : s.durum === 'hazir'
+                ? `<span class="d-etk d-hazir">${ik('check')} HAZIR</span>`
+                : `<span class="d-etk d-bekliyor">${ik('hourglass')} PIŞIYOR</span>`}
+            </div>`).join('')}
+          <div style="margin-top:14px;padding-top:14px;border-top:1px dashed var(--cizgi);
+            display:flex;justify-content:space-between;font-size:18px;font-weight:800">
+            <span>Toplam</span><span>${tl(d.toplam)}</span></div>
+          <p style="font-size:11.5px;color:var(--soluk);margin-top:10px;line-height:1.6;
+            text-align:center">Durum her 20 saniyede bir yenilenir.
+            <br>Ödeme masada garson aracılığıyla yapılır.</p>`
+        : `<div class="sepet-bos">${ik('receipt-text')}
+            <div style="font-size:15px;font-weight:600">Henüz sipariş yok</div>
+            <div style="margin-top:5px;font-size:13px">Menüden ürün seçip sipariş verin</div></div>`}
+      </div>
+      ${D.menu.siparis_acik && D.masaId ? `<div class="sayfa-alt">
+        <button class="gonder" onclick="sepetKapat();clearInterval(D.durumZaman)"
+          style="background:var(--zemin);color:var(--metin)">
+          ${ik('plus')} Menüden Yeni Ürün Ekle</button>
+      </div>` : ''}
+    </div>`;
+}
+
+/* ───────── küçük bildirim ───────── */
+function bildir(metin, tip) {
+  const el = document.createElement('div');
+  el.className = 'bildirim ' + (tip || '');
+  el.innerHTML = `${ik(tip === 'hata' ? 'triangle-alert' : 'check')} ${kacis(metin)}`;
+  document.getElementById('bildirim').appendChild(el);
+  setTimeout(() => el.remove(), 3500);
+}
+
+/* ───────── perde arka planına tıklayınca kapat ───────── */
+document.getElementById('perde').addEventListener('click', e => {
+  if (e.target === e.currentTarget) sepetKapat();
+});
 
 yukle();
 </script>

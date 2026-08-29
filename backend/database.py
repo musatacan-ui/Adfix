@@ -203,7 +203,8 @@ AYAR_VARSAYILAN = {
     "telefon":      "",
     "logo":         "",       # data URI
     "fis_alt_not":  "Afiyet olsun · Teşekkür ederiz",
-    "qr_taban_url": "",       # QR'ların işaret edeceği adres, ör. http://192.168.1.20:8002
+    "qr_taban_url": "",        # QR'ların işaret edeceği adres, ör. http://192.168.1.20:8002
+    "qr_siparis_acik": "1",    # Müşteri masa QR'ından sipariş verebilir mi? ('1'/'0')
 }
 
 

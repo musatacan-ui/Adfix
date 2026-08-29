@@ -887,6 +887,7 @@ function sepetCiz() {
           ${s.durum === 'ikram' ? ' · <b style="color:var(--yesil)">İKRAM</b>' : ''}
           ${s.durum === 'iptal' ? ` · <b style="color:var(--kirmizi)">İPTAL</b>` : ''}
           ${s.durum === 'bekliyor' && s.mutfak ? ` · <span style="color:var(--sari)">${ik('hourglass')} mutfakta</span>` : ''}
+          ${s.ekleyen_id == null ? ` · <span style="color:var(--mor,#7C3AED)">${ik('smartphone')} Müşteri</span>` : ''}
         </div>
       </div>
       <div class="tut">${s.durum === 'ikram' || s.durum === 'iptal' ? '—' : tlSade(s.tutar_kurus)}</div>
@@ -972,7 +973,7 @@ function satirIslem(sid) {
   modalAc(s.ad, `
     <div style="font-size:12.5px;color:var(--gri);margin-bottom:14px">
       ${s.adet} × ${tlSade(s.birim_kurus)} = <b>${tlSade(s.tutar_kurus)}</b>
-      · ekleyen: ${kacis(s.ekleyen_ad || '-')} · ${saatFmt(s.eklenme)}</div>
+      · ekleyen: ${s.ekleyen_id == null ? `<b style="color:var(--mor,#7C3AED)">${ik('smartphone')} Müşteri (QR)</b>` : kacis(s.ekleyen_ad || '-')} · ${saatFmt(s.eklenme)}</div>
     <div class="alan"><label>Adet</label>
       <input id="iAdet" type="number" min="1" value="${s.adet}" inputmode="numeric"></div>
     <div class="alan"><label>Not</label><input id="iNot" value="${kacis(s.notu)}"></div>`,
@@ -1380,7 +1381,7 @@ async function mutfakCiz() {
         <div class="fis-ust">
           <div>
             <div class="fis-masa">${kacis(k.masa_ad || (k.tip === 'paket' ? 'Paket' : 'Gel-Al'))}</div>
-            <div class="fis-garson">#${kacis(k.kod)} · ${kacis(k.ekleyen_ad || '')}</div>
+            <div class="fis-garson">#${kacis(k.kod)} · ${k.ekleyen_ad ? kacis(k.ekleyen_ad) : `<span style="color:#7C3AED">${ik('smartphone')} Müşteri</span>`}</div>
           </div>
           <div class="fis-sure ${dk >= 20 ? 'gec' : ''}">${dk} dk</div>
         </div>
@@ -2334,6 +2335,30 @@ async function yQr() {
 
     <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;
       padding:16px;margin-bottom:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            ${ik('smartphone')}<b style="font-size:14px">QR ile Sipariş</b>
+          </div>
+          <div style="font-size:12.5px;color:var(--gri);line-height:1.6">
+            Açıkken müşteriler masa karekodunu okutup doğrudan sipariş verebilir.
+            Kapalıyken sadece menüyü görürler, sipariş garson üzerinden alınır.</div>
+        </div>
+        <label style="position:relative;width:52px;height:28px;flex-shrink:0;cursor:pointer">
+          <input type="checkbox" id="qrSiparisSwitch" onchange="qrSiparisToggle(this.checked)"
+            ${S.ayar.qr_siparis_acik === '1' ? 'checked' : ''}
+            style="opacity:0;width:0;height:0;position:absolute">
+          <span style="position:absolute;inset:0;background:${S.ayar.qr_siparis_acik === '1' ? 'var(--yesil)' : '#ccc'};
+            border-radius:14px;transition:.2s"></span>
+          <span style="position:absolute;top:2px;left:${S.ayar.qr_siparis_acik === '1' ? '26px' : '2px'};
+            width:24px;height:24px;background:#fff;border-radius:50%;transition:.2s;
+            box-shadow:0 1px 3px rgba(0,0,0,.2)"></span>
+        </label>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;
+      padding:16px;margin-bottom:18px">
       <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px">
         ${ik('triangle-alert')}<b style="font-size:14px">Telefonda açılmıyorsa</b>
       </div>
@@ -2415,6 +2440,14 @@ async function qrTabanKaydet() {
   try {
     S.ayar = await PATCH('/ayar', { qr_taban_url: document.getElementById('qrTaban').value });
     iyi('QR adresi kaydedildi'); yQr();
+  } catch (e) { kotu(e.message); }
+}
+
+async function qrSiparisToggle(acik) {
+  try {
+    S.ayar = await PATCH('/ayar', { qr_siparis_acik: acik ? '1' : '0' });
+    iyi(acik ? 'QR sipariş açıldı' : 'QR sipariş kapatıldı');
+    yQr();
   } catch (e) { kotu(e.message); }
 }
 

@@ -281,7 +281,101 @@ with TestClient(main.app) as c:
             and _ag._ozel_mi("172.16.0.1") and not _ag._ozel_mi("172.32.0.1")
             and not _ag._ozel_mi("8.8.8.8"))
 
-    print("\n[21] Son yönetici koruması")
+
+    print("\n[21] QR ile müşteri siparişi (masa QR)")
+    # Diğer test bölümleri M1-M3'ü kirletti; QR akışı için bakir bir masa lazım
+    plan = c.get("/api/masa/plan", headers=admin).json()
+    qr_masa = next(m for s in plan["salonlar"] for m in s["masalar"] if not m["adisyon"])
+
+    # Müşteri karekodu okuyup çorba, çay ve ayran seçti (Çay v1'de pasife alındı;
+    # açık menüden çekelim ki test durumu sızmasın)
+    acik = c.get("/api/acik/menu").json()
+    urun_acik = {u["ad"]: u for k in acik["kategoriler"] for u in k["urunler"]}
+    corba_id = urun_acik["Mercimek Çorbası"]["id"]
+    ayran_id = urun_acik["Ayran"]["id"]
+    kebap_id = urun_acik["Adana Kebap"]["id"]
+
+    r = c.post(f"/api/acik/masa/{qr_masa['id']}/siparis", json={"satirlar": [
+        {"urun_id": corba_id, "adet": 2, "notu": "az tuz"},
+        {"urun_id": ayran_id, "adet": 2},
+    ]})
+    kontrol("QR ile sipariş kabul edildi", r.status_code == 200, r.text[:100])
+    y = r.json()
+    kontrol("yeni adisyon otomatik açıldı", y.get("yeni_adisyon") is True, str(y)[:100])
+    kontrol("adisyon numarası döndü", y["kod"].isdigit() and len(y["kod"]) == 3, y.get("kod"))
+    kontrol("toplam doğru hesaplandı", y["toplam"] == 2*8500 + 2*3500, y.get("toplam"))
+
+    # Aynı masaya ikinci sipariş — mevcut adisyona eklenmeli
+    r = c.post(f"/api/acik/masa/{qr_masa['id']}/siparis", json={"satirlar": [
+        {"urun_id": kebap_id, "adet": 1}]})
+    y2 = r.json()
+    kontrol("aynı masaya 2. sipariş mevcut adisyona eklendi", y2["yeni_adisyon"] is False)
+    kontrol("adisyon numarası aynı", y2["kod"] == y["kod"], f"{y2['kod']} != {y['kod']}")
+    # Adana Kebap fiyatı Test 5'te 99000 kuruşa çekildi
+    kontrol("toplam güncellendi", y2["toplam"] == 2*8500 + 2*3500 + 99000,
+            f"{y2['toplam']} beklenen {2*8500 + 2*3500 + 99000}")
+
+    # Yönetim tarafından adisyona bakılırsa müşteri satırları görünmeli
+    detay = c.get(f"/api/adisyon/{y['adisyon_id']}", headers=admin).json()
+    kontrol("yönetim ekranında adisyon açık ve satırlar var",
+            detay["durum"] == "acik" and len(detay["satirlar"]) == 3)
+    kontrol("müşteri satırları ekleyen_id boş (Müşteri işareti)",
+            all(s["ekleyen_id"] is None for s in detay["satirlar"]),
+            str([s["ekleyen_id"] for s in detay["satirlar"]]))
+
+    # Mutfak ekranında müşteri siparişleri görünmeli (mutfak=1 ürünler için)
+    mutfak = c.get("/api/adisyon/mutfak", headers=admin).json()
+    kontrol("müşteri siparişleri mutfağa düştü",
+            len([x for x in mutfak if x["adisyon_id"] == y["adisyon_id"]]) >= 2,
+            f"{len(mutfak)} kalem")
+
+    # Müşteri kendi durumunu görebilir (ödeme/personel görmeden)
+    d = c.get(f"/api/acik/masa/{qr_masa['id']}/durum").json()
+    kontrol("müşteri kendi masasının durumunu görüyor", d["adisyon_id"] == y["adisyon_id"])
+    kontrol("durum ekranı ciro/personel sızdırmıyor",
+            not any(k in str(d) for k in ("odenen", "ikram_kurus", "iskonto", "kapatan",
+                                          "acan_id", "ekleyen_id", "kasiyer")),
+            "sızıntı!")
+
+    print("\n[22] QR sipariş güvenlik sınırları")
+    r = c.post(f"/api/acik/masa/{qr_masa['id']}/siparis", json={"satirlar": []})
+    kontrol("boş sepet reddedildi", r.status_code == 400, r.text[:80])
+
+    r = c.post("/api/acik/masa/99999/siparis", json={"satirlar":
+        [{"urun_id": ayran_id, "adet": 1}]})
+    kontrol("olmayan masa reddedildi", r.status_code == 404)
+
+    bakir2 = next(m for s in plan["salonlar"] for m in s["masalar"]
+                  if not m["adisyon"] and m["id"] != qr_masa["id"])
+    # Adet üst sınırı: SATIR_UST_SINIR aşımı 400
+    r = c.post(f"/api/acik/masa/{bakir2['id']}/siparis",
+               json={"satirlar": [{"urun_id": ayran_id, "adet": 1}] * 31})
+    kontrol("aşırı satır sayısı reddedildi", r.status_code == 400, r.text[:80])
+
+    # Aşırı adet sessizce atlanır — hepsi atlanırsa "menüde yok" hatası
+    r = c.post(f"/api/acik/masa/{bakir2['id']}/siparis", json={"satirlar":
+        [{"urun_id": ayran_id, "adet": 9999}]})
+    kontrol("aşırı adet reddedildi (sepet boş kaldı)", r.status_code == 400, r.text[:80])
+
+    # Pasif ürün sessizce atlanır (Çay Test 5'te pasife alınmıştı)
+    r = c.post(f"/api/acik/masa/{bakir2['id']}/siparis", json={"satirlar":
+        [{"urun_id": cay["id"], "adet": 1}]})
+    kontrol("pasif ürün sessizce atlandı", r.status_code == 400)
+
+    # Yönetici QR siparişi kapattı — artık kabul edilmemeli
+    c.patch("/api/ayar", headers=admin, json={"qr_siparis_acik": "0"})
+    r = c.post(f"/api/acik/masa/{bakir2['id']}/siparis", json={"satirlar":
+        [{"urun_id": kebap_id, "adet": 1}]})
+    kontrol("QR sipariş kapalıyken 403", r.status_code == 403, r.text[:80])
+    kontrol("kullanıcıya anlamlı mesaj", "sipariş almıyor" in r.text or "garson" in r.text, r.text[:80])
+    c.patch("/api/ayar", headers=admin, json={"qr_siparis_acik": "1"})
+
+    # Açık menüde siparis_acik bayrağı görünüyor mu
+    m = c.get("/api/acik/menu").json()
+    kontrol("açık menüde siparis_acik bayrağı var", "siparis_acik" in m and m["siparis_acik"] is True)
+
+    print("\n[23] Son yönetici koruması")
+
     r = c.patch("/api/kullanici/1", headers=admin, json={
         "ad_soyad": "Sistem Yöneticisi", "kullanici_adi": "admin",
         "rol": "garson", "aktif": 1})
