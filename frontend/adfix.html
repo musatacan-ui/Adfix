@@ -1552,24 +1552,54 @@ async function mutfakHazir(idler) {
 
 async function gecmisCiz(bas, bit) {
   bas ||= bugun(); bit ||= bugun();
-  baslikYaz('Adisyonlar', 'Kapanmış ve iptal edilmiş adisyonlar', `
+  baslikYaz('Adisyonlar', 'Açık, kapanmış ve iptal edilmiş adisyonlar', `
     <input type="date" id="gBas" value="${bas}" style="padding:6px 9px;border:1.5px solid var(--cizgi);border-radius:8px">
     <input type="date" id="gBit" value="${bit}" style="padding:6px 9px;border:1.5px solid var(--cizgi);border-radius:8px">
     <button class="btn btn-kucuk" onclick="gecmisCiz(document.getElementById('gBas').value,document.getElementById('gBit').value)">Getir</button>`);
-  let liste;
-  try { liste = await GET(`/adisyon/gecmis?bas=${bas}&bit=${bit}`); }
-  catch (e) { return kotu(e.message); }
+  let liste, aciklar;
+  try {
+    [liste, aciklar] = await Promise.all([
+      GET(`/adisyon/gecmis?bas=${bas}&bit=${bit}`),
+      GET('/adisyon/acik')
+    ]);
+  } catch (e) { return kotu(e.message); }
 
   const kapali = liste.filter(a => a.durum === 'kapali');
   const ciro = kapali.reduce((t, a) => t + a.ozet.net_toplam, 0);
 
   document.getElementById('sayfa').innerHTML = `
+    ${aciklar.length ? `<div class="bolum" style="margin-bottom:18px">
+      <h3 style="margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:6px">
+        ${ik('clock')} Bekleyen Adisyonlar
+        <span style="background:var(--turuncu);color:#fff;font-size:11px;padding:1px 8px;border-radius:10px;font-weight:700">${aciklar.length}</span>
+      </h3>
+      <div class="tablo-sar"><table>
+        <thead><tr><th>No</th><th>Yer</th><th>Açılış</th><th>Süre</th>
+          <th class="sag">Tutar</th><th class="sag">Ödenen</th><th class="sag">Kalan</th><th></th></tr></thead>
+        <tbody>${aciklar.map(a => {
+          const dk = Math.round((Date.now() - new Date(a.acilis).getTime()) / 60000);
+          const sure = dk >= 60 ? Math.floor(dk/60) + 's ' + (dk%60) + 'dk' : dk + 'dk';
+          return `<tr>
+            <td><b>#${kacis(a.kod)}</b></td>
+            <td>${kacis(a.masa_ad || (a.tip === 'paket' ? 'Paket' : 'Gel-Al'))}</td>
+            <td>${saatFmt(a.acilis)}</td>
+            <td>${sure}</td>
+            <td class="sag para">${tl(a.ozet.net_toplam)}</td>
+            <td class="sag para">${tl(a.ozet.odenen)}</td>
+            <td class="sag para" style="font-weight:700;color:${a.ozet.kalan > 0 ? 'var(--kirmizi)' : 'var(--yesil)'}">${tl(a.ozet.kalan)}</td>
+            <td><button class="btn btn-cizgi btn-kucuk" onclick="git('adisyon',${a.id})">Aç</button></td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table></div>
+    </div>` : ''}
     <div class="kart-sira">
-      <div class="ozet-kart"><div class="etiket">Kapanan Adisyon</div>
+      <div class="ozet-kart"><div class="etiket">Açık</div>
+        <div class="deger">${aciklar.length}</div></div>
+      <div class="ozet-kart"><div class="etiket">Kapanan</div>
         <div class="deger">${kapali.length}</div></div>
       <div class="ozet-kart vurgu"><div class="etiket">Toplam Ciro</div>
         <div class="deger">${tl(ciro)}</div></div>
-      <div class="ozet-kart"><div class="etiket">Ortalama Adisyon</div>
+      <div class="ozet-kart"><div class="etiket">Ortalama</div>
         <div class="deger">${tl(kapali.length ? Math.round(ciro / kapali.length) : 0)}</div></div>
       <div class="ozet-kart"><div class="etiket">İptal</div>
         <div class="deger">${liste.length - kapali.length}</div></div>
