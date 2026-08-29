@@ -4,23 +4,24 @@ title Adfix Deploy
 
 set SUNUCU=sagunmed@sagunmed.com
 set PORT=22667
-set REPO=/home/sagunmed/SagunMedBeta
+set HEDEF=/home/sagunmed/SagunMedBeta/Adfix
+set ADFIX=%~dp0..
 
-set /p BRANCH=Branch (bos birak = master):
-if "%BRANCH%"=="" set BRANCH=master
-
+echo Adfix Deploy
 echo.
-echo Git pull (%BRANCH%)...
-ssh -p %PORT% %SUNUCU% "cd %REPO% && git fetch origin %BRANCH% && git merge origin/%BRANCH% --no-edit"
+
+echo [1/3] Backend yukleniyor...
+scp -P %PORT% "%ADFIX%\backend\*.py" %SUNUCU%:%HEDEF%/backend/
+scp -P %PORT% "%ADFIX%\backend\routers\*.py" %SUNUCU%:%HEDEF%/backend/routers/
 if %errorlevel% neq 0 goto hata
 
-echo PM2 restart...
+echo [2/3] Frontend yukleniyor...
+scp -P %PORT% "%ADFIX%\frontend\*.html" %SUNUCU%:%HEDEF%/frontend/
+if %errorlevel% neq 0 goto hata
+
+echo [3/3] PM2 restart...
 ssh -p %PORT% %SUNUCU% "pm2 restart adfix"
 if %errorlevel% neq 0 goto hata
-
-echo Durum kontrolu...
-ping -n 3 127.0.0.1 >nul
-ssh -p %PORT% %SUNUCU% "pm2 status adfix"
 
 echo.
 echo Deploy tamamlandi - https://adfixapp.com.tr
