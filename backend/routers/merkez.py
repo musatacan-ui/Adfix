@@ -96,3 +96,14 @@ def isletme_guncelle(slug: str, ad: str = None, aktif: int = None,
     mc.commit()
     mc.close()
     return {"mesaj": "Guncellendi"}
+
+
+@router.delete("/isletme/{slug}")
+def isletme_sil(slug: str, _=Depends(super_gerektir)):
+    mc = db.merkez_conn()
+    isl = mc.execute("SELECT * FROM isletmeler WHERE slug=?", (slug,)).fetchone()
+    mc.close()
+    if not isl:
+        raise HTTPException(404, "Isletme bulunamadi")
+    db.isletme_sil(slug)
+    return {"mesaj": f"'{isl['ad']}' silindi"}

@@ -105,6 +105,14 @@ def isletme_slug_kontrol(slug: str) -> bool:
     return bool(r and r["aktif"])
 
 
+def isletme_sil(slug: str):
+    """İşletmeyi merkez DB'den siler. İşletme DB dosyası korunur (yedek)."""
+    mc = merkez_conn()
+    mc.execute("DELETE FROM isletmeler WHERE slug=?", (slug,))
+    mc.commit()
+    mc.close()
+
+
 def init_db():
     conn = get_conn()
     c = conn.cursor()

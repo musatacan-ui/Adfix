@@ -37,6 +37,8 @@ a{color:var(--mavi);text-decoration:none}a:hover{text-decoration:underline}
 .row{display:flex;gap:12px}.row>*{flex:1}
 #girisEkrani,#panelEkrani{display:none}
 .bos{text-align:center;color:var(--sol);padding:24px;font-size:14px}
+.btn-kucuk{padding:5px 12px;font-size:12px;border-radius:6px}
+.btn-turuncu{background:var(--turuncu);color:#fff}.btn-turuncu:hover{filter:brightness(1.1)}
 </style>
 </head>
 <body>
@@ -142,17 +144,23 @@ async function listeYukle() {
   try {
     const liste = await istek('/isletme/liste');
     if(!liste.length) { el.innerHTML='<div class="bos">Henuz isletme eklenmemis.</div>'; return; }
-    let html = '<table><tr><th>Isletme</th><th>URL Kodu</th><th>Durum</th><th>Erisim</th></tr>';
+    let html = '<table><tr><th>Isletme</th><th>URL Kodu</th><th>Durum</th><th></th></tr>';
     for(const i of liste) {
       const durum = i.aktif
         ? '<span class="rozet rozet-aktif">Aktif</span>'
         : '<span class="rozet rozet-pasif">Pasif</span>';
       const url = location.origin + '/i/' + i.slug + '/';
+      const toggleBtn = i.aktif
+        ? `<button class="btn btn-kucuk btn-turuncu" onclick="isletmeToggle('${esc(i.slug)}',0)">Pasife Al</button>`
+        : `<button class="btn btn-kucuk btn-yesil" onclick="isletmeToggle('${esc(i.slug)}',1)">Aktif Et</button>`;
       html += `<tr>
-        <td><strong>${esc(i.ad)}</strong></td>
+        <td><strong><a href="${url}" target="_blank">${esc(i.ad)}</a></strong></td>
         <td><code>${esc(i.slug)}</code></td>
         <td>${durum}</td>
-        <td><a href="${url}" target="_blank">Ac</a></td>
+        <td style="text-align:right;white-space:nowrap">
+          ${toggleBtn}
+          <button class="btn btn-kucuk btn-kirmizi" onclick="isletmeSil('${esc(i.slug)}','${esc(i.ad)}')">Sil</button>
+        </td>
       </tr>`;
     }
     html += '</table>';
@@ -183,6 +191,22 @@ async function isletmeOlustur() {
     slugElle = false;
     listeYukle();
   } catch(e) { el.innerHTML = '<div class="hata">'+esc(e.message)+'</div>'; }
+}
+
+async function isletmeToggle(slug, aktif) {
+  try {
+    await istek('/isletme/'+slug, {method:'PATCH',
+      body:JSON.stringify({aktif})});
+    listeYukle();
+  } catch(e) { alert(e.message); }
+}
+
+async function isletmeSil(slug, ad) {
+  if(!confirm(ad+' isletmesi kalici olarak silinecek.\nIsletmenin veritabani dosyasi (data/'+slug+'.db) sunucuda korunur.\n\nDevam edilsin mi?')) return;
+  try {
+    await istek('/isletme/'+slug, {method:'DELETE'});
+    listeYukle();
+  } catch(e) { alert(e.message); }
 }
 
 function cikis() {
