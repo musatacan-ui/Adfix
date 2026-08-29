@@ -127,9 +127,16 @@ def saglik():
     return {"durum": "ayakta", "acik_adisyon": n}
 
 
+@_app.get("/api/acik/isletmeler", include_in_schema=False)
+def acik_isletmeler():
+    """Aktif işletmelerin listesi (auth gerektirmez, anasayfa için)."""
+    liste = db.isletme_listesi()
+    return [{"ad": i["ad"], "slug": i["slug"]} for i in liste if i["aktif"]]
+
+
 @_app.get("/", include_in_schema=False)
 def anasayfa():
-    return FileResponse(os.path.join(FRONTEND, "adfix.html"))
+    return FileResponse(os.path.join(FRONTEND, "anasayfa.html"))
 
 
 @_app.get("/menu", include_in_schema=False)

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adfix — Adisyon Sistemi</title>
+<meta name="theme-color" content="#F97316">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F97316'/%3E%3Ctext y='72' x='50' font-size='58' text-anchor='middle'%3E%F0%9F%A7%A8%3C/text%3E%3C/svg%3E">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--ana:#F97316;--ana-koyu:#C2410C;--ana-acik:#FFF7ED;--koyu:#0F172A;--koyu2:#1E293B;--gri:#64748B;--cizgi:#E2E8F0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:var(--koyu);color:#E2E8F0;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:24px 16px}
+
+.kapsam{width:100%;max-width:440px;text-align:center}
+
+.logo{width:72px;height:72px;background:var(--ana);border-radius:18px;
+  display:inline-flex;align-items:center;justify-content:center;margin-bottom:16px;
+  box-shadow:0 8px 32px rgba(249,115,22,.3)}
+.logo svg{width:36px;height:36px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+h1{font-size:32px;font-weight:700;margin-bottom:6px;color:#fff}
+.slogan{color:var(--gri);font-size:15px;margin-bottom:36px}
+
+.isletme-liste{display:flex;flex-direction:column;gap:10px;margin-bottom:24px}
+
+.isletme-btn{display:flex;align-items:center;gap:14px;padding:16px 20px;
+  background:var(--koyu2);border:1.5px solid #334155;border-radius:14px;
+  cursor:pointer;transition:all .15s;text-decoration:none;color:inherit;text-align:left}
+.isletme-btn:hover{border-color:var(--ana);background:#1a2744;transform:translateY(-1px);
+  box-shadow:0 4px 16px rgba(249,115,22,.15)}
+.isletme-btn:active{transform:translateY(0)}
+
+.isletme-ikon{width:44px;height:44px;background:var(--ana);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  font-size:20px;color:#fff;font-weight:700}
+
+.isletme-bilgi{flex:1;min-width:0}
+.isletme-ad{font-size:16px;font-weight:600;color:#fff;margin-bottom:2px}
+.isletme-slug{font-size:12px;color:var(--gri);font-family:monospace}
+
+.isletme-ok{color:var(--gri);transition:color .15s}
+.isletme-btn:hover .isletme-ok{color:var(--ana)}
+
+.ayirici{display:flex;align-items:center;gap:12px;margin:20px 0;color:var(--gri);font-size:13px}
+.ayirici::before,.ayirici::after{content:'';flex:1;height:1px;background:#334155}
+
+.kod-alan{display:flex;gap:8px}
+.kod-alan input{flex:1;padding:14px 16px;border:1.5px solid #334155;border-radius:12px;
+  background:var(--koyu2);color:#fff;font-size:15px;outline:none;transition:border-color .15s}
+.kod-alan input:focus{border-color:var(--ana)}
+.kod-alan input::placeholder{color:#475569}
+.kod-alan button{padding:14px 24px;background:var(--ana);color:#fff;border:none;
+  border-radius:12px;font-size:15px;font-weight:600;cursor:pointer;white-space:nowrap;
+  transition:filter .15s}
+.kod-alan button:hover{filter:brightness(1.1)}
+
+.hata{color:#F87171;font-size:13px;margin-top:8px;min-height:20px}
+.bos-mesaj{color:var(--gri);font-size:14px;padding:24px;text-align:center}
+
+.alt{margin-top:40px;font-size:12px;color:#475569}
+.alt a{color:var(--gri);text-decoration:none}
+.alt a:hover{color:var(--ana)}
+
+.yukle{color:var(--gri);font-size:14px;padding:24px}
+</style>
+</head>
+<body>
+<div class="kapsam">
+  <div class="logo">
+    <svg viewBox="0 0 24 24"><path d="M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z"/></svg>
+  </div>
+  <h1>Adfix</h1>
+  <p class="slogan">Adisyonu hallet.</p>
+
+  <div id="liste" class="isletme-liste">
+    <div class="yukle">Yukleniyor...</div>
+  </div>
+
+  <div class="ayirici">veya isletme kodu girin</div>
+
+  <div class="kod-alan">
+    <input id="kodInput" placeholder="ornek-kafe" autocomplete="off" autocapitalize="off"
+           oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')"
+           onkeydown="if(event.key==='Enter')kodGit()">
+    <button onclick="kodGit()">Git</button>
+  </div>
+  <div class="hata" id="hata"></div>
+
+  <div class="alt">
+    <a href="/merkez">Merkez Yonetim</a>
+  </div>
+</div>
+
+<script>
+async function yukle() {
+  const el = document.getElementById('liste');
+  try {
+    const r = await fetch('/api/acik/isletmeler');
+    if (!r.ok) throw new Error();
+    const liste = await r.json();
+    if (!liste.length) {
+      el.innerHTML = '<div class="bos-mesaj">Henuz isletme eklenmemis.<br>Merkez panelden ekleyin.</div>';
+      return;
+    }
+    el.innerHTML = liste.map(i => `
+      <a class="isletme-btn" href="/i/${esc(i.slug)}/">
+        <div class="isletme-ikon">${esc(i.ad.charAt(0).toUpperCase())}</div>
+        <div class="isletme-bilgi">
+          <div class="isletme-ad">${esc(i.ad)}</div>
+          <div class="isletme-slug">/i/${esc(i.slug)}/</div>
+        </div>
+        <svg class="isletme-ok" width="20" height="20" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m9 18 6-6-6-6"/></svg>
+      </a>`).join('');
+  } catch (e) {
+    el.innerHTML = '';
+  }
+}
+
+function kodGit() {
+  const kod = document.getElementById('kodInput').value.trim();
+  const hata = document.getElementById('hata');
+  if (!kod) { hata.textContent = 'Isletme kodunu girin'; return; }
+  if (kod.length < 2) { hata.textContent = 'Kod en az 2 karakter olmali'; return; }
+  hata.textContent = '';
+  location.href = '/i/' + encodeURIComponent(kod) + '/';
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+yukle();
+</script>
+</body>
+</html>
