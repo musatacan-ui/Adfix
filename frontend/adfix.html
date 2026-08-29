@@ -2275,10 +2275,12 @@ async function yQr() {
   window._salonlar = salonlar;
   window._agBilgi = agBilgi;
 
-  // Karekodların işaret edeceği adres. Ayar boşsa sunucunun bulduğu yerel ağ
-  // adresini kullan — location.origin localhost olabilir ve telefonda açılmaz.
-  const taban = (S.ayar.qr_taban_url || agBilgi.onerilen || location.origin) + API_BASE;
   const yerelMi = a => /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:|\/|$)/i.test(a);
+  const ipMi = /^(\d+\.){3}\d+$/.test(location.hostname);
+  const domainMi = location.hostname.includes('.') && !ipMi && !yerelMi(location.origin);
+
+  // Domain üzerinden erişiliyorsa domain'i kullan, lokalde sunucu IP'sini öner
+  const taban = (S.ayar.qr_taban_url || (domainMi ? location.origin : agBilgi.onerilen) || location.origin) + API_BASE;
   const bozuk = yerelMi(taban);
   const ayarsiz = !S.ayar.qr_taban_url;
 
@@ -2293,7 +2295,7 @@ async function yQr() {
             <div style="font-size:12.5px;color:#7F1D1D;margin-top:5px;line-height:1.65">
               Adres <code>${kacis(taban)}</code> — <code>localhost</code> her cihazın
               "kendisi" demektir; müşterinin telefonu bu adreste kendi telefonunu arar.
-              Aşağıdan bu bilgisayarın yerel ağ adresini seçin.</div>
+              ${domainMi ? '' : 'Aşağıdan bu bilgisayarın yerel ağ adresini seçin.'}</div>
           </div>
         </div>
       </div>` : `
@@ -2301,25 +2303,33 @@ async function yQr() {
         padding:13px 16px;margin-bottom:16px;display:flex;gap:10px;align-items:center">
         <span style="color:var(--yesil)">${ik('check', 'ik-b')}</span>
         <div style="font-size:13px;color:#166534">
-          Karekodlar <b>${kacis(taban)}</b> adresini gösteriyor${ayarsiz
-            ? ' <span style="opacity:.75">(sunucunun bulduğu adres — kalıcı olması için kaydedin)</span>'
-            : ''}.
+          Karekodlar <b>${kacis(taban)}</b> adresini gösteriyor${domainMi && ayarsiz
+            ? '' : (ayarsiz ? ' <span style="opacity:.75">(kalıcı olması için kaydedin)</span>' : '')}.
         </div>
       </div>`}
 
     <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;
       padding:16px;margin-bottom:18px">
+      ${domainMi && ayarsiz ? `
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+        <span style="color:var(--ana)">${ik('globe', 'ik-b')}</span>
+        <div style="font-size:13px;color:#334155">
+          Domain otomatik algılandı: <b>${kacis(location.origin)}</b>
+          <span style="color:var(--gri);font-size:12px">— farklı bir adres kullanmak isterseniz aşağıya yazın</span>
+        </div>
+      </div>` : ''}
       <div class="alan" style="margin-bottom:12px">
         <label>QR Adresi <span style="font-weight:400;text-transform:none">
           — müşterinin telefonunun açacağı adres</span></label>
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <input id="qrTaban" value="${kacis(S.ayar.qr_taban_url || '')}"
-            placeholder="${kacis(agBilgi.onerilen || 'http://192.168.1.20:8002')}"
+            placeholder="${kacis(domainMi ? location.origin : (agBilgi.onerilen || 'http://192.168.1.20:8002'))}"
             style="flex:1;min-width:250px">
           <button class="btn btn-kucuk" onclick="qrTabanKaydet()">${ik('check')} Kaydet</button>
         </div>
       </div>
 
+      ${domainMi ? '' : `
       <div style="font-size:11.5px;font-weight:700;color:var(--gri);text-transform:uppercase;
         letter-spacing:.05em;margin-bottom:7px">Bu bilgisayarın ağ adresleri</div>
       ${agBilgi.adaylar.length ? `<div class="hizli-sira" style="margin-bottom:10px">
@@ -2332,7 +2342,7 @@ async function yQr() {
       <div style="font-size:11.5px;color:var(--gri);line-height:1.7">
         Doğru adresi seçip <b>Kaydet</b>'e basın, sonra karekodları yazdırın.
         Telefonun kasayla <b>aynı Wi-Fi ağında</b> olması gerekir.
-      </div>
+      </div>`}
     </div>
 
     <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;
@@ -2359,14 +2369,14 @@ async function yQr() {
       </div>
     </div>
 
-    <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;
+    ${domainMi ? '' : `<div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;
       padding:16px;margin-bottom:18px">
       <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px">
         ${ik('triangle-alert')}<b style="font-size:14px">Telefonda açılmıyorsa</b>
       </div>
       <div style="font-size:12.5px;line-height:1.9;color:#334155">
         <b>1 · Windows Güvenlik Duvarı</b> — en sık sebep budur. Kasadaki bilgisayarda
-        <code>Adfix\\guvenlik-duvari.bat</code> dosyasına <b>sağ tık → Yönetici olarak
+        <code>Adfix\\\\guvenlik-duvari.bat</code> dosyasına <b>sağ tık → Yönetici olarak
         çalıştır</b> deyin. Elle yapmak isterseniz, yönetici komut isteminde:
         <div style="display:flex;gap:7px;align-items:center;margin:6px 0 10px">
           <code id="fwKomut" style="flex:1;background:var(--zemin);padding:8px 10px;
@@ -2381,7 +2391,7 @@ async function yQr() {
         karekod okuyucudadır (bazı kameralar http adreslerini açmaz; Chrome ya da
         Safari'nin kendi QR okuyucusunu kullanın).
       </div>
-    </div>
+    </div>`}
 
     <div class="bolum">
       <h3>${ik('qr-code')} Genel Menü Karekodu
