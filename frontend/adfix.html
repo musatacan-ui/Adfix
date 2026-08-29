@@ -23,7 +23,9 @@
 .ik-xl{width:2.2em;height:2.2em;stroke-width:1.6}
 body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   font-size:14px;font-weight:300;background:#000000;color:#ffffff;overflow:hidden}
-input,select,textarea,button{font-family:inherit;font-size:14px}
+input,select,textarea,button{font-family:inherit;font-size:14px;color:inherit}
+option{background:#111111;color:#fff}
+::placeholder{color:#666;opacity:1}
 .gizli{display:none!important}
 ::-webkit-scrollbar{width:9px;height:9px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -151,7 +153,7 @@ input,select,textarea,button{font-family:inherit;font-size:14px}
 .masa.odendi{border-color:rgba(21,132,110,.5);background:#111111}
 .masa-ad{font-size:19px;font-weight:800;letter-spacing:-.4px}
 .masa-bos{font-size:12px;color:#9a9a9a;margin-top:auto}
-.masa-tutar{font-size:18px;font-weight:800;color:var(--ana-koyu);margin-top:auto}
+.masa-tutar{font-size:18px;font-weight:800;color:var(--ana);margin-top:auto}
 .masa-satir{display:flex;justify-content:space-between;align-items:center;
   font-size:11.5px;color:var(--gri);margin-top:3px}
 .masa-rozet{position:absolute;top:9px;right:9px;background:var(--kirmizi);color:#fff;
@@ -184,7 +186,7 @@ input,select,textarea,button{font-family:inherit;font-size:14px}
 .urun:hover{border-color:var(--ana);background:#1a1230;transform:translateY(-1px)}
 .urun:active{transform:scale(.96)}
 .urun .ad{font-size:12.5px;font-weight:600;line-height:1.35}
-.urun .fy{font-size:14px;font-weight:800;color:var(--ana-koyu);margin-top:6px}
+.urun .fy{font-size:14px;font-weight:800;color:var(--ana);margin-top:6px}
 .urun-gorsel{width:100%;height:66px;border-radius:8px;overflow:hidden;margin-bottom:7px;
   display:flex;align-items:center;justify-content:center;background:var(--zemin)}
 .urun-gorsel img{width:100%;height:100%;object-fit:cover;display:block}
@@ -253,7 +255,7 @@ input,select,textarea,button{font-family:inherit;font-size:14px}
 .fis-urun{font-size:14px;font-weight:600;padding:4px 0}
 .fis-urun .adet{display:inline-block;background:var(--koyu);color:#fff;font-size:11.5px;
   padding:1px 7px;border-radius:6px;margin-right:6px;font-weight:700}
-.fis-not{font-size:11.5px;color:var(--ana-koyu);font-style:italic;margin-top:2px}
+.fis-not{font-size:11.5px;color:var(--ana);font-style:italic;margin-top:2px}
 .fis-alt{display:flex;justify-content:space-between;align-items:center;margin-top:10px;
   padding-top:9px;border-top:1px dashed var(--cizgi)}
 .fis-garson{font-size:11px;color:var(--gri)}
@@ -305,7 +307,7 @@ tbody tr:hover{background:#1a1a1a}
 .tur{padding:13px 9px;border:2px solid #1f1f1f;border-radius:24px;background:#111111;
   cursor:pointer;text-align:center;font-weight:600;font-size:13px;transition:all .13s;color:#bdbdbd}
 .tur:hover{border-color:#333}
-.tur.aktif{border-color:var(--ana);background:var(--ana-acik);color:var(--ana-koyu)}
+.tur.aktif{border-color:var(--ana);background:var(--ana-acik);color:#a78bfa}
 .tur-ik{display:block;margin-bottom:5px;color:var(--gri)}
 .tur.aktif .tur-ik{color:var(--ana)}
 .tus-takim{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
@@ -315,8 +317,8 @@ tbody tr:hover{background:#1a1a1a}
 .tus:active{background:var(--ana);color:#fff;transform:scale(.95)}
 .tus.islem{background:#0a0a0a;font-size:15px;color:#bdbdbd}
 .tutar-goster{font-size:31px;font-weight:800;text-align:right;padding:13px 15px;
-  background:var(--zemin);border-radius:11px;font-variant-numeric:tabular-nums;
-  border:2px solid var(--cizgi)}
+  background:#0a0a0a;border-radius:24px;font-variant-numeric:tabular-nums;
+  border:2px solid #1f1f1f;color:#fff}
 .hizli-sira{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
 .hizli{padding:7px 12px;border:1.5px solid #1f1f1f;border-radius:9999px;background:#111111;
   font-size:12.5px;font-weight:600;cursor:pointer;color:#bdbdbd}
@@ -328,8 +330,8 @@ tbody tr:hover{background:#1a1a1a}
 /* ───────────── bildirim ───────────── */
 #bildirimler{position:fixed;bottom:16px;right:16px;z-index:400;display:flex;
   flex-direction:column;gap:8px;max-width:340px}
-.bildirim{background:var(--koyu2);color:#fff;padding:12px 16px;border-radius:11px;
-  font-size:13px;box-shadow:0 10px 26px rgba(0,0,0,.28);animation:gir .22s ease;
+.bildirim{background:#111111;color:#fff;padding:12px 16px;border-radius:24px;
+  font-size:13px;animation:gir .22s ease;border:1px solid #1f1f1f;
   border-left:4px solid var(--ana)}
 .bildirim.iyi{border-left-color:var(--yesil)}
 .bildirim.kotu{border-left-color:var(--kirmizi)}
@@ -957,7 +959,7 @@ function urunGorseli(u) {
   if (u.gorsel)
     return `<div class="urun-gorsel"><img src="${u.gorsel}" alt="" loading="lazy"></div>`;
   const k = S.menu.find(k => k.id === u.kategori_id) || {};
-  const renk = k.renk || '#F97316';
+  const renk = k.renk || '#8052ff';
   return `<div class="urun-gorsel" style="background:${renk}1A;color:${renk}">
     ${ik(k.ikon || 'utensils')}</div>`;
 }
@@ -1307,7 +1309,7 @@ async function bolAc(kisi) {
         <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:9px">
           <span>Toplam</span><b class="para">${tl(b.net_toplam)}</b></div>
         ${b.paylar.map((p, i) => `<div style="display:flex;justify-content:space-between;
-          font-size:14px;padding:6px 0;border-top:1px dashed #CBD5E1">
+          font-size:14px;padding:6px 0;border-top:1px dashed #1f1f1f">
           <span>${i + 1}. kişi</span><b class="para">${tl(p)}</b></div>`).join('')}
       </div>
       <p style="font-size:11.5px;color:var(--gri);margin-top:11px;line-height:1.6">
@@ -1525,13 +1527,13 @@ async function mutfakCiz() {
     if (mutfakListe.length) {
       h += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
         <span style="font-size:16px;font-weight:700;color:#fff">${ik('chef-hat')} Mutfak</span>
-        <span style="background:#F97316;color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px">${mutfakListe.length}</span></div>
+        <span style="background:#8052ff;color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px">${mutfakListe.length}</span></div>
         <div class="mutfak-izgara">${kartlarHTML(mutfakListe)}</div>`;
     }
     if (barListe.length) {
       h += `<div style="display:flex;align-items:center;gap:8px;margin:${mutfakListe.length ? '24px' : '0'} 0 12px">
         <span style="font-size:16px;font-weight:700;color:#fff">${ik('wine')} Bar</span>
-        <span style="background:#8B5CF6;color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px">${barListe.length}</span></div>
+        <span style="background:#6B3FE8;color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px">${barListe.length}</span></div>
         <div class="mutfak-izgara">${kartlarHTML(barListe)}</div>`;
     }
     document.getElementById('sayfa').innerHTML = h;
@@ -1699,7 +1701,7 @@ async function raporCiz(bas, bit) {
     ${r.saatler && r.saatler.length ? (() => {
       const maxA = Math.max(1, ...r.saatler.map(s => s.adisyon));
       return `<div class="bolum"><h3>${ik('clock')} Saatlik Satış Dağılımı</h3>
-        <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;padding:14px 16px;overflow-x:auto">
+        <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;padding:14px 16px;overflow-x:auto">
           <div class="saat-grafik">
             ${r.saatler.map(s => {
               const yuzde = Math.round(s.adisyon * 100 / maxA);
@@ -1755,10 +1757,10 @@ async function raporCiz(bas, bit) {
     </div>
 
     <div class="bolum"><h3>${ik('lock')} Gün Sonu (Z Raporu)</h3>
-      <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;padding:16px">
+      <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;padding:16px">
         ${gs.adisyon_sayisi ? `
           <div style="font-size:13px;color:var(--gri);margin-bottom:12px">
-            Henüz gün sonuna girmemiş <b style="color:#0F172A">${gs.adisyon_sayisi}</b> kapalı adisyon var.</div>
+            Henüz gün sonuna girmemiş <b style="color:#fff">${gs.adisyon_sayisi}</b> kapalı adisyon var.</div>
           <div class="kart-sira" style="margin-bottom:12px">
             <div class="ozet-kart"><div class="etiket">Net</div><div class="deger" style="font-size:19px">${tl(gs.net_kurus)}</div></div>
             <div class="ozet-kart"><div class="etiket">${ik('banknote')} Nakit</div><div class="deger" style="font-size:19px">${tl(gs.nakit_kurus)}</div></div>
@@ -2251,7 +2253,7 @@ async function yLog() {
 
 function yHesap() {
   document.getElementById('yonetimGovde').innerHTML = `
-    <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;
+    <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;
       padding:20px;max-width:420px">
       <h3 style="font-size:15px;margin-bottom:14px">Şifre Değiştir</h3>
       <div class="alan"><label>Mevcut Şifre</label><input id="hEski" type="password"></div>
@@ -2348,7 +2350,7 @@ async function yIsletme() {
       <div>
       <div class="bolum">
         <h3>${ik('image-up')} Logo</h3>
-        <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;padding:16px">
+        <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;padding:16px">
           <div style="display:flex;gap:16px;align-items:center">
             <div class="logo-onizleme" id="logoOnizleme">${
               a.logo ? `<img src="${a.logo}" alt="">` : ik('image', 'ik-xl')}</div>
@@ -2369,10 +2371,10 @@ async function yIsletme() {
 
       <div class="bolum">
         <h3>${ik('printer')} Fiş Önizleme <small>çıktı böyle görünür</small></h3>
-        <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;padding:18px;
+        <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;padding:18px;
           display:flex;justify-content:center">
-          <div style="width:280px;font-family:'Courier New',monospace;font-size:12px;
-            border:1px dashed var(--cizgi);padding:14px;border-radius:8px">
+          <div style="width:280px;font-family:'Courier New',monospace;font-size:12px;color:#000;background:#fff;
+            border:1px dashed #ccc;padding:14px;border-radius:8px">
             ${a.logo ? `<div style="text-align:center;margin-bottom:6px">
               <img src="${a.logo}" style="max-height:52px;max-width:150px;object-fit:contain"></div>` : ''}
             <div style="text-align:center;font-weight:bold;font-size:15px">
@@ -2395,7 +2397,7 @@ async function yIsletme() {
 
       <div class="bolum">
         <h3>${ik('building-2')} İşletme Bilgileri</h3>
-        <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;padding:16px">
+        <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;padding:16px">
           <div class="alan"><label>İşletme Adı</label>
             <input id="ayAd" value="${kacis(a.isletme_adi)}" placeholder="Örn. Sofra Restoran"></div>
           <div class="alan"><label>Slogan</label>
@@ -2472,34 +2474,34 @@ async function yQr() {
 
   document.getElementById('yonetimGovde').innerHTML = `
     ${bozuk ? `
-      <div style="background:#FEF2F2;border:1.5px solid #FCA5A5;border-radius:12px;
+      <div style="background:#2a1010;border:1.5px solid #4a1c1c;border-radius:24px;
         padding:16px;margin-bottom:16px">
         <div style="display:flex;gap:10px;align-items:flex-start">
           <span style="color:var(--kirmizi);margin-top:2px">${ik('triangle-alert', 'ik-b')}</span>
           <div>
-            <b style="color:#B91C1C">Bu karekodlar telefonda ÇALIŞMAZ</b>
-            <div style="font-size:12.5px;color:#7F1D1D;margin-top:5px;line-height:1.65">
+            <b style="color:#f87171">Bu karekodlar telefonda ÇALIŞMAZ</b>
+            <div style="font-size:12.5px;color:#fca5a5;margin-top:5px;line-height:1.65">
               Adres <code>${kacis(taban)}</code> — <code>localhost</code> her cihazın
               "kendisi" demektir; müşterinin telefonu bu adreste kendi telefonunu arar.
               ${domainMi ? '' : 'Aşağıdan bu bilgisayarın yerel ağ adresini seçin.'}</div>
           </div>
         </div>
       </div>` : `
-      <div style="background:#F0FDF4;border:1.5px solid #BBF7D0;border-radius:12px;
+      <div style="background:#0d2a22;border:1.5px solid #1a4a3a;border-radius:24px;
         padding:13px 16px;margin-bottom:16px;display:flex;gap:10px;align-items:center">
         <span style="color:var(--yesil)">${ik('check', 'ik-b')}</span>
-        <div style="font-size:13px;color:#166534">
+        <div style="font-size:13px;color:#5eead4">
           Karekodlar <b>${kacis(taban)}</b> adresini gösteriyor${domainMi && ayarsiz
             ? '' : (ayarsiz ? ' <span style="opacity:.75">(kalıcı olması için kaydedin)</span>' : '')}.
         </div>
       </div>`}
 
-    <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;
+    <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;
       padding:16px;margin-bottom:18px">
       ${domainMi && ayarsiz ? `
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
         <span style="color:var(--ana)">${ik('globe', 'ik-b')}</span>
-        <div style="font-size:13px;color:#334155">
+        <div style="font-size:13px;color:#bdbdbd">
           Domain otomatik algılandı: <b>${kacis(location.origin)}</b>
           <span style="color:var(--gri);font-size:12px">— farklı bir adres kullanmak isterseniz aşağıya yazın</span>
         </div>
@@ -2531,7 +2533,7 @@ async function yQr() {
       </div>`}
     </div>
 
-    <div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;
+    <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;
       padding:16px;margin-bottom:18px">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
         <div>
@@ -2546,21 +2548,20 @@ async function yQr() {
           <input type="checkbox" id="qrSiparisSwitch" onchange="qrSiparisToggle(this.checked)"
             ${S.ayar.qr_siparis_acik === '1' ? 'checked' : ''}
             style="opacity:0;width:0;height:0;position:absolute">
-          <span style="position:absolute;inset:0;background:${S.ayar.qr_siparis_acik === '1' ? 'var(--yesil)' : '#ccc'};
+          <span style="position:absolute;inset:0;background:${S.ayar.qr_siparis_acik === '1' ? 'var(--yesil)' : '#333'};
             border-radius:14px;transition:.2s"></span>
           <span style="position:absolute;top:2px;left:${S.ayar.qr_siparis_acik === '1' ? '26px' : '2px'};
-            width:24px;height:24px;background:#fff;border-radius:50%;transition:.2s;
-            box-shadow:0 1px 3px rgba(0,0,0,.2)"></span>
+            width:24px;height:24px;background:#1f1f1f;border-radius:50%;transition:.2s"></span>
         </label>
       </div>
     </div>
 
-    ${domainMi ? '' : `<div style="background:#fff;border:1px solid var(--cizgi);border-radius:12px;
+    ${domainMi ? '' : `<div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;
       padding:16px;margin-bottom:18px">
       <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px">
         ${ik('triangle-alert')}<b style="font-size:14px">Telefonda açılmıyorsa</b>
       </div>
-      <div style="font-size:12.5px;line-height:1.9;color:#334155">
+      <div style="font-size:12.5px;line-height:1.9;color:#bdbdbd">
         <b>1 · Windows Güvenlik Duvarı</b> — en sık sebep budur. Kasadaki bilgisayarda
         <code>Adfix\\\\guvenlik-duvari.bat</code> dosyasına <b>sağ tık → Yönetici olarak
         çalıştır</b> deyin. Elle yapmak isterseniz, yönetici komut isteminde:
