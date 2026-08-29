@@ -413,13 +413,16 @@ tbody tr:hover{background:#FAFAFA}
    Para birimi: her yerde KURUŞ (tam sayı). TL'ye çevirme sadece tl().
    ════════════════════════════════════════════════════════════════ */
 
-const _slugMatch = location.pathname.match(/^(\/i\/[^/]+)/);
-const API_BASE = _slugMatch ? _slugMatch[1] : '';
+const _slugMatch = location.pathname.match(/^\/i\/([^/]+)/);
+const _slug = _slugMatch ? _slugMatch[1] : '';
+const API_BASE = _slug ? '/i/' + _slug : '';
 const API = location.origin + API_BASE + '/api';
+const _tokenKey = _slug ? 'adfix_token_' + _slug : 'adfix_token';
+const _kulKey = _slug ? 'adfix_kul_' + _slug : 'adfix_kul';
 
 const S = {
-  token: localStorage.getItem('adfix_token'),
-  kul:   JSON.parse(localStorage.getItem('adfix_kul') || 'null'),
+  token: localStorage.getItem(_tokenKey),
+  kul:   JSON.parse(localStorage.getItem(_kulKey) || 'null'),
   rota: 'masalar',
   plan: null, menu: null, adisyon: null,
   salon: null, kategori: null,
@@ -525,8 +528,8 @@ async function girisYap() {
   try {
     const y = await POST('/kullanici/giris', { kullanici_adi: k, sifre: s });
     S.token = y.token; S.kul = y.kullanici;
-    localStorage.setItem('adfix_token', y.token);
-    localStorage.setItem('adfix_kul', JSON.stringify(y.kullanici));
+    localStorage.setItem(_tokenKey, y.token);
+    localStorage.setItem(_kulKey, JSON.stringify(y.kullanici));
     baslat();
   } catch (e) { h.textContent = e.message; h.style.display = 'block'; }
 }
@@ -534,7 +537,7 @@ document.getElementById('gSifre').addEventListener('keydown', e => { if (e.key =
 document.getElementById('gKullanici').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('gSifre').focus(); });
 
 function cikis() {
-  localStorage.removeItem('adfix_token'); localStorage.removeItem('adfix_kul');
+  localStorage.removeItem(_tokenKey); localStorage.removeItem(_kulKey);
   S.token = null; S.kul = null;
   clearInterval(S.zamanlayici);
   document.getElementById('uygulama').style.display = 'none';

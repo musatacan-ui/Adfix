@@ -136,6 +136,9 @@ def acik_isletmeler():
 
 @_app.get("/", include_in_schema=False)
 def anasayfa():
+    slug = tenant.isletme_slug.get(None)
+    if slug:
+        return FileResponse(os.path.join(FRONTEND, "adfix.html"))
     return FileResponse(os.path.join(FRONTEND, "anasayfa.html"))
 
 
