@@ -2277,7 +2277,7 @@ async function yQr() {
 
   // Karekodların işaret edeceği adres. Ayar boşsa sunucunun bulduğu yerel ağ
   // adresini kullan — location.origin localhost olabilir ve telefonda açılmaz.
-  const taban = S.ayar.qr_taban_url || agBilgi.onerilen || location.origin;
+  const taban = (S.ayar.qr_taban_url || agBilgi.onerilen || location.origin) + API_BASE;
   const yerelMi = a => /^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])(:|\/|$)/i.test(a);
   const bozuk = yerelMi(taban);
   const ayarsiz = !S.ayar.qr_taban_url;
