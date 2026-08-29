@@ -149,6 +149,7 @@ class MusteriSatir(BaseModel):
 
 class MusteriSiparisForm(BaseModel):
     satirlar: List[MusteriSatir]
+    notu: str = ""
 
 
 @router.post("/masa/{masa_id}/siparis")
@@ -186,10 +187,10 @@ def musteri_siparis(masa_id: int, form: MusteriSiparisForm, request: Request):
     yeni_adisyon = ad is None
     aid = ad["id"] if ad else None
 
+    musteri_notu = (form.notu or "").strip()[:NOT_UZUNLUK]
+    aciklama = ("QR ile açıldı" + (" — Müşteri notu: " + musteri_notu if musteri_notu else ""))
+
     if yeni_adisyon:
-        # Adisyon aç: kişi 1 (garson daha sonra düzeltebilir), kodu günlük seriden ver.
-        # ux_gunluk_kod / ux_masa_tek_acik çakışırsa birkaç kez dener; ikinci deneme
-        # çakışmadan (araya başka bir sipariş girdiyse) mevcut adisyona satır ekler.
         for _ in range(6):
             n = conn.execute(
                 "SELECT COUNT(*) n FROM adisyonlar "
@@ -198,13 +199,12 @@ def musteri_siparis(masa_id: int, form: MusteriSiparisForm, request: Request):
             try:
                 cur = conn.execute("""
                     INSERT INTO adisyonlar (kod, tip, masa_id, kisi, acan_id, aciklama)
-                    VALUES (?, 'masa', ?, 1, NULL, 'QR ile açıldı')""",
-                    (kod, masa_id))
+                    VALUES (?, 'masa', ?, 1, NULL, ?)""",
+                    (kod, masa_id, aciklama))
                 aid = cur.lastrowid
                 break
             except sqlite3.IntegrityError as e:
                 if "ux_masa_tek_acik" in str(e):
-                    # Arada bir başka sipariş masayı açtı — o adisyona yaz.
                     ad = conn.execute(
                         "SELECT * FROM adisyonlar WHERE masa_id=? AND durum='acik'",
                         (masa_id,)).fetchone()
@@ -212,12 +212,19 @@ def musteri_siparis(masa_id: int, form: MusteriSiparisForm, request: Request):
                         aid = ad["id"]; yeni_adisyon = False
                         break
                 if "ux_gunluk_kod" in str(e):
-                    continue                # aynı gün kodu; tekrar dene
+                    continue
                 conn.close()
                 raise HTTPException(500, "Adisyon açılamadı, tekrar deneyin")
         else:
             conn.close()
             raise HTTPException(500, "Adisyon numarası üretilemedi")
+
+    if not yeni_adisyon and musteri_notu:
+        mevcut = conn.execute(
+            "SELECT aciklama FROM adisyonlar WHERE id=?", (aid,)).fetchone()
+        eski = (mevcut["aciklama"] or "") if mevcut else ""
+        yeni = (eski + " | Müşteri: " + musteri_notu).strip()[:500]
+        conn.execute("UPDATE adisyonlar SET aciklama=? WHERE id=?", (yeni, aid))
 
     eklenen = 0
     for s in form.satirlar:
