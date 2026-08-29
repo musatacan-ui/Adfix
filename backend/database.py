@@ -252,6 +252,15 @@ def init_db():
     CREATE INDEX IF NOT EXISTS ix_adisyon_durum ON adisyonlar(durum);
     CREATE INDEX IF NOT EXISTS ix_adisyon_kapanis ON adisyonlar(kapanis);
     CREATE INDEX IF NOT EXISTS ix_urun_kategori ON urunler(kategori_id);
+
+    CREATE TABLE IF NOT EXISTS masa_bildirim (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        masa_id   INTEGER NOT NULL REFERENCES masalar(id),
+        tip       TEXT NOT NULL CHECK(tip IN ('garson','hesap')),
+        durum     TEXT NOT NULL DEFAULT 'bekliyor' CHECK(durum IN ('bekliyor','goruldu')),
+        olusturma TEXT NOT NULL DEFAULT (datetime('now','localtime'))
+    );
+    CREATE INDEX IF NOT EXISTS ix_bildirim_durum ON masa_bildirim(durum);
     """)
     conn.commit()
     _gocler(conn)

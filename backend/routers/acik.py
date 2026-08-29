@@ -68,7 +68,15 @@ def acik_menu():
     urunler = [dict(x) for x in conn.execute(
         "SELECT id, kategori_id, ad, fiyat_kurus, aciklama, gorsel "
         "FROM urunler WHERE aktif=1 ORDER BY sira, ad")]
+    populer_ids = {r["urun_id"] for r in conn.execute("""
+        SELECT s.urun_id, SUM(s.adet) toplam
+        FROM adisyon_satir s JOIN adisyonlar a ON a.id = s.adisyon_id
+        WHERE s.durum IN ('bekliyor','hazir') AND s.urun_id IS NOT NULL
+          AND a.acilis >= datetime('now','localtime','-30 days')
+        GROUP BY s.urun_id ORDER BY toplam DESC LIMIT 5""")}
     conn.close()
+    for u in urunler:
+        u["populer"] = u["id"] in populer_ids
     for k in kategoriler:
         k["urunler"] = [u for u in urunler if u["kategori_id"] == k["id"]]
     return {
@@ -140,6 +148,10 @@ def qr_uret(veri: str, boyut: int = 8):
 
 
 # ─────────────────────────── SİPARİŞ VE DURUM ───────────────────────────
+
+class CagriForm(BaseModel):
+    tip: str = "garson"
+
 
 class MusteriSatir(BaseModel):
     urun_id: int
@@ -276,6 +288,39 @@ def _masa_ozeti(conn, aid: int) -> dict:
         "satirlar": satirlar,
         "toplam": ara,
     }
+
+
+@router.post("/masa/{masa_id}/cagri")
+def garson_cagri(masa_id: int, form: CagriForm, request: Request):
+    """Müşteri masadan garson çağırır veya hesap ister.
+    Aynı masadan kısa sürede tekrar çağrı engellenir."""
+    _hiz_siniri(_ip(request))
+    conn = db.get_conn()
+    masa = conn.execute(
+        "SELECT ad FROM masalar WHERE id=? AND aktif=1", (masa_id,)).fetchone()
+    if not masa:
+        conn.close()
+        raise HTTPException(404, "Masa bulunamadı")
+
+    tip = form.tip if form.tip in ('garson', 'hesap') else 'garson'
+
+    mevcut = conn.execute(
+        "SELECT id FROM masa_bildirim WHERE masa_id=? AND tip=? AND durum='bekliyor'",
+        (masa_id, tip)).fetchone()
+    if mevcut:
+        conn.close()
+        ad = 'Garson çağırma' if tip == 'garson' else 'Hesap isteme'
+        return {"mesaj": f"{ad} isteğiniz zaten iletildi, birazdan geleceğiz!"}
+
+    conn.execute(
+        "INSERT INTO masa_bildirim (masa_id, tip) VALUES (?, ?)", (masa_id, tip))
+    db.kayit_log(conn, None, f"musteri_{tip}_cagri",
+                 f"masa={masa['ad']} ip={_ip(request)}")
+    conn.commit()
+    conn.close()
+    if tip == 'hesap':
+        return {"mesaj": "Hesap isteğiniz garsona iletildi!"}
+    return {"mesaj": "Garson çağrıldı, birazdan masanıza geleceğiz!"}
 
 
 @router.get("/masa/{masa_id}/durum")

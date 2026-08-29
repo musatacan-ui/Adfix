@@ -187,6 +187,25 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 @keyframes cikar{from{opacity:0;transform:translateY(30px)}}
 
 /* ── genel ── */
+/* ── müşteri aksiyon butonları (garson çağır / hesap iste) ── */
+.musteri-aksiyonlar{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));right:16px;
+  z-index:11;display:flex;flex-direction:column;gap:10px}
+.musteri-aksiyonlar.sepetli{bottom:calc(76px + env(safe-area-inset-bottom))}
+.aksiyon-btn{display:flex;align-items:center;gap:8px;padding:12px 18px;border:none;
+  border-radius:16px;font-size:13.5px;font-weight:700;color:#fff;cursor:pointer;
+  box-shadow:0 6px 20px rgba(0,0,0,.18);transition:transform .12s}
+.aksiyon-btn:active{transform:scale(.93)}
+.aksiyon-btn.garson{background:var(--yesil)}
+.aksiyon-btn.hesap{background:var(--ana)}
+.aksiyon-btn .ik{width:18px;height:18px;stroke-width:2.5}
+
+/* ── popüler rozet ── */
+.populer-rozet{position:absolute;top:6px;left:6px;background:#FEF3C7;color:#92400E;
+  font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;
+  display:flex;align-items:center;gap:3px;letter-spacing:.02em}
+.populer-rozet .ik{width:11px;height:11px;stroke-width:3}
+@media(prefers-color-scheme:dark){.populer-rozet{background:#3F2A0A;color:#FBBF24}}
+
 .alt{margin:34px 16px 0;padding:20px;background:var(--kart);border:1px solid var(--cizgi);
   border-radius:15px;text-align:center;font-size:13px;color:var(--soluk);line-height:1.8}
 .alt a{color:var(--ana-koyu);text-decoration:none;font-weight:600}
@@ -258,6 +277,8 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
   <button class="alt-bar-git" onclick="event.stopPropagation();sepetAc()">
     Sepete git <svg class="ik" style="transform:rotate(-90deg)"><use href="#i-chevron-down"/></svg></button>
 </div>
+
+<div class="musteri-aksiyonlar" id="musteriAks"></div>
 
 <div class="perde" id="perde"></div>
 <div id="bildirim"></div>
@@ -405,6 +426,7 @@ function ciz() {
             <article class="urun ${n ? 'secili' : ''}"
               onclick="urunSec(${u.id})">
               ${n ? `<span class="urun-adet">${n}</span>` : ''}
+              ${u.populer ? `<span class="populer-rozet">${ik('flame')} Popüler</span>` : ''}
               <div class="urun-gor" ${u.gorsel ? '' : `style="background:${k.renk}1A;color:${k.renk}"`}>
                 ${u.gorsel ? `<img src="${u.gorsel}" alt="${kacis(u.ad)}" loading="lazy">`
                            : ik(k.ikon || 'utensils')}</div>
@@ -436,6 +458,8 @@ function ciz() {
     ciz(); sepetBariGoster();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }));
+
+  aksiyonButonlariCiz();
 
   const ara = document.getElementById('ara');
   ara.addEventListener('input', e => {
@@ -749,6 +773,32 @@ function bildir(metin, tip) {
   el.innerHTML = `${ik(tip === 'hata' ? 'triangle-alert' : 'check')} ${kacis(metin)}`;
   document.getElementById('bildirim').appendChild(el);
   setTimeout(() => el.remove(), 3500);
+}
+
+/* ───────── garson çağırma / hesap isteme ───────── */
+function aksiyonButonlariCiz() {
+  const el = document.getElementById('musteriAks');
+  if (!D.masaId) { el.innerHTML = ''; return; }
+  const sepetli = sepetAdetToplam() > 0 && D.menu?.siparis_acik;
+  el.className = 'musteri-aksiyonlar' + (sepetli ? ' sepetli' : '');
+  el.innerHTML = `
+    <button class="aksiyon-btn hesap" onclick="musteriCagri('hesap')">
+      ${ik('receipt-text')} Hesap İste</button>
+    <button class="aksiyon-btn garson" onclick="musteriCagri('garson')">
+      ${ik('bell-ring')} Garson Çağır</button>`;
+}
+
+async function musteriCagri(tip) {
+  try {
+    const y = await api(`/masa/${D.masaId}/cagri`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tip })
+    });
+    bildir(y.mesaj || 'İsteğiniz iletildi!');
+  } catch (e) {
+    bildir(e.message || 'İstek gönderilemedi', 'hata');
+  }
 }
 
 /* ───────── perde arka planına tıklayınca kapat ───────── */

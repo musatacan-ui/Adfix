@@ -536,6 +536,42 @@ def kapat(aid: int, mevcut: dict = Depends(auth.kasiyer_gerektir)):
     return d
 
 
+@router.get("/bildirimler")
+def bildirimler(mevcut: dict = Depends(auth.token_dogrula)):
+    """Bekleyen masa bildirimleri (garson çağırma / hesap isteme)."""
+    conn = db.get_conn()
+    rows = [dict(r) for r in conn.execute("""
+        SELECT b.id, b.masa_id, b.tip, b.durum, b.olusturma, m.ad AS masa_ad,
+               s.ad AS salon_ad
+        FROM masa_bildirim b
+        JOIN masalar m ON m.id = b.masa_id
+        LEFT JOIN salonlar s ON s.id = m.salon_id
+        WHERE b.durum = 'bekliyor'
+        ORDER BY b.id DESC""")]
+    conn.close()
+    return rows
+
+
+@router.patch("/bildirim/{bid}/goruldu")
+def bildirim_goruldu(bid: int, mevcut: dict = Depends(auth.token_dogrula)):
+    conn = db.get_conn()
+    b = conn.execute("SELECT * FROM masa_bildirim WHERE id=?", (bid,)).fetchone()
+    if not b:
+        conn.close()
+        raise HTTPException(404, "Bildirim bulunamadı")
+    if b["durum"] == "goruldu":
+        conn.close()
+        return {"mesaj": "Zaten görüldü"}
+    conn.execute("UPDATE masa_bildirim SET durum='goruldu' WHERE id=?", (bid,))
+    masa = conn.execute("SELECT ad FROM masalar WHERE id=?", (b["masa_id"],)).fetchone()
+    tip_ad = "garson çağrısı" if b["tip"] == "garson" else "hesap isteği"
+    db.kayit_log(conn, mevcut, "bildirim_goruldu",
+                 f"{masa['ad'] if masa else ''} {tip_ad}")
+    conn.commit()
+    conn.close()
+    return {"mesaj": "Görüldü olarak işaretlendi"}
+
+
 @router.post("/{aid}/iptal")
 def iptal(aid: int, form: IptalForm, mevcut: dict = Depends(auth.yonetici_gerektir)):
     if not form.sebep.strip():
