@@ -5,6 +5,7 @@ from collections import defaultdict
 import time
 import database as db
 import auth
+import tenant
 
 router = APIRouter()
 
@@ -55,8 +56,9 @@ def giris(request: Request, form: GirisForm):
     db.kayit_log(conn, dict(k), "giris", k["kullanici_adi"])
     conn.commit()
     conn.close()
+    slug = tenant.isletme_slug.get()
     return {
-        "token": auth.token_olustur(k),
+        "token": auth.token_olustur(k, isletme=slug),
         "kullanici": {"id": k["id"], "ad_soyad": k["ad_soyad"],
                       "kullanici_adi": k["kullanici_adi"], "rol": k["rol"]},
     }

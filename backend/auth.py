@@ -1,24 +1,25 @@
 """
-Adfix — kimlik doğrulama.
-JWT secret ortam değişkeninden okunur, kaynağa asla gömülmez.
+Adfix — kimlik dogrulama.
+JWT secret ortam degiskeninden okunur, kaynaga asla gomulmez.
   export ADFIX_JWT_SECRET=$(python3 -c 'import secrets;print(secrets.token_urlsafe(48))')
 """
 import os, datetime
 import jwt
 from fastapi import HTTPException, Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+import tenant
 
 SECRET = os.environ.get("ADFIX_JWT_SECRET")
 if not SECRET:
     raise RuntimeError(
-        "ADFIX_JWT_SECRET ortam değişkeni tanımlı değil. En az 32 karakter olmalı.\n"
-        "Üretmek için: python3 -c 'import secrets; print(secrets.token_urlsafe(48))'"
+        "ADFIX_JWT_SECRET ortam degiskeni tanimli degil. En az 32 karakter olmali.\n"
+        "Uretmek icin: python3 -c 'import secrets; print(secrets.token_urlsafe(48))'"
     )
 if len(SECRET) < 32:
-    raise RuntimeError("ADFIX_JWT_SECRET çok kısa (en az 32 karakter olmalı).")
+    raise RuntimeError("ADFIX_JWT_SECRET cok kisa (en az 32 karakter olmali).")
 
 ALGORITHM = "HS256"
-EXPIRE_HOURS = 16          # bir vardiya + devir payı
+EXPIRE_HOURS = 16
 
 security = HTTPBearer()
 
@@ -36,7 +37,7 @@ def sifre_dogrula(sifre: str, kayitli_hash: str) -> bool:
         return False
 
 
-def token_olustur(kullanici) -> str:
+def token_olustur(kullanici, isletme: str | None = None) -> str:
     payload = {
         "id": kullanici["id"],
         "kullanici_adi": kullanici["kullanici_adi"],
@@ -45,27 +46,34 @@ def token_olustur(kullanici) -> str:
         "exp": datetime.datetime.now(datetime.timezone.utc)
                + datetime.timedelta(hours=EXPIRE_HOURS),
     }
+    if isletme:
+        payload["isletme"] = isletme
     return jwt.encode(payload, SECRET, algorithm=ALGORITHM)
 
 
 def token_dogrula(kimlik: HTTPAuthorizationCredentials = Depends(security)) -> dict:
     try:
-        return jwt.decode(kimlik.credentials, SECRET, algorithms=[ALGORITHM])
+        payload = jwt.decode(kimlik.credentials, SECRET, algorithms=[ALGORITHM])
     except jwt.ExpiredSignatureError:
-        raise HTTPException(401, "Oturum süresi doldu, tekrar giriş yapın")
+        raise HTTPException(401, "Oturum suresi doldu, tekrar giris yapin")
     except jwt.InvalidTokenError:
-        raise HTTPException(401, "Geçersiz oturum")
+        raise HTTPException(401, "Gecersiz oturum")
+    slug = tenant.isletme_slug.get()
+    token_isletme = payload.get("isletme")
+    if slug != token_isletme:
+        raise HTTPException(401, "Bu token bu isletmeye ait degil")
+    return payload
 
 
 def kasiyer_gerektir(kullanici: dict = Depends(token_dogrula)) -> dict:
-    """Para hareketi: ödeme, iskonto, ikram, satır iptali, adisyon kapatma."""
+    """Para hareketi: odeme, iskonto, ikram, satir iptali, adisyon kapatma."""
     if kullanici["rol"] not in ("kasiyer", "yonetici"):
-        raise HTTPException(403, "Bu işlem için kasiyer yetkisi gerekli")
+        raise HTTPException(403, "Bu islem icin kasiyer yetkisi gerekli")
     return kullanici
 
 
 def yonetici_gerektir(kullanici: dict = Depends(token_dogrula)) -> dict:
-    """Menü, masa düzeni, kullanıcı ve gün sonu işlemleri."""
+    """Menu, masa duzeni, kullanici ve gun sonu islemleri."""
     if kullanici["rol"] != "yonetici":
-        raise HTTPException(403, "Bu işlem için yönetici yetkisi gerekli")
+        raise HTTPException(403, "Bu islem icin yonetici yetkisi gerekli")
     return kullanici

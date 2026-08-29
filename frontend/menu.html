@@ -270,7 +270,9 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
    yalnızca gösterim modu.
    Fiyatlar kuruş gelir, gösterimde TL'ye çevrilir.
    ══════════════════════════════════════════════════════════════════════ */
-const API = location.origin + '/api/acik';
+const _slugMatch = location.pathname.match(/^(\/i\/[^/]+)/);
+const API_BASE = _slugMatch ? _slugMatch[1] : '';
+const API = location.origin + API_BASE + '/api/acik';
 const D = {
   menu: null,          // /acik/menu yanıtı
   kategori: null,      // seçili kategori id (null = hepsi)

@@ -20,7 +20,7 @@ fi
 
 # 2) Sunucuda dizin yapısı
 echo "[1/5] Dizin yapısı kontrol ediliyor…"
-$SSH "mkdir -p $HEDEF/backend $HEDEF/frontend /home/sagunmed/logs"
+$SSH "mkdir -p $HEDEF/backend/routers $HEDEF/backend/data $HEDEF/frontend /home/sagunmed/logs"
 
 # 3) Backend dosyaları
 echo "[2/5] Backend yükleniyor…"

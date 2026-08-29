@@ -7,25 +7,102 @@ PARA BİRİMİ KURALI (KRİTİK):
   12,50 TL  ->  1250
   Float kullanılmaz: 0.1+0.2 hatası bir kasa programında gün sonu tutmaz.
   TL'ye çevirme sadece arayüzde (adfix.html -> tl()) yapılır.
+
+MULTI-TENANT:
+  Her işletme kendi SQLite DB'sine sahiptir (data/{slug}.db).
+  tenant.isletme_slug ContextVar'ı aktif işletmeyi belirler.
+  Slug yoksa varsayılan adfix.db kullanılır (geriye uyumlu tek-işletme modu).
 """
 import sqlite3, os
+import tenant
 
+# ─── Yollar ───
 DB_PATH = os.environ.get(
     "ADFIX_DB",
     os.path.join(os.path.dirname(__file__), "adfix.db")
 )
+DATA_DIR = os.environ.get(
+    "ADFIX_DATA_DIR",
+    os.path.join(os.path.dirname(__file__), "data")
+)
+MERKEZ_DB = os.path.join(DATA_DIR, "_merkez.db")
 
 ROLLER = ("garson", "kasiyer", "yonetici")
 
 
 def get_conn():
-    conn = sqlite3.connect(DB_PATH, timeout=60, check_same_thread=False)
+    """İşletme DB'sine bağlanır. Slug ayarlıysa data/{slug}.db, yoksa adfix.db."""
+    slug = tenant.isletme_slug.get()
+    if slug:
+        yol = os.path.join(DATA_DIR, f"{slug}.db")
+    else:
+        yol = DB_PATH
+    conn = sqlite3.connect(yol, timeout=60, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA foreign_keys = ON")
     conn.execute("PRAGMA journal_mode = WAL")
     conn.execute("PRAGMA busy_timeout = 60000")
     conn.execute("PRAGMA synchronous = NORMAL")
     return conn
+
+
+def merkez_conn():
+    """Merkez DB: işletme listesi."""
+    os.makedirs(DATA_DIR, exist_ok=True)
+    conn = sqlite3.connect(MERKEZ_DB, timeout=60, check_same_thread=False)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode = WAL")
+    conn.execute("PRAGMA busy_timeout = 60000")
+    return conn
+
+
+def init_merkez_db():
+    """Merkez veritabanını oluşturur (işletme listesi)."""
+    conn = merkez_conn()
+    conn.executescript("""
+    CREATE TABLE IF NOT EXISTS isletmeler (
+        id        INTEGER PRIMARY KEY AUTOINCREMENT,
+        slug      TEXT UNIQUE NOT NULL,
+        ad        TEXT NOT NULL,
+        aktif     INTEGER DEFAULT 1,
+        olusturma TEXT DEFAULT (datetime('now','localtime'))
+    );
+    """)
+    conn.commit()
+    conn.close()
+
+
+def isletme_olustur(slug: str, ad: str, ilk_sifre: str = "adfix2026"):
+    """Yeni işletme: merkez DB'ye kayıt + kendi DB'sini başlat + seed veri."""
+    mc = merkez_conn()
+    mc.execute("INSERT INTO isletmeler (slug, ad) VALUES (?, ?)", (slug, ad))
+    mc.commit()
+    mc.close()
+    eski = tenant.isletme_slug.get()
+    token = tenant.isletme_slug.set(slug)
+    try:
+        init_db()
+        os.environ["ADFIX_ILK_SIFRE"] = ilk_sifre
+        seed_data()
+    finally:
+        tenant.isletme_slug.reset(token)
+
+
+def isletme_listesi() -> list[dict]:
+    mc = merkez_conn()
+    r = [dict(x) for x in mc.execute(
+        "SELECT id, slug, ad, aktif, olusturma FROM isletmeler ORDER BY ad")]
+    mc.close()
+    return r
+
+
+def isletme_slug_kontrol(slug: str) -> bool:
+    """Slug'ın aktif bir işletmeye ait olup olmadığını kontrol eder."""
+    mc = merkez_conn()
+    r = mc.execute(
+        "SELECT aktif FROM isletmeler WHERE slug=?", (slug,)).fetchone()
+    mc.close()
+    return bool(r and r["aktif"])
 
 
 def init_db():
@@ -62,7 +139,7 @@ def init_db():
         id    INTEGER PRIMARY KEY AUTOINCREMENT,
         ad    TEXT NOT NULL,
         renk  TEXT DEFAULT '#F97316',
-        ikon  TEXT DEFAULT 'utensils',   -- lucide ikon adı (görseli olmayan ürünlerde kullanılır)
+        ikon  TEXT DEFAULT 'utensils',
         sira  INTEGER DEFAULT 0,
         aktif INTEGER DEFAULT 1
     );
@@ -73,8 +150,8 @@ def init_db():
         ad           TEXT NOT NULL,
         fiyat_kurus  INTEGER NOT NULL CHECK(fiyat_kurus >= 0),
         aciklama     TEXT DEFAULT '',
-        gorsel       TEXT DEFAULT '',     -- data URI (yüklenen fotoğraf) ya da dosya yolu; boşsa kategori ikonu
-        mutfak       INTEGER DEFAULT 1,   -- 1: mutfak ekranına düşer, 0: (içecek vb.) düşmez
+        gorsel       TEXT DEFAULT '',
+        mutfak       INTEGER DEFAULT 1,
         sira         INTEGER DEFAULT 0,
         aktif        INTEGER DEFAULT 1
     );
@@ -104,7 +181,7 @@ def init_db():
         id           INTEGER PRIMARY KEY AUTOINCREMENT,
         adisyon_id   INTEGER NOT NULL REFERENCES adisyonlar(id) ON DELETE CASCADE,
         urun_id      INTEGER REFERENCES urunler(id),
-        ad           TEXT NOT NULL,              -- ürün adı anlık kopyalanır (fiyat/ad değişse de fiş bozulmaz)
+        ad           TEXT NOT NULL,
         birim_kurus  INTEGER NOT NULL CHECK(birim_kurus >= 0),
         adet         INTEGER NOT NULL CHECK(adet > 0),
         notu         TEXT DEFAULT '',
@@ -156,11 +233,9 @@ def init_db():
     );
 
     -- HC1: Bir masada aynı anda EN FAZLA 1 açık adisyon olabilir.
-    -- Kısmi tekil indeks — veritabanı seviyesinde garanti, uygulama hatası bile bunu delemez.
     CREATE UNIQUE INDEX IF NOT EXISTS ux_masa_tek_acik
         ON adisyonlar(masa_id) WHERE durum='acik' AND masa_id IS NOT NULL;
 
-    -- Günlük adisyon numarası (001, 002, ...) gün içinde tekrar edemez.
     CREATE UNIQUE INDEX IF NOT EXISTS ux_gunluk_kod
         ON adisyonlar(date(acilis), kod);
 
@@ -186,25 +261,21 @@ def _gocler(conn):
         mevcut = {r["name"] for r in conn.execute(f"PRAGMA table_info({tablo})")}
         if mevcut and sutun not in mevcut:
             conn.execute(f"ALTER TABLE {tablo} ADD COLUMN {sutun} {tanim}")
-            print(f"[göç] {tablo}.{sutun} eklendi")
+            print(f"[goc] {tablo}.{sutun} eklendi")
     conn.commit()
 
 
 # ─────────────────────────── AYARLAR ───────────────────────────
 
 AYAR_VARSAYILAN = {
-    # Boş bırakılır — kullanıcı ilk kurulumda kendi adını girer. Arayüz
-    # boş adda "Adfix" / fişte "ADFIX" göstererek geçici bir marka basar,
-    # böylece kullanıcının kendi adında Türkçe büyük harf kuralı (i→İ) doğru
-    # işler; sabit yazsak "Adfix" özel-adı da "ADFİX" olurdu.
     "isletme_adi":  "",
     "slogan":       "",
     "adres":        "",
     "telefon":      "",
-    "logo":         "",       # data URI
+    "logo":         "",
     "fis_alt_not":  "Afiyet olsun · Teşekkür ederiz",
-    "qr_taban_url": "",        # QR'ların işaret edeceği adres, ör. http://192.168.1.20:8002
-    "qr_siparis_acik": "1",    # Müşteri masa QR'ından sipariş verebilir mi? ('1'/'0')
+    "qr_taban_url": "",
+    "qr_siparis_acik": "1",
 }
 
 
@@ -225,7 +296,7 @@ def ayar_yaz(conn, anahtar: str, deger: str):
 
 
 def kayit_log(conn, kullanici: dict | None, islem: str, detay: str = ""):
-    """Her para/iptal hareketi loglanır — kasa farkı çıkarsa kim ne yaptı görünsün."""
+    """Her para/iptal hareketi loglanir."""
     conn.execute(
         "INSERT INTO log (kullanici_id, kullanici_ad, islem, detay) VALUES (?,?,?,?)",
         ((kullanici or {}).get("id"), (kullanici or {}).get("ad_soyad", ""), islem, detay)
@@ -235,7 +306,7 @@ def kayit_log(conn, kullanici: dict | None, islem: str, detay: str = ""):
 # ─────────────────────────── SEED ───────────────────────────
 
 def seed_data():
-    """Boş veritabanına örnek kurulum basar. Var olan veriye dokunmaz."""
+    """Bos veritabanina ornek kurulum basar. Var olan veriye dokunmaz."""
     import auth
     conn = get_conn()
     c = conn.cursor()
@@ -271,7 +342,6 @@ def seed_data():
             ("Soğuk İçecek","#0284C7", "wine",     8),
         ]
         c.executemany("INSERT INTO kategoriler (ad, renk, ikon, sira) VALUES (?,?,?,?)", kats)
-        # (kategori_sira, ad, fiyat_kurus, mutfak)
         urun = [
             (1, "Mercimek Çorbası", 8500,  1), (1, "Ezogelin Çorbası", 8500, 1),
             (1, "İşkembe Çorbası", 11000, 1),
@@ -304,4 +374,4 @@ def seed_data():
 if __name__ == "__main__":
     init_db()
     seed_data()
-    print(f"Adfix veritabanı hazır: {DB_PATH}")
+    print(f"Adfix veritabani hazir: {DB_PATH}")

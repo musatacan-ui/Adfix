@@ -413,7 +413,9 @@ tbody tr:hover{background:#FAFAFA}
    Para birimi: her yerde KURUŞ (tam sayı). TL'ye çevirme sadece tl().
    ════════════════════════════════════════════════════════════════ */
 
-const API = location.origin + '/api';
+const _slugMatch = location.pathname.match(/^(\/i\/[^/]+)/);
+const API_BASE = _slugMatch ? _slugMatch[1] : '';
+const API = location.origin + API_BASE + '/api';
 
 const S = {
   token: localStorage.getItem('adfix_token'),

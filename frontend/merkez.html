@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adfix — Merkez Yonetim</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f172a;--kart:#1e293b;--kenar:#334155;--yazi:#e2e8f0;--sol:#94a3b8;
+      --mavi:#3b82f6;--yesil:#22c55e;--kirmizi:#ef4444;--turuncu:#f59e0b}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--yazi);
+     min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+.kapsam{max-width:720px;width:100%}
+h1{font-size:28px;margin-bottom:8px;text-align:center}
+.aciklama{text-align:center;color:var(--sol);margin-bottom:32px;font-size:14px}
+.kart{background:var(--kart);border:1px solid var(--kenar);border-radius:12px;padding:24px;margin-bottom:20px}
+.kart h2{font-size:18px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+label{display:block;font-size:13px;color:var(--sol);margin-bottom:4px}
+input,select{width:100%;padding:10px 12px;border:1px solid var(--kenar);border-radius:8px;
+       background:var(--bg);color:var(--yazi);font-size:14px;margin-bottom:12px}
+input:focus{outline:none;border-color:var(--mavi)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border:none;
+     border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s}
+.btn-mavi{background:var(--mavi);color:#fff}.btn-mavi:hover{filter:brightness(1.1)}
+.btn-yesil{background:var(--yesil);color:#fff}.btn-yesil:hover{filter:brightness(1.1)}
+.btn-kirmizi{background:var(--kirmizi);color:#fff}.btn-kirmizi:hover{filter:brightness(1.1)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.hata{color:var(--kirmizi);font-size:13px;margin-top:4px}
+.basari{color:var(--yesil);font-size:13px;margin-top:4px}
+table{width:100%;border-collapse:collapse;margin-top:12px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--kenar);font-size:13px}
+th{color:var(--sol);font-weight:600}
+.rozet{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.rozet-aktif{background:rgba(34,197,94,.15);color:var(--yesil)}
+.rozet-pasif{background:rgba(239,68,68,.15);color:var(--kirmizi)}
+a{color:var(--mavi);text-decoration:none}a:hover{text-decoration:underline}
+.row{display:flex;gap:12px}.row>*{flex:1}
+#girisEkrani,#panelEkrani{display:none}
+.bos{text-align:center;color:var(--sol);padding:24px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="kapsam">
+  <h1>Adfix Merkez</h1>
+  <p class="aciklama">Isletme yonetim paneli</p>
+
+  <!-- GIRIS -->
+  <div id="girisEkrani" class="kart">
+    <h2>Giris</h2>
+    <label>Super Yonetici Sifresi</label>
+    <input type="password" id="sifre" placeholder="ADFIX_SUPER_SIFRE degerini girin"
+           onkeydown="if(event.key==='Enter')girisYap()">
+    <button class="btn btn-mavi" onclick="girisYap()">Giris Yap</button>
+    <div id="girisHata" class="hata"></div>
+  </div>
+
+  <!-- PANEL -->
+  <div id="panelEkrani">
+    <div class="kart">
+      <h2>Yeni Isletme Olustur</h2>
+      <div class="row">
+        <div>
+          <label>Isletme Adi</label>
+          <input type="text" id="yeniAd" placeholder="Ornek Kafe">
+        </div>
+        <div>
+          <label>URL Kodu (slug)</label>
+          <input type="text" id="yeniSlug" placeholder="ornek-kafe"
+                 oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'-')">
+        </div>
+      </div>
+      <div class="row">
+        <div>
+          <label>Ilk Yonetici Sifresi</label>
+          <input type="text" id="yeniSifre" value="adfix2026">
+        </div>
+        <div style="display:flex;align-items:flex-end">
+          <button class="btn btn-yesil" onclick="isletmeOlustur()" style="width:100%">Olustur</button>
+        </div>
+      </div>
+      <div id="olusturMesaj"></div>
+    </div>
+
+    <div class="kart">
+      <h2>Isletmeler</h2>
+      <div id="isletmeListe"><div class="bos">Yukleniyor...</div></div>
+    </div>
+
+    <div style="text-align:center;margin-top:16px">
+      <button class="btn btn-kirmizi" onclick="cikis()">Cikis Yap</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = location.origin + '/api/merkez';
+let TOKEN = localStorage.getItem('adfix_merkez_token');
+
+function baslik(){ return {'Content-Type':'application/json','Authorization':'Bearer '+TOKEN}; }
+
+async function istek(yol, sec={}) {
+  const r = await fetch(API + yol, {...sec, headers:{...baslik(), ...(sec.headers||{})}});
+  const g = await r.json().catch(()=>({}));
+  if(!r.ok) throw new Error(g.detail || 'Hata ('+r.status+')');
+  return g;
+}
+
+function goster(giris, panel) {
+  document.getElementById('girisEkrani').style.display = giris ? 'block' : 'none';
+  document.getElementById('panelEkrani').style.display = panel ? 'block' : 'none';
+}
+
+async function girisYap() {
+  const el = document.getElementById('girisHata');
+  el.textContent = '';
+  try {
+    const r = await fetch(API + '/giris', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({sifre: document.getElementById('sifre').value})
+    });
+    const g = await r.json().catch(()=>({}));
+    if(!r.ok) throw new Error(g.detail || 'Hata');
+    TOKEN = g.token;
+    localStorage.setItem('adfix_merkez_token', TOKEN);
+    goster(false, true);
+    listeYukle();
+  } catch(e) { el.textContent = e.message; }
+}
+
+async function listeYukle() {
+  const el = document.getElementById('isletmeListe');
+  try {
+    const liste = await istek('/isletme/liste');
+    if(!liste.length) { el.innerHTML='<div class="bos">Henuz isletme eklenmemis.</div>'; return; }
+    let html = '<table><tr><th>Isletme</th><th>URL Kodu</th><th>Durum</th><th>Erisim</th></tr>';
+    for(const i of liste) {
+      const durum = i.aktif
+        ? '<span class="rozet rozet-aktif">Aktif</span>'
+        : '<span class="rozet rozet-pasif">Pasif</span>';
+      const url = location.origin + '/i/' + i.slug + '/';
+      html += `<tr>
+        <td><strong>${esc(i.ad)}</strong></td>
+        <td><code>${esc(i.slug)}</code></td>
+        <td>${durum}</td>
+        <td><a href="${url}" target="_blank">Ac</a></td>
+      </tr>`;
+    }
+    html += '</table>';
+    el.innerHTML = html;
+  } catch(e) {
+    if(e.message.includes('401') || e.message.includes('oturum')) { cikis(); return; }
+    el.innerHTML = '<div class="hata">'+esc(e.message)+'</div>';
+  }
+}
+
+async function isletmeOlustur() {
+  const el = document.getElementById('olusturMesaj');
+  el.innerHTML = '';
+  const ad = document.getElementById('yeniAd').value.trim();
+  const slug = document.getElementById('yeniSlug').value.trim();
+  const sifre = document.getElementById('yeniSifre').value.trim();
+  if(!ad || !slug) { el.innerHTML='<div class="hata">Ad ve slug gerekli</div>'; return; }
+  try {
+    const r = await istek('/isletme/olustur', {
+      method:'POST',
+      body: JSON.stringify({ad, slug, ilk_sifre: sifre || 'adfix2026'})
+    });
+    const url = location.origin + '/i/' + r.slug + '/';
+    el.innerHTML = `<div class="basari">${esc(r.mesaj)}<br>
+      <a href="${url}" target="_blank">${url}</a></div>`;
+    document.getElementById('yeniAd').value = '';
+    document.getElementById('yeniSlug').value = '';
+    listeYukle();
+  } catch(e) { el.innerHTML = '<div class="hata">'+esc(e.message)+'</div>'; }
+}
+
+function cikis() {
+  TOKEN = null;
+  localStorage.removeItem('adfix_merkez_token');
+  goster(true, false);
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+// Baslangic
+if(TOKEN) {
+  goster(false, true);
+  listeYukle();
+} else {
+  goster(true, false);
+}
+</script>
+</body>
+</html>

@@ -9,7 +9,8 @@ module.exports = {
     interpreter: "python3",
     env: {
       ADFIX_PORT: "8002",
-      ADFIX_JWT_SECRET: "__BURAYA_GUCLU_ANAHTAR__"
+      ADFIX_JWT_SECRET: "__BURAYA_GUCLU_ANAHTAR__",
+      ADFIX_SUPER_SIFRE: "__MERKEZ_YONETICI_SIFRESI__"
     },
     max_restarts: 10,
     restart_delay: 3000,
