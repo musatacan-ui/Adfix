@@ -4,22 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
 <title>Menü</title>
-<meta name="theme-color" content="#F97316">
+<meta name="theme-color" content="#8052ff">
 <meta name="description" content="Dijital menü ve sipariş">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%23F97316'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%238052ff'/%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --ana:#F97316; --ana-koyu:#C2410C; --ana-acik:#FFF7ED;
-  --metin:#1C1917; --soluk:#78716C; --cizgi:#E7E5E4; --zemin:#FAFAF9; --kart:#fff;
-  --yesil:#16A34A; --uyari:#CA8A04; --kirmizi:#DC2626;
-}
-@media(prefers-color-scheme:dark){
-  :root{--metin:#FAFAF9; --soluk:#A8A29E; --cizgi:#292524; --zemin:#0C0A09; --kart:#1C1917;
-        --ana-acik:#292018}
+  --ana:#8052ff; --ana-koyu:#8052ff; --ana-acik:#1a1130;
+  --metin:#ffffff; --soluk:#9a9a9a; --cizgi:#1f1f1f; --zemin:#000000; --kart:#111111;
+  --yesil:#15846e; --uyari:#ffb829; --kirmizi:#DC2626;
 }
 html,body{overscroll-behavior-y:contain}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   background:var(--zemin);color:var(--metin);line-height:1.5;
   padding-bottom:calc(90px + env(safe-area-inset-bottom))}
 button{font-family:inherit;font-size:14px;cursor:pointer}
@@ -27,11 +23,11 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
   stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;flex-shrink:0}
 
 /* ── başlık ── */
-.ust{background:linear-gradient(150deg,#9A3412,#EA580C 65%,#F97316);
+.ust{background:#000000;border-bottom:1px solid var(--cizgi);
   color:#fff;padding:calc(26px + env(safe-area-inset-top)) 20px 26px;text-align:center}
-.logo{width:78px;height:78px;margin:0 auto 12px;border-radius:20px;background:#fff;
+.logo{width:78px;height:78px;margin:0 auto 12px;border-radius:20px;background:#111111;
   display:flex;align-items:center;justify-content:center;overflow:hidden;
-  box-shadow:0 10px 30px rgba(0,0,0,.22)}
+  border:1px solid var(--cizgi)}
 .logo img{width:100%;height:100%;object-fit:contain}
 .ust h1{font-size:25px;font-weight:800;letter-spacing:-.5px}
 .ust .slogan{font-size:13px;opacity:.85;margin-top:3px}
@@ -52,7 +48,7 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 .sekmeler{display:flex;gap:8px;overflow-x:auto;padding:0 16px 11px;
   scrollbar-width:none}
 .sekmeler::-webkit-scrollbar{display:none}
-.sekme{white-space:nowrap;padding:8px 15px;border-radius:20px;background:var(--kart);
+.sekme{white-space:nowrap;padding:8px 15px;border-radius:9999px;background:var(--kart);
   border:1.5px solid var(--cizgi);font-size:13.5px;font-weight:600;color:var(--soluk);
   cursor:pointer;display:flex;align-items:center;gap:6px;flex-shrink:0}
 .sekme.aktif{background:var(--ana);border-color:var(--ana);color:#fff}
@@ -64,7 +60,7 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
   align-items:center;justify-content:center;flex-shrink:0}
 .bolum-bas h2{font-size:18px;font-weight:800;letter-spacing:-.3px}
 .urunler{display:flex;flex-direction:column;gap:10px}
-.urun{background:var(--kart);border:1px solid var(--cizgi);border-radius:15px;
+.urun{background:var(--kart);border:1px solid var(--cizgi);border-radius:24px;
   padding:11px;display:flex;gap:13px;align-items:center;position:relative}
 .urun-gor{width:82px;height:82px;border-radius:11px;overflow:hidden;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;background:var(--zemin)}
@@ -73,23 +69,22 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 .urun-bilgi{flex:1;min-width:0}
 .urun-ad{font-size:15.5px;font-weight:700;letter-spacing:-.2px}
 .urun-ack{font-size:12.5px;color:var(--soluk);margin-top:2px;line-height:1.45}
-.urun-fiyat{font-size:16px;font-weight:800;color:var(--ana-koyu);margin-top:6px;
+.urun-fiyat{font-size:16px;font-weight:800;color:var(--uyari);margin-top:6px;
   white-space:nowrap}
-@media(prefers-color-scheme:dark){.urun-fiyat{color:#FB923C}}
 .urun-ekle{background:var(--ana);color:#fff;border:none;width:38px;height:38px;
-  border-radius:12px;font-size:0;display:flex;align-items:center;justify-content:center;
+  border-radius:24px;font-size:0;display:flex;align-items:center;justify-content:center;
   flex-shrink:0;transition:transform .12s}
 .urun-ekle .ik{width:18px;height:18px;stroke-width:2.5}
 .urun-ekle:active{transform:scale(.88)}
-.urun.secili{border-color:var(--ana);box-shadow:0 0 0 3px rgba(249,115,22,.12)}
+.urun.secili{border-color:var(--ana)}
 .urun-adet{position:absolute;top:6px;right:6px;background:var(--ana);color:#fff;
-  font-size:11px;font-weight:800;padding:2px 8px;border-radius:12px;min-width:22px;
-  text-align:center;box-shadow:0 2px 5px rgba(249,115,22,.4)}
+  font-size:11px;font-weight:800;padding:2px 8px;border-radius:9999px;min-width:22px;
+  text-align:center}
 
 /* ── alt bar (sepet çubuğu) ── */
 .alt-bar{position:fixed;bottom:0;left:0;right:0;z-index:15;background:var(--ana);
   color:#fff;padding:13px 18px calc(13px + env(safe-area-inset-bottom));
-  box-shadow:0 -10px 24px rgba(0,0,0,.15);display:none;
+  border-top:1px solid rgba(255,255,255,.1);display:none;
   cursor:pointer;transition:transform .18s ease-out}
 .alt-bar.acik{display:flex;align-items:center;gap:14px;animation:kalk .25s ease-out}
 @keyframes kalk{from{transform:translateY(60px)}}
@@ -104,9 +99,9 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 
 /* ── durum takip düğmesi ── */
 .durum-btn{position:fixed;top:calc(20px + env(safe-area-inset-top));right:14px;z-index:12;
-  background:rgba(255,255,255,.22);color:#fff;border:1px solid rgba(255,255,255,.35);
-  padding:8px 12px;border-radius:11px;font-weight:600;font-size:12.5px;
-  backdrop-filter:blur(6px);display:none;align-items:center;gap:6px}
+  background:#111111;color:#fff;border:1px solid var(--cizgi);
+  padding:8px 12px;border-radius:9999px;font-weight:600;font-size:12.5px;
+  display:none;align-items:center;gap:6px}
 .durum-btn.acik{display:inline-flex}
 
 /* ── perde (sepet + durum modalleri) ── */
@@ -120,7 +115,7 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 .sayfa-ust{position:sticky;top:0;background:var(--kart);border-bottom:1px solid var(--cizgi);
   padding:14px 18px;display:flex;align-items:center;justify-content:space-between;z-index:2}
 .sayfa-ust h3{font-size:17px;font-weight:800;letter-spacing:-.3px}
-.kapat{background:var(--zemin);border:none;color:var(--metin);width:34px;height:34px;
+.kapat{background:#1f1f1f;border:none;color:var(--metin);width:34px;height:34px;
   border-radius:11px;display:flex;align-items:center;justify-content:center}
 .sayfa-icerik{padding:16px 18px;flex:1}
 .sayfa-alt{position:sticky;bottom:0;background:var(--kart);border-top:1px solid var(--cizgi);
@@ -140,10 +135,9 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
   padding:3px 9px;font-size:11.5px;border-radius:8px;margin-top:6px}
 .sp-not-btn.dolu{border-style:solid;color:var(--ana-koyu);border-color:var(--ana)}
 .sp-sag{display:flex;flex-direction:column;align-items:flex-end;gap:8px;justify-content:space-between}
-.sp-fy{font-weight:800;color:var(--ana-koyu);font-size:14px;white-space:nowrap}
-@media(prefers-color-scheme:dark){.sp-fy{color:#FB923C}}
-.sayac{display:flex;align-items:center;background:var(--zemin);border-radius:10px;padding:3px}
-.sayac button{width:30px;height:30px;border:none;background:var(--kart);border-radius:8px;
+.sp-fy{font-weight:800;color:var(--uyari);font-size:14px;white-space:nowrap}
+.sayac{display:flex;align-items:center;background:#000000;border-radius:10px;padding:3px}
+.sayac button{width:30px;height:30px;border:none;background:#1f1f1f;border-radius:8px;
   color:var(--metin);display:flex;align-items:center;justify-content:center;font-size:0}
 .sayac button .ik{width:16px;height:16px;stroke-width:2.5}
 .sayac span{padding:0 10px;font-weight:700;min-width:26px;text-align:center}
@@ -152,7 +146,7 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 .tutar-sat.buyuk{padding-top:14px;font-size:20px;font-weight:800;
   border-top:1px dashed var(--cizgi);margin-top:6px}
 .gonder{background:var(--ana);color:#fff;border:none;width:100%;padding:15px;
-  border-radius:14px;font-size:16px;font-weight:800;letter-spacing:-.2px;
+  border-radius:24px;font-size:16px;font-weight:800;letter-spacing:-.2px;
   display:flex;align-items:center;justify-content:center;gap:8px}
 .gonder:disabled{opacity:.55}
 .gonder .ik{width:18px;height:18px;stroke-width:2.5}
@@ -162,25 +156,20 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 
 /* ── sipariş durumu ── */
 .d-satir{display:flex;justify-content:space-between;align-items:center;
-  padding:11px 12px;background:var(--zemin);border-radius:11px;margin-bottom:7px}
+  padding:11px 12px;background:#1a1a1a;border-radius:11px;margin-bottom:7px}
 .d-satir .ad{font-weight:600;font-size:14px}
 .d-satir .kck{font-size:12px;color:var(--soluk);margin-top:2px}
-.d-etk{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:9px;
+.d-etk{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:9999px;
   text-transform:uppercase;letter-spacing:.04em;display:inline-flex;align-items:center;gap:4px}
 .d-etk .ik{width:11px;height:11px;stroke-width:3}
-.d-bekliyor{background:#FEF3C7;color:#92400E}
-.d-hazir{background:#DCFCE7;color:#166534}
-.d-ikram{background:#DBEAFE;color:#1E40AF}
-@media(prefers-color-scheme:dark){
-  .d-bekliyor{background:#3F2A0A;color:#FBBF24}
-  .d-hazir{background:#052E1A;color:#4ADE80}
-  .d-ikram{background:#1E2545;color:#93C5FD}
-}
+.d-bekliyor{background:rgba(255,184,41,.15);color:#ffb829}
+.d-hazir{background:rgba(21,132,110,.2);color:#4ADE80}
+.d-ikram{background:rgba(147,197,253,.15);color:#93C5FD}
 
 /* ── başarı / hata bildirimi ── */
 .bildirim{position:fixed;bottom:calc(115px + env(safe-area-inset-bottom));left:16px;right:16px;
   z-index:200;background:var(--yesil);color:#fff;padding:14px 18px;border-radius:14px;
-  font-weight:600;font-size:14px;box-shadow:0 15px 40px rgba(0,0,0,.25);
+  font-weight:600;font-size:14px;
   display:flex;align-items:center;gap:10px;animation:cikar .3s ease-out;text-align:left}
 .bildirim.hata{background:var(--kirmizi)}
 .bildirim .ik{width:22px;height:22px;stroke-width:2.5;flex-shrink:0}
@@ -192,32 +181,34 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
   z-index:11;display:flex;flex-direction:column;gap:10px}
 .musteri-aksiyonlar.sepetli{bottom:calc(76px + env(safe-area-inset-bottom))}
 .aksiyon-btn{display:flex;align-items:center;gap:8px;padding:12px 18px;border:none;
-  border-radius:16px;font-size:13.5px;font-weight:700;color:#fff;cursor:pointer;
-  box-shadow:0 6px 20px rgba(0,0,0,.18);transition:transform .12s}
+  border-radius:24px;font-size:13.5px;font-weight:700;color:#fff;cursor:pointer;
+  transition:transform .12s}
 .aksiyon-btn:active{transform:scale(.93)}
-.aksiyon-btn.garson{background:var(--yesil)}
+.aksiyon-btn.garson{background:var(--ana)}
 .aksiyon-btn.hesap{background:var(--ana)}
 .aksiyon-btn .ik{width:18px;height:18px;stroke-width:2.5}
 
 /* ── popüler rozet ── */
-.populer-rozet{position:absolute;top:6px;left:6px;background:#FEF3C7;color:#92400E;
-  font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;
+.populer-rozet{position:absolute;top:6px;left:6px;background:#ffb829;color:#000000;
+  font-size:10px;font-weight:800;padding:2px 7px;border-radius:9999px;
   display:flex;align-items:center;gap:3px;letter-spacing:.02em}
 .populer-rozet .ik{width:11px;height:11px;stroke-width:3}
-@media(prefers-color-scheme:dark){.populer-rozet{background:#3F2A0A;color:#FBBF24}}
 
 .alt{margin:34px 16px 0;padding:20px;background:var(--kart);border:1px solid var(--cizgi);
   border-radius:15px;text-align:center;font-size:13px;color:var(--soluk);line-height:1.8}
-.alt a{color:var(--ana-koyu);text-decoration:none;font-weight:600}
-@media(prefers-color-scheme:dark){.alt a{color:#FB923C}}
+.alt a{color:var(--ana);text-decoration:none;font-weight:600}
 .alt .imza{margin-top:14px;padding-top:12px;border-top:1px solid var(--cizgi);
   font-size:11px;opacity:.65}
 .durum{text-align:center;padding:64px 24px;color:var(--soluk)}
 .durum .ik{width:42px;height:42px;opacity:.45;margin-bottom:12px;stroke-width:1.5}
 .yukleniyor{animation:solup 1.3s ease-in-out infinite}
 @keyframes solup{50%{opacity:.4}}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#000000}
+::-webkit-scrollbar-thumb{background:#1f1f1f;border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:#2a2a2a}
 @media(min-width:640px){
-  body{max-width:680px;margin:0 auto;box-shadow:0 0 60px rgba(0,0,0,.07)}
+  body{max-width:680px;margin:0 auto;border-left:1px solid var(--cizgi);border-right:1px solid var(--cizgi)}
   .urunler{display:grid;grid-template-columns:1fr 1fr;gap:11px}
   .alt-bar,.perde,.bildirim,.durum-btn{max-width:680px;left:auto;right:auto;
     margin-left:auto;margin-right:auto}
@@ -405,12 +396,12 @@ function ciz() {
     </div>
 
     ${!m.siparis_acik && D.masaId ? `<div style="margin:16px 16px 0;padding:12px 14px;
-      background:#FEF3C7;color:#92400E;border-radius:12px;font-size:13px;
+      background:rgba(255,184,41,.1);color:#ffb829;border:1px solid rgba(255,184,41,.2);border-radius:12px;font-size:13px;
       display:flex;gap:9px;align-items:flex-start">${ik('triangle-alert')}
       <div><b>Sadece görüntüleme.</b> Bu işletme şu an QR ile sipariş almıyor —
       sipariş vermek için garsona sesleniniz.</div></div>` : ''}
     ${!D.masaId && m.siparis_acik ? `<div style="margin:16px 16px 0;padding:12px 14px;
-      background:#DBEAFE;color:#1E40AF;border-radius:12px;font-size:13px;
+      background:rgba(128,82,255,.1);color:#a78bfa;border:1px solid rgba(128,82,255,.2);border-radius:12px;font-size:13px;
       display:flex;gap:9px;align-items:flex-start">${ik('triangle-alert')}
       <div>Genel karekodu okuttunuz. Sipariş vermek için masanızdaki karekodu okutun.</div></div>` : ''}
 
@@ -646,7 +637,7 @@ function basariCiz(y) {
         <button class="kapat" onclick="sepetKapat()">${ik('x')}</button>
       </div>
       <div class="sayfa-icerik" style="text-align:center">
-        <div style="width:80px;height:80px;background:#DCFCE7;color:var(--yesil);
+        <div style="width:80px;height:80px;background:rgba(21,132,110,.2);color:var(--yesil);
           border-radius:24px;display:flex;align-items:center;justify-content:center;
           margin:12px auto 20px">
           <svg class="ik" style="width:44px;height:44px;stroke-width:2.5">
@@ -658,7 +649,7 @@ function basariCiz(y) {
         <div style="background:var(--zemin);border-radius:14px;padding:14px;text-align:left">
           <div style="font-size:12px;font-weight:700;color:var(--soluk);
             text-transform:uppercase;letter-spacing:.05em;margin-bottom:7px">Toplam</div>
-          <div style="font-size:24px;font-weight:800;color:var(--ana-koyu)">${tl(y.toplam)}</div>
+          <div style="font-size:24px;font-weight:800;color:var(--uyari)">${tl(y.toplam)}</div>
         </div>
       </div>
       <div class="sayfa-alt">
@@ -727,11 +718,11 @@ function durumCiz() {
       <div class="sayfa-icerik">
         ${d.satirlar.length ? `
           ${bekleyen || hazir ? `<div style="display:flex;gap:8px;margin-bottom:14px">
-            ${bekleyen ? `<div style="flex:1;background:#FEF3C7;color:#92400E;padding:11px;
+            ${bekleyen ? `<div style="flex:1;background:rgba(255,184,41,.12);color:#ffb829;padding:11px;
               border-radius:11px;text-align:center">
               <div style="font-size:22px;font-weight:800">${bekleyen}</div>
               <div style="font-size:11.5px;font-weight:700">HAZIRLANIYOR</div></div>` : ''}
-            ${hazir ? `<div style="flex:1;background:#DCFCE7;color:#166534;padding:11px;
+            ${hazir ? `<div style="flex:1;background:rgba(21,132,110,.2);color:#4ADE80;padding:11px;
               border-radius:11px;text-align:center">
               <div style="font-size:22px;font-weight:800">${hazir}</div>
               <div style="font-size:11.5px;font-weight:700">HAZIR</div></div>` : ''}
@@ -760,7 +751,7 @@ function durumCiz() {
       </div>
       ${D.menu.siparis_acik && D.masaId ? `<div class="sayfa-alt">
         <button class="gonder" onclick="sepetKapat();clearInterval(D.durumZaman)"
-          style="background:var(--zemin);color:var(--metin)">
+          style="background:#1f1f1f;color:var(--metin)">
           ${ik('plus')} Menüden Yeni Ürün Ekle</button>
       </div>` : ''}
     </div>`;
