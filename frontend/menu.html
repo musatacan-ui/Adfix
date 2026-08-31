@@ -15,15 +15,17 @@
   --yesil:#15846e; --uyari:#ffb829; --kirmizi:#DC2626;
 }
 /* ── video arka plan ── */
-.bg-video{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;
-  z-index:-2;pointer-events:none}
-.bg-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:-1;pointer-events:none}
+#bg-wrap{position:fixed;top:0;left:0;width:100%;height:100%;
+  z-index:-1;overflow:hidden;pointer-events:none}
+#bg-wrap video{width:100%;height:100%;object-fit:cover;display:block}
+#bg-wrap .dim{position:absolute;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,.45)}
 
-html{background:#000;overscroll-behavior-y:contain}
+html{background:#000}
+html,body{overscroll-behavior-y:contain}
 body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   background:transparent;color:var(--metin);line-height:1.5;
-  padding-bottom:calc(90px + env(safe-area-inset-bottom));
-  position:relative;z-index:0;overscroll-behavior-y:contain}
+  padding-bottom:calc(90px + env(safe-area-inset-bottom))}
 button{font-family:inherit;font-size:14px;cursor:pointer}
 .ik{width:1.05em;height:1.05em;fill:none;stroke:currentColor;stroke-width:2;
   stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;flex-shrink:0}
@@ -225,10 +227,12 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 </head>
 <body>
 
-<video class="bg-video" autoplay muted loop playsinline>
-  <source src="/bg.mp4" type="video/mp4">
-</video>
-<div class="bg-overlay"></div>
+<div id="bg-wrap">
+  <video autoplay muted loop playsinline>
+    <source src="/bg.mp4" type="video/mp4">
+  </video>
+  <div class="dim"></div>
+</div>
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
 <!-- Lucide v1.34.0 — ISC License, https://lucide.dev -->
