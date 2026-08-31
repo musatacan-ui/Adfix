@@ -3,471 +3,540 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adfix — Adisyon Sistemi</title>
-<meta name="theme-color" content="#8052ff">
-<meta name="description" content="Masa yönetimi, QR menü, mutfak ekranı ve raporlar. Restoranınızı kolayca yönetin.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%238052ff'/%3E%3Ctext y='68' x='50' font-size='52' text-anchor='middle' fill='%23fff' font-weight='700' font-family='system-ui'%3EA%3C/text%3E%3C/svg%3E">
+<title>Adfix</title>
+<meta name="description" content="Restoran ve kafe için adisyon, masa yönetimi, QR menü ve raporlar.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%236246EA'/%3E%3Ctext y='68' x='50' font-size='52' text-anchor='middle' fill='%23fff' font-weight='700' font-family='system-ui'%3EA%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-
-:root{
-  --ana:#8052ff;
-  --amber:#ffb829;
-  --zemin:#000000;
-  --kart:#111111;
-  --gri:#9a9a9a;
-  --cizgi:#1f1f1f;
-  --r:24px;
+/* ── Tokens ── */
+:root {
+  --bg:      #FAFAF8;
+  --bg2:     #F3F1FC;
+  --bg3:     #ECEAF5;
+  --fg:      #141414;
+  --fg2:     #6B6B7A;
+  --brand:   #6246EA;
+  --amber:   #C88B00;
+  --amber-bg:#FFF5D6;
+  --divider: #E4E1F0;
+  --r: 14px;
 }
 
-html{scroll-behavior:smooth}
-
-body{
-  font-family:'Inter',system-ui,sans-serif;
-  background:var(--zemin);
-  color:#fff;
-  font-weight:300;
-  line-height:1.6;
-  min-height:100vh;
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:      #0F0E1A;
+    --bg2:     #1C1A2E;
+    --bg3:     #252340;
+    --fg:      #F0EFF9;
+    --fg2:     #9490AB;
+    --amber:   #FFB829;
+    --amber-bg:rgba(255,184,41,.1);
+    --divider: #2A2840;
+  }
 }
 
-a{text-decoration:none;color:inherit}
-
-/* ─── Nav ─── */
-nav{
-  position:fixed;top:0;left:0;right:0;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:18px 40px;
-  z-index:100;
-  background:rgba(0,0,0,.8);
-  backdrop-filter:blur(20px);
-  -webkit-backdrop-filter:blur(20px);
-  border-bottom:1px solid rgba(255,255,255,.05);
+:root[data-theme="dark"] {
+  --bg:      #0F0E1A;
+  --bg2:     #1C1A2E;
+  --bg3:     #252340;
+  --fg:      #F0EFF9;
+  --fg2:     #9490AB;
+  --amber:   #FFB829;
+  --amber-bg:rgba(255,184,41,.1);
+  --divider: #2A2840;
 }
 
-.nav-logo{
-  font-size:20px;
-  font-weight:800;
-  letter-spacing:-.04em;
-  color:#fff;
-}
-.nav-logo span{color:var(--ana)}
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
 
-.nav-giris{
-  padding:9px 22px;
-  background:var(--ana);
-  color:#fff;
-  border-radius:9999px;
-  font-size:14px;
-  font-weight:500;
-  transition:opacity .15s;
-  letter-spacing:-.01em;
-}
-.nav-giris:hover{opacity:.85}
-
-/* ─── Hero ─── */
-.hero{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:120px 24px 80px;
-  position:relative;
-  overflow:hidden;
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  font-weight: 300;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
 }
 
-.hero-glow{
-  position:absolute;
-  width:800px;height:600px;
-  border-radius:50%;
-  background:radial-gradient(ellipse, rgba(128,82,255,.12) 0%, transparent 70%);
-  pointer-events:none;
-  top:40%;left:50%;
-  transform:translate(-50%,-50%);
+a { text-decoration: none; color: inherit; }
+
+/* ── Nav ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 48px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--divider);
 }
 
-.hero-rozet{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:7px 18px;
-  background:rgba(128,82,255,.1);
-  border:1px solid rgba(128,82,255,.2);
-  border-radius:9999px;
-  font-size:13px;
-  color:var(--ana);
-  font-weight:500;
-  margin-bottom:36px;
-  position:relative;
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -.04em;
+  color: var(--fg);
+}
+.nav-logo span { color: var(--brand); }
+
+.nav-cta {
+  padding: 9px 20px;
+  background: var(--brand);
+  color: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: opacity .15s;
+}
+.nav-cta:hover { opacity: .87; }
+
+/* ── Hero ── */
+.hero {
+  min-height: 100vh;
+  padding: 108px 48px 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
 }
 
-.hero h1{
-  font-size:clamp(56px, 9vw, 104px);
-  font-weight:900;
-  letter-spacing:-.05em;
-  line-height:1;
-  margin-bottom:28px;
-  position:relative;
+.hero-etiket {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin-bottom: 18px;
 }
 
-.hero h1 .vurgu{color:var(--ana)}
-
-.hero-alt{
-  font-size:clamp(16px, 2vw, 19px);
-  color:var(--gri);
-  max-width:480px;
-  margin:0 auto 52px;
-  line-height:1.7;
-  position:relative;
+.hero-left h1 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(40px, 5vw, 60px);
+  letter-spacing: -.04em;
+  line-height: 1.06;
+  text-wrap: balance;
+  color: var(--fg);
+  margin-bottom: 20px;
 }
 
-.hero-butonlar{
-  display:flex;gap:12px;flex-wrap:wrap;justify-content:center;
-  position:relative;
+.hero-left h1 em {
+  font-style: normal;
+  color: var(--brand);
 }
 
-.btn-birincil{
-  padding:15px 40px;
-  background:var(--ana);
-  color:#fff;
-  border-radius:9999px;
-  font-size:16px;
-  font-weight:600;
-  transition:opacity .15s, transform .15s;
-  letter-spacing:-.02em;
-}
-.btn-birincil:hover{opacity:.88;transform:translateY(-1px)}
-
-.btn-ikincil{
-  padding:15px 40px;
-  color:var(--gri);
-  border-radius:9999px;
-  font-size:16px;
-  font-weight:400;
-  transition:color .15s;
-  border:1px solid var(--cizgi);
-  letter-spacing:-.01em;
-}
-.btn-ikincil:hover{color:#fff;border-color:#333}
-
-/* ─── Özellikler ─── */
-.ozellikler{
-  padding:100px 24px;
-  max-width:1200px;
-  margin:0 auto;
+.hero-desc {
+  font-size: 16px;
+  color: var(--fg2);
+  max-width: 400px;
+  line-height: 1.7;
+  margin-bottom: 36px;
 }
 
-.bolum-ust{
-  text-align:center;
-  margin-bottom:56px;
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 26px;
+  background: var(--brand);
+  color: #fff;
+  border-radius: 10px;
+  font-size: 15px; font-weight: 500;
+  transition: opacity .15s, transform .12s;
 }
-.bolum-ust h2{
-  font-size:clamp(30px, 4vw, 44px);
-  font-weight:800;
-  letter-spacing:-.04em;
-  margin-bottom:12px;
-}
-.bolum-ust p{
-  color:var(--gri);
-  font-size:16px;
-}
+.btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+.btn-primary svg { flex-shrink: 0; }
 
-.ozellik-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
-  gap:12px;
-}
-
-.ozellik-kart{
-  background:var(--kart);
-  border-radius:var(--r);
-  padding:28px 28px 32px;
-  transition:background .15s;
-}
-.ozellik-kart:hover{background:#171717}
-
-.ozellik-ikon{
-  width:44px;height:44px;
-  background:rgba(128,82,255,.1);
-  border-radius:14px;
-  display:flex;align-items:center;justify-content:center;
-  margin-bottom:18px;
-}
-.ozellik-ikon svg{
-  width:20px;height:20px;
-  stroke:var(--ana);fill:none;
-  stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;
+/* ── Masa Mockup ── */
+.masa-mockup {
+  background: var(--bg2);
+  border-radius: 20px;
+  padding: 28px;
+  border: 1px solid var(--divider);
 }
 
-.ozellik-kart h3{
-  font-size:16px;
-  font-weight:600;
-  letter-spacing:-.02em;
-  margin-bottom:8px;
+.mockup-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
 }
-.ozellik-kart p{
-  color:var(--gri);
-  font-size:13px;
-  line-height:1.7;
+.mockup-baslik {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--fg2);
 }
-
-/* ─── Stat şeridi ─── */
-.stat-serit{
-  max-width:1200px;
-  margin:0 auto 100px;
-  padding:0 24px;
+.mockup-tarih {
+  font-size: 11px;
+  color: var(--fg2);
 }
 
-.stat-ic{
-  background:var(--kart);
-  border-radius:var(--r);
-  padding:48px 40px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));
-  gap:32px;
-  text-align:center;
+.masa-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-.stat-sayi{
-  font-size:38px;
-  font-weight:800;
-  letter-spacing:-.04em;
-  color:var(--amber);
-  line-height:1;
-  margin-bottom:6px;
-}
-.stat-ad{
-  color:var(--gri);
-  font-size:13px;
-  font-weight:400;
+.masa-k {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 3px;
+  cursor: default;
 }
 
-/* ─── Giriş bölümü ─── */
-.giris-bolum{
-  padding:80px 24px 120px;
-  max-width:480px;
-  margin:0 auto;
+.masa-k-no {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px; font-weight: 700;
+  line-height: 1;
+}
+.masa-k-durum {
+  font-size: 10px; font-weight: 400;
 }
 
-.giris-bolum .bolum-ust{margin-bottom:36px}
-
-#liste{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  margin-bottom:20px;
+.masa-k.bos {
+  background: var(--bg);
+  border: 1.5px solid var(--divider);
+  color: var(--fg2);
+}
+.masa-k.acik {
+  background: rgba(98,70,234,.08);
+  border: 1.5px solid rgba(98,70,234,.2);
+  color: var(--brand);
+}
+.masa-k.bekleyen {
+  background: var(--amber-bg);
+  border: 1.5px solid rgba(200,139,0,.25);
+  color: var(--amber);
 }
 
-.isletme-btn{
-  display:flex;align-items:center;gap:14px;
-  padding:14px 18px;
-  background:var(--kart);
-  border-radius:var(--r);
-  cursor:pointer;
-  transition:background .15s, transform .1s;
-  color:inherit;
-}
-.isletme-btn:hover{background:#1a1a1a;transform:translateY(-1px)}
-.isletme-btn:active{transform:none;background:#1c1c1c}
-
-.isletme-ikon{
-  width:42px;height:42px;
-  background:var(--ana);
-  border-radius:13px;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
-  font-size:17px;font-weight:700;color:#fff;
-  letter-spacing:-.02em;
+.mockup-ozet {
+  display: flex; gap: 8px;
 }
 
-.isletme-bilgi{flex:1;min-width:0}
-.isletme-ad{font-size:14px;font-weight:600;color:#fff;margin-bottom:2px}
-.isletme-slug{font-size:11px;color:var(--gri);font-family:monospace}
-
-.isletme-ok svg{
-  width:16px;height:16px;
-  stroke:var(--gri);fill:none;
-  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
-  transition:stroke .15s;
+.ozet-kart {
+  flex: 1;
+  padding: 10px 12px;
+  background: var(--bg);
+  border-radius: 10px;
+  border: 1px solid var(--divider);
+  text-align: center;
 }
-.isletme-btn:hover .isletme-ok svg{stroke:var(--ana)}
-
-.ayirici{
-  display:flex;align-items:center;gap:12px;
-  margin:18px 0;
-  color:var(--gri);font-size:12px;
+.ozet-sayi {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px; font-weight: 700;
+  color: var(--fg);
+  line-height: 1;
+  margin-bottom: 3px;
+  font-variant-numeric: tabular-nums;
 }
-.ayirici::before,.ayirici::after{content:'';flex:1;height:1px;background:var(--cizgi)}
+.ozet-sayi.marka { color: var(--brand); }
+.ozet-ad { font-size: 10px; color: var(--fg2); }
 
-.kod-alan{display:flex;gap:8px}
-
-.kod-alan input{
-  flex:1;
-  padding:13px 18px;
-  background:var(--kart);
-  border:1px solid var(--cizgi);
-  border-radius:var(--r);
-  color:#fff;font-size:14px;outline:none;
-  transition:border-color .15s;
-  font-family:inherit;font-weight:400;
-}
-.kod-alan input:focus{border-color:var(--ana)}
-.kod-alan input::placeholder{color:#444}
-
-.kod-alan button{
-  padding:13px 22px;
-  background:var(--ana);
-  color:#fff;
-  border:none;
-  border-radius:var(--r);
-  font-size:14px;font-weight:600;
-  cursor:pointer;
-  white-space:nowrap;
-  transition:opacity .15s;
-  font-family:inherit;
-  letter-spacing:-.01em;
-}
-.kod-alan button:hover{opacity:.85}
-
-.hata{color:#ff6b6b;font-size:12px;margin-top:8px;min-height:18px}
-
-.yukle{color:var(--gri);font-size:14px;padding:24px;text-align:center}
-
-.bos-mesaj{
-  text-align:center;
-  color:var(--gri);
-  font-size:14px;
-  padding:28px;
-  background:var(--kart);
-  border-radius:var(--r);
-  line-height:1.7;
+/* ── Features ── */
+.features {
+  border-top: 1px solid var(--divider);
+  padding: 72px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* ─── Footer ─── */
-footer{
-  border-top:1px solid var(--cizgi);
-  padding:28px 24px;
-  text-align:center;
-  color:#444;
-  font-size:12px;
+.features-ust {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 40px;
+  gap: 24px;
 }
 
-/* ─── Responsive ─── */
-@media(max-width:640px){
-  nav{padding:14px 20px}
-  .hero{padding:90px 20px 60px}
-  .hero-butonlar{flex-direction:column;align-items:stretch}
-  .btn-birincil,.btn-ikincil{text-align:center}
-  .ozellikler{padding:72px 20px}
-  .stat-ic{padding:32px 24px;gap:24px}
-  .stat-sayi{font-size:30px}
-  .giris-bolum{padding:60px 20px 80px}
-  .bolum-ust h2{font-size:26px}
+.features-ust h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 700;
+  letter-spacing: -.03em;
+  text-wrap: balance;
+  color: var(--fg);
+  max-width: 360px;
+}
+
+.features-ust p {
+  font-size: 14px;
+  color: var(--fg2);
+  max-width: 320px;
+  text-align: right;
+  line-height: 1.65;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.feat-kart {
+  background: var(--bg2);
+  border-radius: var(--r);
+  padding: 24px;
+  border: 1px solid var(--divider);
+  transition: background .15s;
+}
+.feat-kart:hover { background: var(--bg3); }
+
+.feat-ikon {
+  width: 36px; height: 36px;
+  background: rgba(98,70,234,.1);
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+}
+.feat-ikon svg {
+  width: 16px; height: 16px;
+  stroke: var(--brand); fill: none;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+
+.feat-kart h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px; font-weight: 700;
+  letter-spacing: -.01em;
+  margin-bottom: 6px;
+  color: var(--fg);
+}
+.feat-kart p {
+  font-size: 13px;
+  color: var(--fg2);
+  line-height: 1.6;
+}
+
+/* ── Stats ── */
+.stats-bar {
+  background: var(--bg2);
+  border-top: 1px solid var(--divider);
+  border-bottom: 1px solid var(--divider);
+  padding: 40px 48px;
+}
+.stats-ic {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  text-align: center;
+}
+.stat-sayi {
+  font-family: 'Syne', sans-serif;
+  font-size: 36px; font-weight: 800;
+  letter-spacing: -.04em;
+  color: var(--brand);
+  line-height: 1;
+  margin-bottom: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.stat-ad {
+  font-size: 13px;
+  color: var(--fg2);
+}
+
+/* ── Login ── */
+.login-section {
+  padding: 72px 24px 100px;
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.login-section h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 26px; font-weight: 700;
+  letter-spacing: -.03em;
+  margin-bottom: 8px;
+  color: var(--fg);
+}
+.login-section .login-aciklama {
+  font-size: 14px;
+  color: var(--fg2);
+  margin-bottom: 28px;
+}
+
+.login-satir {
+  display: flex; gap: 8px;
+}
+
+.login-satir input {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--bg2);
+  border: 1.5px solid var(--divider);
+  border-radius: 10px;
+  font-size: 14px;
+  color: var(--fg);
+  font-family: inherit;
+  outline: none;
+  transition: border-color .15s;
+}
+.login-satir input:focus { border-color: var(--brand); }
+.login-satir input::placeholder { color: var(--fg2); opacity: .55; }
+
+.login-satir button {
+  padding: 12px 22px;
+  background: var(--brand);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px; font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: opacity .15s;
+}
+.login-satir button:hover { opacity: .87; }
+
+.hata { color: #D32F2F; font-size: 12px; margin-top: 8px; min-height: 16px; text-align: left; }
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid var(--divider);
+  padding: 24px 48px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--fg2);
+}
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+  .nav { padding: 14px 24px; }
+  .hero { grid-template-columns: 1fr; gap: 40px; padding: 90px 24px 60px; }
+  .features { padding: 56px 24px; }
+  .features-ust { flex-direction: column; align-items: flex-start; }
+  .features-ust p { text-align: left; max-width: none; }
+  .features-grid { grid-template-columns: 1fr 1fr; }
+  .stats-bar { padding: 36px 24px; }
+  .stats-ic { grid-template-columns: 1fr 1fr; gap: 24px; }
+  footer { padding: 24px; }
+}
+
+@media (max-width: 560px) {
+  .features-grid { grid-template-columns: 1fr; }
+  .stats-ic { grid-template-columns: 1fr 1fr; }
+  .masa-grid { grid-template-columns: repeat(4, 1fr); }
+  .login-satir { flex-direction: column; }
+  .login-satir button { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
 }
 </style>
 </head>
 <body>
 
-<!-- ─── Nav ─── -->
-<nav>
-  <div class="nav-logo">Ad<span>fix</span></div>
-  <a href="#giris" class="nav-giris">Giriş Yap</a>
+<!-- ── Nav ── -->
+<nav class="nav">
+  <span class="nav-logo">Ad<span>fix</span></span>
+  <a href="#giris" class="nav-cta">İşletme Girişi</a>
 </nav>
 
-<!-- ─── Hero ─── -->
+<!-- ── Hero ── -->
 <section class="hero">
-  <div class="hero-glow"></div>
-
-  <div class="hero-rozet">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-    Adisyon & Masa Yönetim Sistemi
+  <div class="hero-left">
+    <span class="hero-etiket">Restoran &amp; Kafe Yönetimi</span>
+    <h1>Adisyon,<br>masalarda değil<br><em>ekranda.</em></h1>
+    <p class="hero-desc">Masa takibi, QR menü, mutfak ekranı ve ciro raporları — tek sistemde, sıfır karmaşa.</p>
+    <a href="#giris" class="btn-primary">
+      İşletmenize Giriş Yapın
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
   </div>
 
-  <h1>Adisyonu<br><span class="vurgu">hallet.</span></h1>
-
-  <p class="hero-alt">Masa yönetimi, QR menü, mutfak ekranı ve raporlar.<br>Restoranınızı tek panelden yönetin.</p>
-
-  <div class="hero-butonlar">
-    <a href="#giris" class="btn-birincil">İşletmenize Giriş Yapın</a>
-    <a href="#ozellikler" class="btn-ikincil">Özellikler</a>
+  <div class="masa-mockup">
+    <div class="mockup-header">
+      <span class="mockup-baslik">Salon Görünümü</span>
+      <span class="mockup-tarih">Bugün · 19:42</span>
+    </div>
+    <div class="masa-grid">
+      <div class="masa-k acik"><span class="masa-kart-no">1</span><span class="masa-k-durum">Açık</span></div>
+      <div class="masa-k bos"><span class="masa-kart-no">2</span><span class="masa-k-durum">Boş</span></div>
+      <div class="masa-k acik"><span class="masa-kart-no">3</span><span class="masa-k-durum">Açık</span></div>
+      <div class="masa-k bekleyen"><span class="masa-kart-no">4</span><span class="masa-k-durum">Bekliyor</span></div>
+      <div class="masa-k bos"><span class="masa-kart-no">5</span><span class="masa-k-durum">Boş</span></div>
+      <div class="masa-k acik"><span class="masa-kart-no">6</span><span class="masa-k-durum">Açık</span></div>
+      <div class="masa-k bekleyen"><span class="masa-kart-no">7</span><span class="masa-k-durum">Bekliyor</span></div>
+      <div class="masa-k bos"><span class="masa-kart-no">8</span><span class="masa-k-durum">Boş</span></div>
+    </div>
+    <div class="mockup-ozet">
+      <div class="ozet-kart">
+        <div class="ozet-sayi marka">3</div>
+        <div class="ozet-ad">Açık masa</div>
+      </div>
+      <div class="ozet-kart">
+        <div class="ozet-sayi" style="color:var(--amber)">2</div>
+        <div class="ozet-ad">Bekliyor</div>
+      </div>
+      <div class="ozet-kart">
+        <div class="ozet-sayi marka">₺1.240</div>
+        <div class="ozet-ad">Bugün ciro</div>
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- ─── Özellikler ─── -->
-<section class="ozellikler" id="ozellikler">
-  <div class="bolum-ust">
-    <h2>Her şeyin <span style="color:var(--ana)">kontrolü</span> sizde</h2>
-    <p>Mutfaktan kasaya, masadan menüye — tek sistem, sıfır karmaşa.</p>
+<!-- ── Features ── -->
+<section class="features">
+  <div class="features-ust">
+    <h2>Restoran yönetimi,<br>baştan sona.</h2>
+    <p>Mutfaktan kasaya, masadan menüye ihtiyacınız olan her şey tek çatı altında.</p>
   </div>
-
-  <div class="ozellik-grid">
-    <div class="ozellik-kart">
-      <div class="ozellik-ikon">
+  <div class="features-grid">
+    <div class="feat-kart">
+      <div class="feat-ikon">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
       </div>
       <h3>Masa Yönetimi</h3>
-      <p>Salon haritası üzerinden masaları anlık takip edin. Adisyon aç, ürün ekle, tahsilat al.</p>
+      <p>Salon haritasından adisyon açın, ürün ekleyin, tahsilat alın.</p>
     </div>
-
-    <div class="ozellik-kart">
-      <div class="ozellik-ikon">
+    <div class="feat-kart">
+      <div class="feat-ikon">
         <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
       </div>
       <h3>QR Menü & Sipariş</h3>
-      <p>Müşteri masadan QR okutarak menüyü görsün ve sipariş versin. Garson çağırma özelliği dahil.</p>
+      <p>Müşteri masadan QR okutarak sipariş versin, garson çağırsın.</p>
     </div>
-
-    <div class="ozellik-kart">
-      <div class="ozellik-ikon">
-        <svg viewBox="0 0 24 24"><path d="M15 11h.01M11 15h.01M16 16h.01M5 3H3v18h18V3H5z"/><path d="M9 3v18M15 3v4M15 11v8"/></svg>
+    <div class="feat-kart">
+      <div class="feat-ikon">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4M16 6V4M3 10h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V10z"/></svg>
       </div>
-      <h3>Mutfak Ekranı (KDS)</h3>
-      <p>Gelen siparişleri mutfak ekranında görün ve hazırlayın. Her satırın durumunu güncelleyin.</p>
+      <h3>Mutfak Ekranı</h3>
+      <p>Siparişler anında mutfak ekranına düşsün, hazır olunca işaretleyin.</p>
     </div>
-
-    <div class="ozellik-kart">
-      <div class="ozellik-ikon">
+    <div class="feat-kart">
+      <div class="feat-ikon">
         <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
       </div>
       <h3>Raporlar</h3>
-      <p>Günlük, haftalık, aylık ciro raporları. En çok satan ürünler ve saatlik satış grafiği.</p>
-    </div>
-
-    <div class="ozellik-kart">
-      <div class="ozellik-ikon">
-        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-      </div>
-      <h3>Rol Tabanlı Erişim</h3>
-      <p>Garson, kasiyer ve yönetici rolleri. Her kullanıcı sadece yetkili olduğu ekranları görür.</p>
-    </div>
-
-    <div class="ozellik-kart">
-      <div class="ozellik-ikon">
-        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-      </div>
-      <h3>Çoklu İşletme</h3>
-      <p>Birden fazla şube veya işletmeyi tek sunucudan yönetin. Her işletme izole veritabanında çalışır.</p>
+      <p>Günlük ciro, en çok satan ürünler ve saatlik grafik anlık görünür.</p>
     </div>
   </div>
 </section>
 
-<!-- ─── Stat şeridi ─── -->
-<div class="stat-serit">
-  <div class="stat-ic">
+<!-- ── Stats ── -->
+<div class="stats-bar">
+  <div class="stats-ic">
     <div>
       <div class="stat-sayi">0 ₺</div>
       <div class="stat-ad">SaaS aboneliği yok</div>
     </div>
     <div>
       <div class="stat-sayi">%100</div>
-      <div class="stat-ad">Veriler sizin</div>
+      <div class="stat-ad">Veriler sizin sunucunuzda</div>
     </div>
     <div>
       <div class="stat-sayi">7/24</div>
-      <div class="stat-ad">Çevrimdışı çalışır</div>
+      <div class="stat-ad">İnternet olmadan çalışır</div>
     </div>
     <div>
       <div class="stat-sayi">&lt;1 s</div>
@@ -476,60 +545,25 @@ footer{
   </div>
 </div>
 
-<!-- ─── Giriş ─── -->
-<section class="giris-bolum" id="giris">
-  <div class="bolum-ust">
-    <h2>Giriş Yapın</h2>
-    <p style="color:var(--gri);font-size:15px">İşletmenizi seçin veya kodu girin.</p>
-  </div>
-
-  <div id="liste">
-    <div class="yukle">Yükleniyor…</div>
-  </div>
-
-  <div class="ayirici">veya işletme kodu girin</div>
-
-  <div class="kod-alan">
+<!-- ── Login ── -->
+<section class="login-section" id="giris">
+  <h2>Giriş Yapın</h2>
+  <p class="login-aciklama">İşletme kodunuzu girin.</p>
+  <div class="login-satir">
     <input id="kodInput" placeholder="ornek-kafe" autocomplete="off" autocapitalize="off"
            oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')"
            onkeydown="if(event.key==='Enter')kodGit()">
-    <button onclick="kodGit()">Git</button>
+    <button onclick="kodGit()">Giriş</button>
   </div>
   <div class="hata" id="hata"></div>
 </section>
 
-<!-- ─── Footer ─── -->
+<!-- ── Footer ── -->
 <footer>
-  &copy; 2026 Adfix &mdash; Adisyon &amp; Masa Yönetim Sistemi
+  &copy; 2026 Adfix — Adisyon &amp; Masa Yönetim Sistemi
 </footer>
 
 <script>
-async function yukle() {
-  const el = document.getElementById('liste');
-  try {
-    const r = await fetch('/api/acik/isletmeler');
-    if (!r.ok) throw new Error();
-    const liste = await r.json();
-    if (!liste.length) {
-      el.innerHTML = '<div class="bos-mesaj">Henüz kayıtlı işletme yok.<br>Merkez panelden ekleyebilirsiniz.</div>';
-      return;
-    }
-    el.innerHTML = liste.map(i => `
-      <a class="isletme-btn" href="/i/${esc(i.slug)}/">
-        <div class="isletme-ikon">${esc(i.ad.charAt(0).toUpperCase())}</div>
-        <div class="isletme-bilgi">
-          <div class="isletme-ad">${esc(i.ad)}</div>
-          <div class="isletme-slug">/i/${esc(i.slug)}/</div>
-        </div>
-        <div class="isletme-ok">
-          <svg viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></svg>
-        </div>
-      </a>`).join('');
-  } catch (e) {
-    el.innerHTML = '';
-  }
-}
-
 function kodGit() {
   const kod = document.getElementById('kodInput').value.trim();
   const hata = document.getElementById('hata');
@@ -538,14 +572,6 @@ function kodGit() {
   hata.textContent = '';
   location.href = '/i/' + encodeURIComponent(kod) + '/';
 }
-
-function esc(s) {
-  const d = document.createElement('div');
-  d.textContent = s || '';
-  return d.innerHTML;
-}
-
-yukle();
 </script>
 </body>
 </html>
