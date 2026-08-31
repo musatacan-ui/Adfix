@@ -14,16 +14,22 @@
   --metin:#ffffff; --soluk:#9a9a9a; --cizgi:#1f1f1f; --zemin:#000000; --kart:#111111;
   --yesil:#15846e; --uyari:#ffb829; --kirmizi:#DC2626;
 }
+/* ── video arka plan ── */
+.bg-video{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;
+  z-index:-2;pointer-events:none}
+.bg-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:-1;pointer-events:none}
+
 html,body{overscroll-behavior-y:contain}
 body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  background:var(--zemin);color:var(--metin);line-height:1.5;
+  background:transparent;color:var(--metin);line-height:1.5;
   padding-bottom:calc(90px + env(safe-area-inset-bottom))}
 button{font-family:inherit;font-size:14px;cursor:pointer}
 .ik{width:1.05em;height:1.05em;fill:none;stroke:currentColor;stroke-width:2;
   stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;flex-shrink:0}
 
 /* ── başlık ── */
-.ust{background:#000000;border-bottom:1px solid var(--cizgi);
+.ust{background:rgba(0,0,0,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.08);
   color:#fff;padding:calc(26px + env(safe-area-inset-top)) 20px 26px;text-align:center}
 .logo{width:78px;height:78px;margin:0 auto 12px;border-radius:20px;background:#111111;
   display:flex;align-items:center;justify-content:center;overflow:hidden;
@@ -37,8 +43,9 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
   backdrop-filter:blur(6px)}
 
 /* ── arama + kategoriler ── */
-.arac{position:sticky;top:0;z-index:10;background:var(--zemin);
-  border-bottom:1px solid var(--cizgi);padding:11px 0 0}
+.arac{position:sticky;top:0;z-index:10;background:rgba(0,0,0,.72);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.08);padding:11px 0 0}
 .ara-sar{padding:0 16px 10px;position:relative}
 .ara-sar>.ik{position:absolute;left:28px;top:50%;transform:translateY(-60%);color:var(--soluk)}
 #ara{width:100%;padding:11px 14px 11px 40px;border:1.5px solid var(--cizgi);
@@ -216,6 +223,11 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 </style>
 </head>
 <body>
+
+<video class="bg-video" autoplay muted loop playsinline>
+  <source src="/bg.mp4" type="video/mp4">
+</video>
+<div class="bg-overlay"></div>
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
 <!-- Lucide v1.34.0 — ISC License, https://lucide.dev -->
