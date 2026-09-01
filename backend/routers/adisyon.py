@@ -243,6 +243,28 @@ def mutfak(mevcut: dict = Depends(auth.token_dogrula)):
     return rows
 
 
+@router.get("/bildirimler")
+def bildirimler(mevcut: dict = Depends(auth.token_dogrula)):
+    """Bekleyen masa bildirimleri (garson çağırma / hesap isteme).
+
+    DİKKAT: Bu yol aşağıdaki "/{aid}" yakalayıcısından ÖNCE tanımlanmalı,
+    yoksa FastAPI "bildirimler" metnini aid'ye çevirmeye çalışıp 422 döner.
+    """
+    conn = db.get_conn()
+    rows = [dict(r) for r in conn.execute("""
+        SELECT b.id, b.masa_id, b.tip, b.durum, b.olusturma, m.ad AS masa_ad,
+               s.ad AS salon_ad
+        FROM masa_bildirim b
+        JOIN masalar m ON m.id = b.masa_id
+        LEFT JOIN salonlar s ON s.id = m.salon_id
+        WHERE b.durum = 'bekliyor'
+        ORDER BY b.id DESC""")]
+    conn.close()
+    return rows
+
+
+# UYARI: Bundan sonra tanımlanan tek parçalı GET yolları ("/xyz") bu
+# yakalayıcı tarafından yutulur. Yeni sabit yolu YUKARIYA ekle.
 @router.get("/{aid}")
 def detay(aid: int, mevcut: dict = Depends(auth.token_dogrula)):
     conn = db.get_conn()
@@ -534,22 +556,6 @@ def kapat(aid: int, mevcut: dict = Depends(auth.kasiyer_gerektir)):
     d = _detay(conn, aid)
     conn.close()
     return d
-
-
-@router.get("/bildirimler")
-def bildirimler(mevcut: dict = Depends(auth.token_dogrula)):
-    """Bekleyen masa bildirimleri (garson çağırma / hesap isteme)."""
-    conn = db.get_conn()
-    rows = [dict(r) for r in conn.execute("""
-        SELECT b.id, b.masa_id, b.tip, b.durum, b.olusturma, m.ad AS masa_ad,
-               s.ad AS salon_ad
-        FROM masa_bildirim b
-        JOIN masalar m ON m.id = b.masa_id
-        LEFT JOIN salonlar s ON s.id = m.salon_id
-        WHERE b.durum = 'bekliyor'
-        ORDER BY b.id DESC""")]
-    conn.close()
-    return rows
 
 
 @router.patch("/bildirim/{bid}/goruldu")

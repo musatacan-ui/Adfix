@@ -374,7 +374,30 @@ with TestClient(main.app) as c:
     m = c.get("/api/acik/menu").json()
     kontrol("açık menüde siparis_acik bayrağı var", "siparis_acik" in m and m["siparis_acik"] is True)
 
-    print("\n[23] Son yönetici koruması")
+    print("\n[23] Masa bildirimleri (garson çağırma / hesap isteme)")
+
+    # REGRESYON: "/bildirimler" yolu "/{aid}" yakalayıcısından SONRA tanımlanırsa
+    # FastAPI "bildirimler" metnini int'e çevirmeye çalışır ve 422 döner.
+    r = c.get("/api/adisyon/bildirimler", headers=admin)
+    kontrol("bildirimler ucu erişilebilir (422 değil)", r.status_code == 200,
+            f"durum={r.status_code} {r.text[:90]}")
+    kontrol("bildirimler liste döndürüyor", isinstance(r.json(), list), r.text[:70])
+
+    bm = c.get("/api/masa/plan", headers=admin).json()["salonlar"][0]["masalar"][0]
+    c.post(f"/api/acik/masa/{bm['id']}/cagri", json={"tip": "garson"})
+    b = c.get("/api/adisyon/bildirimler", headers=admin).json()
+    kontrol("müşteri çağrısı bildirimlere düştü", len(b) == 1, f"adet={len(b)}")
+    kontrol("bildirimde masa adı var", b and b[0]["masa_ad"] == bm["ad"], str(b[:1])[:80])
+
+    c.patch(f"/api/adisyon/bildirim/{b[0]['id']}/goruldu", headers=admin)
+    kontrol("görülen bildirim listeden düştü",
+            c.get("/api/adisyon/bildirimler", headers=admin).json() == [])
+
+    # "/{aid}" hâlâ sayısal id'yi yakalıyor mu (düzeltme onu bozmamalı)
+    kontrol("sayısal adisyon detayı hâlâ çalışıyor",
+            c.get(f"/api/adisyon/{aid}", headers=admin).status_code == 200)
+
+    print("\n[24] Son yönetici koruması")
 
     r = c.patch("/api/kullanici/1", headers=admin, json={
         "ad_soyad": "Sistem Yöneticisi", "kullanici_adi": "admin",
