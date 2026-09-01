@@ -12,14 +12,19 @@
 :root{
   --ana:#8052ff; --ana-koyu:#8052ff; --ana-acik:#1a1130;
   --metin:#ffffff; --soluk:#9a9a9a; --cizgi:#1f1f1f; --zemin:#000000; --kart:#111111;
+  /* video üstünde duran yüzeyler: arkayı sızdırır (--kart opak kalır,
+     modal/sayfa gibi okunması şart olan katmanlar onu kullanır) */
+  --kart-cam:rgba(18,18,20,.62); --cizgi-cam:rgba(255,255,255,.10);
   --yesil:#15846e; --uyari:#ffb829; --kirmizi:#DC2626;
 }
 /* ── video arka plan ── */
 #bg-wrap{position:fixed;top:0;left:0;width:100%;height:100%;
-  z-index:-1;overflow:hidden;pointer-events:none}
+  z-index:-1;overflow:hidden;pointer-events:none;
+  /* video yüklenmezse düz siyah yerine bu görünür */
+  background:linear-gradient(160deg,#1a1130,#000 60%)}
 #bg-wrap video{width:100%;height:100%;object-fit:cover;display:block}
 #bg-wrap .dim{position:absolute;top:0;left:0;width:100%;height:100%;
-  background:rgba(0,0,0,.45)}
+  background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.32) 40%,rgba(0,0,0,.6))}
 
 html{background:#000}
 html,body{overscroll-behavior-y:contain}
@@ -52,14 +57,15 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 .ara-sar{padding:0 16px 10px;position:relative}
 .ara-sar>.ik{position:absolute;left:28px;top:50%;transform:translateY(-60%);color:var(--soluk)}
 #ara{width:100%;padding:11px 14px 11px 40px;border:1.5px solid var(--cizgi);
-  border-radius:24px;font-size:15px;background:var(--kart);color:var(--metin);
-  font-family:inherit}
+  border-radius:24px;font-size:15px;background:var(--kart-cam);color:var(--metin);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);font-family:inherit}
 #ara:focus{outline:none;border-color:var(--ana)}
 .sekmeler{display:flex;gap:8px;overflow-x:auto;padding:0 16px 11px;
   scrollbar-width:none}
 .sekmeler::-webkit-scrollbar{display:none}
-.sekme{white-space:nowrap;padding:8px 15px;border-radius:9999px;background:var(--kart);
-  border:1.5px solid var(--cizgi);font-size:13.5px;font-weight:600;color:var(--soluk);
+.sekme{white-space:nowrap;padding:8px 15px;border-radius:9999px;background:var(--kart-cam);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border:1.5px solid var(--cizgi-cam);font-size:13.5px;font-weight:600;color:var(--soluk);
   cursor:pointer;display:flex;align-items:center;gap:6px;flex-shrink:0}
 .sekme.aktif{background:var(--ana);border-color:var(--ana);color:#fff}
 
@@ -70,7 +76,8 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
   align-items:center;justify-content:center;flex-shrink:0}
 .bolum-bas h2{font-size:18px;font-weight:800;letter-spacing:-.3px}
 .urunler{display:flex;flex-direction:column;gap:10px}
-.urun{background:var(--kart);border:1px solid var(--cizgi);border-radius:24px;
+.urun{background:var(--kart-cam);backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);border:1px solid var(--cizgi-cam);border-radius:24px;
   padding:11px;display:flex;gap:13px;align-items:center;position:relative}
 .urun-gor{width:82px;height:82px;border-radius:11px;overflow:hidden;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;background:var(--zemin)}
@@ -204,7 +211,8 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
   display:flex;align-items:center;gap:3px;letter-spacing:.02em}
 .populer-rozet .ik{width:11px;height:11px;stroke-width:3}
 
-.alt{margin:34px 16px 0;padding:20px;background:var(--kart);border:1px solid var(--cizgi);
+.alt{margin:34px 16px 0;padding:20px;background:var(--kart-cam);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--cizgi-cam);
   border-radius:15px;text-align:center;font-size:13px;color:var(--soluk);line-height:1.8}
 .alt a{color:var(--ana);text-decoration:none;font-weight:600}
 .alt .imza{margin-top:14px;padding-top:12px;border-top:1px solid var(--cizgi);
@@ -302,6 +310,33 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 const _slugMatch = location.pathname.match(/^(\/i\/[^/]+)/);
 const API_BASE = _slugMatch ? _slugMatch[1] : '';
 const API = location.origin + API_BASE + '/api/acik';
+
+/* ── arka plan videosu ──────────────────────────────────────────────────
+   Video yüklenemezse sayfa sessizce düz siyah kalıyordu ve "video çıkmıyor"
+   ile "video hiç deploy edilmemiş" ayırt edilemiyordu. Burada sebebi
+   konsola basıyoruz; ayrıca /bg.mp4 bulunamazsa işletme yolunu deniyoruz. */
+(() => {
+  const v = document.querySelector('#bg-wrap video');
+  if (!v) { console.warn('[adfix] #bg-wrap yok — menu.html guncel degil'); return; }
+  const KOD = {1:'ABORTED', 2:'NETWORK (dosya sunulmuyor)',
+               3:'DECODE (codec desteklenmiyor)', 4:'SRC_NOT_SUPPORTED (404 veya bozuk dosya)'};
+  let yedekDenendi = false;
+  v.addEventListener('error', () => {
+    if (!yedekDenendi && API_BASE) {       // /i/<slug>/bg.mp4 dene
+      yedekDenendi = true;
+      v.querySelector('source').src = API_BASE + '/bg.mp4';
+      v.load();
+      return;
+    }
+    // hata <source> uzerinden gelirse v.error bos olur -> dosyaya ulasilamadi demektir
+    const sebep = v.error ? (KOD[v.error.code] || v.error.code)
+                          : 'kaynak acilamadi (404 / yanlis yol / sunulmuyor)';
+    console.warn('[adfix] arka plan videosu yuklenemedi:', sebep,
+                 '·', v.currentSrc || v.querySelector('source').src);
+  }, true);
+  // muted+playsinline olsa da bazi tarayicilar autoplay'i reddedebilir
+  v.play?.().catch(e => console.warn('[adfix] video autoplay reddedildi:', e.name));
+})();
 const D = {
   menu: null,          // /acik/menu yanıtı
   kategori: null,      // seçili kategori id (null = hepsi)
@@ -418,7 +453,8 @@ function ciz() {
       <div><b>Sadece görüntüleme.</b> Bu işletme şu an QR ile sipariş almıyor —
       sipariş vermek için garsona sesleniniz.</div></div>` : ''}
     ${!D.masaId && m.siparis_acik ? `<div style="margin:16px 16px 0;padding:12px 14px;
-      background:rgba(128,82,255,.1);color:#a78bfa;border:1px solid rgba(128,82,255,.2);border-radius:12px;font-size:13px;
+      background:rgba(32,22,64,.74);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+      color:#c4b5fd;border:1px solid rgba(128,82,255,.34);border-radius:12px;font-size:13px;
       display:flex;gap:9px;align-items:flex-start">${ik('triangle-alert')}
       <div>Genel karekodu okuttunuz. Sipariş vermek için masanızdaki karekodu okutun.</div></div>` : ''}
 
