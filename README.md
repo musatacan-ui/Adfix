@@ -177,34 +177,6 @@ yüklemeden de dolu ve düzenli görünür.
 > tabağının görünmesi hem daha doğru hem telif açısından temizdir. Ayrıntı:
 > `UCUNCU-TARAF.md`
 
-### Menü arka plan videosu (isteğe bağlı)
-`menu.html` tam ekran bir arka plan videosu gösterir. Dosya **repoda yoktur**
-(fotoğraflarla aynı telif ilkesi, `.gitignore`'da) — sunucuya elle yüklenir:
-
-```
-/home/sagunmed/SagunMedBeta/Adfix/frontend/bg.mp4
-```
-
-Sayfa önce `/bg.mp4`, bulamazsa `/i/<slug>/bg.mp4` adresini dener. Dosya hiç
-yoksa video yerine koyu mor degrade görünür — sayfa bozulmaz. Yükleme
-başarısız olursa tarayıcı konsoluna sebebi yazılır:
-
-```
-[adfix] arka plan videosu yuklenemedi: kaynak acilamadi (404 / yanlis yol / sunulmuyor) · https://…/bg.mp4
-[adfix] #bg-wrap yok — menu.html guncel degil      ← dosya deploy edilmemiş
-```
-
-Önerilen dönüştürme (web için küçültülmüş, sessiz, hızlı açılan):
-
-```bash
-ffmpeg -i kaynak.mp4 -vf "scale=1280:720,fps=24" -c:v libx264 -crf 28 \
-       -preset slow -an -movflags +faststart bg.mp4
-```
-
-Videonun üstünde %32–60 arası koyulaştırma katmanı var; kartlar da yarı
-saydam (`--kart-cam`) olduğu için video aralardan okunur. Bembeyaz bir
-videoda bile metin kontrastı korunur.
-
 ### QR menü
 **Yönetim → QR Menü.** İki tür karekod üretilir:
 
