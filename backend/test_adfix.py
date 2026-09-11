@@ -5,7 +5,7 @@ TMP = tempfile.mkdtemp()
 os.environ["ADFIX_DB"] = os.path.join(TMP, "test.db")
 os.environ["ADFIX_JWT_SECRET"] = "test-" + "x" * 40
 os.environ["ADFIX_ILK_SIFRE"] = "adfix2026"
-sys.path.insert(0, "/home/user/SagunMed/Adfix/backend")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from fastapi.testclient import TestClient
 import main

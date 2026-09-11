@@ -1,0 +1,25 @@
+# ── Canlı veri: ASLA commit edilmez ───────────────────────────────────
+# Bunlar sunucuda yaşar. data/ her işletmenin ayrı veritabanını tutar
+# (multi-tenant) — kaybı tüm kafelerin menü ve adisyon geçmişi demektir.
+backend/*.db
+backend/*.db-wal
+backend/*.db-shm
+backend/data/
+
+# JWT anahtarı — kaynağa asla girmez
+backend/.env
+
+# Arka plan videosu: telifli stok görüntü, işletme kendi dosyasını yükler
+frontend/bg.mp4
+
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Düzenleyici / işletim sistemi
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
