@@ -1,5 +1,5 @@
 """
-Merkez yonetim — isletme CRUD.
+Merkez yonetim — isletme CRUD + istatistik + admin sifre sifirlama.
 Super yonetici sifresiyle erisilir (ADFIX_SUPER_SIFRE ortam degiskeni).
 """
 from fastapi import APIRouter, HTTPException, Depends
@@ -8,6 +8,7 @@ from pydantic import BaseModel
 import os, re, jwt, datetime
 
 import database as db
+import tenant
 
 router = APIRouter()
 
@@ -26,6 +27,10 @@ class IsletmeForm(BaseModel):
     slug: str
     ad: str
     ilk_sifre: str = "adfix2026"
+
+
+class SifreSifirlaForm(BaseModel):
+    yeni_sifre: str
 
 
 def super_gerektir(kimlik: HTTPAuthorizationCredentials = Depends(security)):
@@ -60,6 +65,72 @@ def merkez_giris(form: MerkezGirisForm):
 @router.get("/isletme/liste")
 def isletme_liste(_=Depends(super_gerektir)):
     return db.isletme_listesi()
+
+
+@router.get("/isletme/{slug}/istatistik")
+def isletme_istatistik(slug: str, _=Depends(super_gerektir)):
+    mc = db.merkez_conn()
+    isl = mc.execute("SELECT id FROM isletmeler WHERE slug=?", (slug,)).fetchone()
+    mc.close()
+    if not isl:
+        raise HTTPException(404, "Isletme bulunamadi")
+    tok = tenant.isletme_slug.set(slug)
+    try:
+        conn = db.get_conn()
+        masa_sayisi = conn.execute(
+            "SELECT COUNT(*) n FROM masalar WHERE aktif=1").fetchone()["n"]
+        acik_adisyon = conn.execute(
+            "SELECT COUNT(*) n FROM adisyonlar WHERE durum='acik'").fetchone()["n"]
+        bugun_ciro = conn.execute(
+            "SELECT COALESCE(SUM(tutar_kurus),0) n FROM odemeler "
+            "WHERE date(zaman)=date('now','localtime')").fetchone()["n"]
+        bugun_siparis = conn.execute(
+            "SELECT COUNT(*) n FROM adisyonlar WHERE durum='kapali' "
+            "AND date(kapanis)=date('now','localtime')").fetchone()["n"]
+        kullanici_sayisi = conn.execute(
+            "SELECT COUNT(*) n FROM kullanicilar WHERE aktif=1").fetchone()["n"]
+        conn.close()
+    except Exception:
+        try: conn.close()
+        except Exception: pass
+        raise
+    finally:
+        tenant.isletme_slug.reset(tok)
+    return {
+        "masa_sayisi": masa_sayisi,
+        "acik_adisyon": acik_adisyon,
+        "bugun_ciro_kurus": bugun_ciro,
+        "bugun_siparis": bugun_siparis,
+        "kullanici_sayisi": kullanici_sayisi,
+    }
+
+
+@router.post("/isletme/{slug}/admin-sifre-sifirla")
+def admin_sifre_sifirla(slug: str, form: SifreSifirlaForm, _=Depends(super_gerektir)):
+    if len(form.yeni_sifre) < 4:
+        raise HTTPException(400, "Sifre en az 4 karakter olmali")
+    mc = db.merkez_conn()
+    isl = mc.execute("SELECT id FROM isletmeler WHERE slug=?", (slug,)).fetchone()
+    mc.close()
+    if not isl:
+        raise HTTPException(404, "Isletme bulunamadi")
+    import auth as auth_mod
+    hash_ = auth_mod.hash_sifre(form.yeni_sifre)
+    tok = tenant.isletme_slug.set(slug)
+    try:
+        conn = db.get_conn()
+        c = conn.execute(
+            "UPDATE kullanicilar SET sifre_hash=? WHERE rol='yonetici'", (hash_,))
+        count = c.rowcount
+        conn.commit()
+        conn.close()
+    except Exception:
+        try: conn.close()
+        except Exception: pass
+        raise
+    finally:
+        tenant.isletme_slug.reset(tok)
+    return {"mesaj": f"{count} yonetici sifresi guncellendi"}
 
 
 @router.post("/isletme/olustur")

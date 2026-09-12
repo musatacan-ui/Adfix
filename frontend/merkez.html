@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adfix — Merkez Yönetim</title>
+<title>Adfix Merkez</title>
 <meta name="theme-color" content="#1F4E48">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231F4E48'/%3E%3Ctext y='68' x='50' font-size='52' text-anchor='middle' fill='%23D4921A' font-weight='700' font-family='Georgia,serif'%3EA%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,74 +11,218 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0C1F1B;--kart:#152D28;--kenar:rgba(255,255,255,.08);--yazi:#E8F5F2;--sol:#7AADA4;
-      --teal:#2A7A6E;--teal-l:#3DA394;--yesil:#27AE60;--kirmizi:#E74C3C;--amber:#D4921A}
-body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--yazi);
-     min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
-.kapsam{max-width:760px;width:100%}
-.page-header{text-align:center;margin-bottom:32px}
-.logo{font-family:'Fraunces',Georgia,serif;font-size:28px;font-weight:700;color:var(--teal-l);margin-bottom:4px}
+:root{
+  --bg:#0C1F1B;--kart:#152D28;--kart2:#1A3830;--kenar:rgba(255,255,255,.08);
+  --yazi:#E8F5F2;--sol:#7AADA4;--teal:#2A7A6E;--teal-l:#3DA394;
+  --yesil:#27AE60;--kirmizi:#E74C3C;--amber:#D4921A;--mavi:#3B82F6;
+  --kenar-g:rgba(61,163,148,.25)
+}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--yazi);min-height:100vh}
+
+/* ── TOPBAR ── */
+.topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(12,31,27,.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--kenar);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;height:56px
+}
+.logo{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:700;color:var(--teal-l)}
 .logo span{color:var(--amber)}
-.aciklama{color:var(--sol);font-size:13px;letter-spacing:.5px;text-transform:uppercase}
-.kart{background:var(--kart);border:1px solid var(--kenar);border-radius:14px;padding:24px;margin-bottom:20px}
-.kart h2{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:var(--yazi)}
-label{display:block;font-size:11px;font-weight:700;color:var(--sol);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
-input,select{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,.12);border-radius:8px;
-       background:rgba(255,255,255,.05);color:var(--yazi);font-size:14px;margin-bottom:12px;
-       font-family:inherit;outline:none}
-input:focus,select:focus{border-color:var(--teal-l)}
-option{background:#152D28}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border:none;
-     border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit}
+.topbar-mid{font-size:12px;font-weight:700;color:var(--sol);text-transform:uppercase;letter-spacing:.8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:none;
+     border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:.15s;
+     font-family:inherit;text-decoration:none}
 .btn-mavi{background:var(--teal);color:#fff}.btn-mavi:hover{background:var(--teal-l)}
 .btn-yesil{background:rgba(39,174,96,.15);color:var(--yesil);border:1px solid rgba(39,174,96,.25)}
 .btn-yesil:hover{background:rgba(39,174,96,.25)}
 .btn-kirmizi{background:rgba(231,76,60,.12);color:var(--kirmizi);border:1px solid rgba(231,76,60,.2)}
 .btn-kirmizi:hover{background:rgba(231,76,60,.22)}
-.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-turuncu{background:rgba(212,146,26,.12);color:var(--amber);border:1px solid rgba(212,146,26,.22)}
+.btn-turuncu:hover{background:rgba(212,146,26,.25)}
+.btn-sol{background:rgba(61,163,148,.12);color:var(--teal-l);border:1px solid rgba(61,163,148,.2)}
+.btn-sol:hover{background:rgba(61,163,148,.22)}
+.btn-xs{padding:4px 10px;font-size:11px;border-radius:6px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+/* ── GİRİŞ ── */
+#girisEkrani{display:none;min-height:100vh;align-items:center;justify-content:center;padding:24px 16px}
+.giris-kart{background:var(--kart);border:1px solid var(--kenar);border-radius:16px;
+            padding:32px;width:100%;max-width:380px}
+.giris-bas{text-align:center;margin-bottom:28px}
+.giris-logo{font-family:'Fraunces',Georgia,serif;font-size:32px;font-weight:700;color:var(--teal-l)}
+.giris-logo span{color:var(--amber)}
+.giris-alt{font-size:12px;color:var(--sol);text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
+label{display:block;font-size:11px;font-weight:700;color:var(--sol);margin-bottom:4px;
+      text-transform:uppercase;letter-spacing:.5px}
+input,select{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,.12);border-radius:8px;
+       background:rgba(255,255,255,.05);color:var(--yazi);font-size:14px;margin-bottom:12px;
+       font-family:inherit;outline:none}
+input:focus,select:focus{border-color:var(--teal-l)}
+option{background:#152D28}
 .hata{color:var(--kirmizi);font-size:13px;margin-top:4px}
 .basari{color:var(--yesil);font-size:13px;margin-top:4px}
-table{width:100%;border-collapse:collapse;margin-top:8px}
-th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--kenar);font-size:13px}
-th{color:var(--sol);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
-tr:hover td{background:rgba(255,255,255,.02)}
-.rozet{display:inline-block;padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700}
-.rozet-aktif{background:rgba(39,174,96,.15);color:var(--yesil)}
-.rozet-pasif{background:rgba(231,76,60,.12);color:var(--kirmizi)}
-a{color:var(--teal-l);text-decoration:none}a:hover{text-decoration:underline}
-.row{display:flex;gap:12px}.row>*{flex:1}
-#girisEkrani,#panelEkrani{display:none}
-.bos{text-align:center;color:var(--sol);padding:24px;font-size:14px}
-.btn-kucuk{padding:5px 12px;font-size:12px;border-radius:6px}
-.btn-turuncu{background:rgba(212,146,26,.15);color:var(--amber);border:1px solid rgba(212,146,26,.25)}
-.btn-turuncu:hover{background:rgba(212,146,26,.25)}
+
+/* ── PANEL ── */
+#panelEkrani{display:none;padding:24px 24px 48px}
+.icerik{max-width:1140px;margin:0 auto}
+
+/* ── STAT KARTLAR ── */
+.stat-bar{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px}
+@media(max-width:860px){.stat-bar{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.stat-bar{grid-template-columns:repeat(2,1fr)}}
+.stat-kart{background:var(--kart);border:1px solid var(--kenar);border-radius:12px;
+           padding:16px 20px;position:relative;overflow:hidden}
+.stat-kart::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+                   background:var(--aksent,var(--teal-l))}
+.stat-val{font-size:28px;font-weight:700;font-family:'Fraunces',Georgia,serif;
+          color:var(--aksent,var(--teal-l));line-height:1.1;margin-bottom:4px}
+.stat-lbl{font-size:11px;color:var(--sol);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.stat-sub{font-size:12px;color:var(--sol);margin-top:2px}
+
+/* ── BÖLÜM KARTLARI ── */
+.kart{background:var(--kart);border:1px solid var(--kenar);border-radius:14px;
+      padding:24px;margin-bottom:20px}
+.kart-bas{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.kart-bas h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.row{display:flex;gap:12px}
+.row>*{flex:1}
+
+/* ── TABLO ── */
+.tablo-wrap{overflow-x:auto;border-radius:10px;border:1px solid var(--kenar)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:11px 14px;border-bottom:1px solid var(--kenar)}
+th{color:var(--sol);font-weight:700;font-size:10.5px;text-transform:uppercase;
+   letter-spacing:.5px;background:rgba(255,255,255,.02);white-space:nowrap}
+td{vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,.015)}
+.rozet{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;
+       border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.rozet::before{content:'';width:6px;height:6px;border-radius:50%;display:inline-block}
+.rozet-aktif{background:rgba(39,174,96,.14);color:var(--yesil)}
+.rozet-aktif::before{background:var(--yesil)}
+.rozet-pasif{background:rgba(231,76,60,.1);color:var(--kirmizi)}
+.rozet-pasif::before{background:var(--kirmizi)}
+a{color:var(--teal-l);text-decoration:none}
+a:hover{text-decoration:underline}
+.islem-grubu{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.bos{text-align:center;color:var(--sol);padding:40px;font-size:14px}
+
+/* ── CIRO ── */
+.ciro{font-weight:700;color:var(--teal-l)}
+.ciro-sifir{color:var(--sol)}
+.acik-adisyon{font-weight:700;color:var(--amber)}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.1);
+      border-top-color:var(--teal-l);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── AD DÜZENLEME ── */
+.ad-wrap{display:flex;align-items:center;gap:6px}
+.ad-text{font-weight:600;cursor:default}
+.ad-form{display:none;align-items:center;gap:6px;flex:1}
+.ad-input{flex:1;padding:4px 8px;font-size:13px;margin-bottom:0;
+          border-radius:6px;border:1px solid var(--teal-l)}
+.ad-duzenle-btn{background:transparent;border:none;color:var(--sol);cursor:pointer;
+                padding:2px 4px;font-size:12px;border-radius:4px;line-height:1}
+.ad-duzenle-btn:hover{color:var(--teal-l);background:rgba(61,163,148,.1)}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);
+               backdrop-filter:blur(4px);z-index:500;
+               display:flex;align-items:center;justify-content:center;padding:16px}
+.modal-kart{background:var(--kart);border:1px solid var(--kenar-g);
+            border-radius:16px;padding:28px;width:100%;max-width:420px}
+.modal-kart h3{font-size:17px;font-weight:700;margin-bottom:6px}
+.modal-kart p{font-size:13px;color:var(--sol);margin-bottom:20px}
+.modal-islem{display:flex;gap:10px;margin-top:16px}
+.modal-islem .btn{flex:1;justify-content:center}
+
+/* ── YENİ İŞLETME TOGGLE ── */
+#yeniForm{display:none;margin-top:20px;padding-top:20px;border-top:1px solid var(--kenar)}
+
+/* ── RENKLİ ── */
+.c-yesil{color:var(--yesil)}
+.c-kirmizi{color:var(--kirmizi)}
+.c-amber{color:var(--amber)}
+.c-teal{color:var(--teal-l)}
+.c-sol{color:var(--sol)}
 </style>
 </head>
 <body>
-<div class="kapsam">
-  <div class="page-header">
-    <div class="logo">Adfix<span>.</span></div>
-    <p class="aciklama">Merkez Yönetim Paneli</p>
-  </div>
 
-  <!-- GIRIS -->
-  <div id="girisEkrani" class="kart">
-    <h2>Giris</h2>
-    <label>Super Yonetici Sifresi</label>
-    <input type="password" id="sifre" placeholder="ADFIX_SUPER_SIFRE degerini girin"
+<!-- ═══════════════ GİRİŞ ═══════════════ -->
+<div id="girisEkrani">
+  <div class="giris-kart">
+    <div class="giris-bas">
+      <div class="giris-logo">Adfix<span>.</span></div>
+      <div class="giris-alt">Merkez Yönetim</div>
+    </div>
+    <label>Süper Yönetici Şifresi</label>
+    <input type="password" id="sifre" placeholder="ADFIX_SUPER_SIFRE"
            onkeydown="if(event.key==='Enter')girisYap()">
-    <button class="btn btn-mavi" onclick="girisYap()">Giris Yap</button>
+    <button class="btn btn-mavi" style="width:100%;justify-content:center" onclick="girisYap()">
+      Giriş Yap
+    </button>
     <div id="girisHata" class="hata"></div>
   </div>
+</div>
 
-  <!-- PANEL -->
-  <div id="panelEkrani">
-    <div class="kart">
-      <h2>Yeni Isletme Olustur</h2>
+<!-- ═══════════════ TOPBAR ═══════════════ -->
+<div class="topbar" id="topbar" style="display:none">
+  <div class="logo">Adfix<span>.</span></div>
+  <div class="topbar-mid">Merkez Yönetim Paneli</div>
+  <button class="btn btn-kirmizi btn-xs" onclick="cikis()">Çıkış</button>
+</div>
+
+<!-- ═══════════════ PANEL ═══════════════ -->
+<div id="panelEkrani">
+<div class="icerik">
+
+  <!-- STAT KARTLAR -->
+  <div class="stat-bar" style="margin-top:24px">
+    <div class="stat-kart" style="--aksent:var(--teal-l)">
+      <div class="stat-val" id="sToplam">–</div>
+      <div class="stat-lbl">Toplam İşletme</div>
+    </div>
+    <div class="stat-kart" style="--aksent:var(--yesil)">
+      <div class="stat-val" id="sAktif">–</div>
+      <div class="stat-lbl">Aktif</div>
+    </div>
+    <div class="stat-kart" style="--aksent:var(--kirmizi)">
+      <div class="stat-val" id="sPasif">–</div>
+      <div class="stat-lbl">Pasif</div>
+    </div>
+    <div class="stat-kart" style="--aksent:var(--amber)">
+      <div class="stat-val" id="sAcikAdisyon">–</div>
+      <div class="stat-lbl">Açık Adisyon</div>
+      <div class="stat-sub" id="sAcikSub"></div>
+    </div>
+    <div class="stat-kart" style="--aksent:var(--mavi)">
+      <div class="stat-val" id="sBugunCiro">–</div>
+      <div class="stat-lbl">Bugün Toplam Ciro</div>
+    </div>
+  </div>
+
+  <!-- İŞLETMELER -->
+  <div class="kart">
+    <div class="kart-bas">
+      <h2>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        İşletmeler
+      </h2>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sol btn-xs" onclick="listeYukle()">↻ Yenile</button>
+        <button class="btn btn-yesil btn-xs" onclick="yeniToggle()" id="yeniToggleBtn">+ Yeni İşletme</button>
+      </div>
+    </div>
+
+    <!-- YENİ İŞLETME FORMU -->
+    <div id="yeniForm">
       <div class="row">
         <div>
-          <label>Isletme Adi</label>
-          <input type="text" id="yeniAd" placeholder="Ornek Kafe"
+          <label>İşletme Adı</label>
+          <input type="text" id="yeniAd" placeholder="Örnek Kafe"
                  oninput="if(!slugElle)document.getElementById('yeniSlug').value=slugYap(this.value)">
         </div>
         <div>
@@ -89,23 +233,39 @@ a{color:var(--teal-l);text-decoration:none}a:hover{text-decoration:underline}
       </div>
       <div class="row">
         <div>
-          <label>Ilk Yonetici Sifresi</label>
+          <label>İlk Yönetici Şifresi</label>
           <input type="text" id="yeniSifre" value="adfix2026">
         </div>
         <div style="display:flex;align-items:flex-end">
-          <button class="btn btn-yesil" onclick="isletmeOlustur()" style="width:100%">Olustur</button>
+          <button class="btn btn-yesil" onclick="isletmeOlustur()" style="width:100%;justify-content:center">
+            Oluştur
+          </button>
         </div>
       </div>
-      <div id="olusturMesaj"></div>
+      <div id="olusturMesaj" style="margin-top:4px"></div>
     </div>
 
-    <div class="kart">
-      <h2>Isletmeler</h2>
-      <div id="isletmeListe"><div class="bos">Yukleniyor...</div></div>
+    <!-- TABLO -->
+    <div class="tablo-wrap" id="isletmeListe">
+      <div class="bos">Yükleniyor…</div>
     </div>
+  </div>
 
-    <div style="text-align:center;margin-top:16px">
-      <button class="btn btn-kirmizi" onclick="cikis()">Cikis Yap</button>
+</div><!-- /icerik -->
+</div><!-- /panelEkrani -->
+
+<!-- ═══════════════ MODAL: ŞİFRE SIFIRLA ═══════════════ -->
+<div id="sifreModal" class="modal-overlay" style="display:none" onclick="if(event.target===this)sifreModalKapat()">
+  <div class="modal-kart">
+    <h3>Yönetici Şifresini Sıfırla</h3>
+    <p>İşletme: <strong id="sifreModalAd" style="color:var(--yazi)"></strong></p>
+    <label>Yeni Şifre</label>
+    <input type="text" id="yeniSifreInput" placeholder="En az 4 karakter"
+           onkeydown="if(event.key==='Enter')sifreSifirlaOnayla()">
+    <div id="sifreMesaj"></div>
+    <div class="modal-islem">
+      <button class="btn btn-mavi" onclick="sifreSifirlaOnayla()">Sıfırla</button>
+      <button class="btn btn-kirmizi" onclick="sifreModalKapat()">İptal</button>
     </div>
   </div>
 </div>
@@ -114,136 +274,303 @@ a{color:var(--teal-l);text-decoration:none}a:hover{text-decoration:underline}
 const API = location.origin + '/api/merkez';
 let TOKEN = localStorage.getItem('adfix_merkez_token');
 let slugElle = false;
+let sifreModalSlug = '';
 
-function slugYap(ad) {
-  const tr = {'ç':'c','ş':'s','ğ':'g','ı':'i','ö':'o','ü':'u',
-              'Ç':'c','Ş':'s','Ğ':'g','İ':'i','Ö':'o','Ü':'u'};
-  return ad.toLowerCase().replace(/[çşğıöüÇŞĞİÖÜ]/g, c=>tr[c]||c)
-    .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').substring(0,50);
-}
+function baslik(){return{'Content-Type':'application/json','Authorization':'Bearer '+TOKEN}}
 
-function baslik(){ return {'Content-Type':'application/json','Authorization':'Bearer '+TOKEN}; }
-
-async function istek(yol, sec={}) {
-  const r = await fetch(API + yol, {...sec, headers:{...baslik(), ...(sec.headers||{})}});
-  const g = await r.json().catch(()=>({}));
-  if(!r.ok) throw new Error(g.detail || 'Hata ('+r.status+')');
+async function istek(yol,sec={}){
+  const r=await fetch(API+yol,{...sec,headers:{...baslik(),...(sec.headers||{})}});
+  const g=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(g.detail||'Hata ('+r.status+')');
   return g;
 }
 
-function goster(giris, panel) {
-  document.getElementById('girisEkrani').style.display = giris ? 'block' : 'none';
-  document.getElementById('panelEkrani').style.display = panel ? 'block' : 'none';
-}
-
-async function girisYap() {
-  const el = document.getElementById('girisHata');
-  el.textContent = '';
-  try {
-    const r = await fetch(API + '/giris', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({sifre: document.getElementById('sifre').value})
-    });
-    const g = await r.json().catch(()=>({}));
-    if(!r.ok) throw new Error(g.detail || 'Hata');
-    TOKEN = g.token;
-    localStorage.setItem('adfix_merkez_token', TOKEN);
-    goster(false, true);
-    listeYukle();
-  } catch(e) { el.textContent = e.message; }
-}
-
-async function listeYukle() {
-  const el = document.getElementById('isletmeListe');
-  try {
-    const liste = await istek('/isletme/liste');
-    if(!liste.length) { el.innerHTML='<div class="bos">Henuz isletme eklenmemis.</div>'; return; }
-    let html = '<table><tr><th>Isletme</th><th>URL Kodu</th><th>Durum</th><th></th></tr>';
-    for(const i of liste) {
-      const durum = i.aktif
-        ? '<span class="rozet rozet-aktif">Aktif</span>'
-        : '<span class="rozet rozet-pasif">Pasif</span>';
-      const url = location.origin + '/i/' + i.slug + '/';
-      const toggleBtn = i.aktif
-        ? `<button class="btn btn-kucuk btn-turuncu" onclick="isletmeToggle('${esc(i.slug)}',0)">Pasife Al</button>`
-        : `<button class="btn btn-kucuk btn-yesil" onclick="isletmeToggle('${esc(i.slug)}',1)">Aktif Et</button>`;
-      html += `<tr>
-        <td><strong><a href="${url}" target="_blank">${esc(i.ad)}</a></strong></td>
-        <td><code>${esc(i.slug)}</code></td>
-        <td>${durum}</td>
-        <td style="text-align:right;white-space:nowrap">
-          ${toggleBtn}
-          <button class="btn btn-kucuk btn-kirmizi" onclick="isletmeSil('${esc(i.slug)}','${esc(i.ad)}')">Sil</button>
-        </td>
-      </tr>`;
-    }
-    html += '</table>';
-    el.innerHTML = html;
-  } catch(e) {
-    if(e.message.includes('401') || e.message.includes('oturum')) { cikis(); return; }
-    el.innerHTML = '<div class="hata">'+esc(e.message)+'</div>';
+function goster(giris){
+  const gi=document.getElementById('girisEkrani');
+  const pa=document.getElementById('panelEkrani');
+  const tb=document.getElementById('topbar');
+  if(giris){
+    gi.style.display='flex';pa.style.display='none';tb.style.display='none';
+  } else {
+    gi.style.display='none';pa.style.display='block';tb.style.display='flex';
   }
 }
 
-async function isletmeOlustur() {
-  const el = document.getElementById('olusturMesaj');
-  el.innerHTML = '';
-  const ad = document.getElementById('yeniAd').value.trim();
-  const slug = document.getElementById('yeniSlug').value.trim();
-  const sifre = document.getElementById('yeniSifre').value.trim();
-  if(!ad || !slug) { el.innerHTML='<div class="hata">Ad ve slug gerekli</div>'; return; }
-  try {
-    const r = await istek('/isletme/olustur', {
-      method:'POST',
-      body: JSON.stringify({ad, slug, ilk_sifre: sifre || 'adfix2026'})
-    });
-    const url = location.origin + '/i/' + r.slug + '/';
-    el.innerHTML = `<div class="basari">${esc(r.mesaj)}<br>
-      <a href="${url}" target="_blank">${url}</a></div>`;
-    document.getElementById('yeniAd').value = '';
-    document.getElementById('yeniSlug').value = '';
-    slugElle = false;
-    listeYukle();
-  } catch(e) { el.innerHTML = '<div class="hata">'+esc(e.message)+'</div>'; }
+function slugYap(ad){
+  const tr={'ç':'c','ş':'s','ğ':'g','ı':'i','ö':'o','ü':'u',
+            'Ç':'c','Ş':'s','Ğ':'g','İ':'i','Ö':'o','Ü':'u'};
+  return ad.toLowerCase().replace(/[çşğıöüÇŞĞİÖÜ]/g,c=>tr[c]||c)
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').substring(0,50);
 }
 
-async function isletmeToggle(slug, aktif) {
-  try {
-    await istek('/isletme/'+slug, {method:'PATCH',
-      body:JSON.stringify({aktif})});
+function esc(s){const d=document.createElement('div');d.textContent=s||'';return d.innerHTML}
+function tl(k){return(k/100).toLocaleString('tr-TR',{minimumFractionDigits:2,maximumFractionDigits:2})}
+
+async function girisYap(){
+  const el=document.getElementById('girisHata');
+  el.textContent='';
+  try{
+    const r=await fetch(API+'/giris',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({sifre:document.getElementById('sifre').value})});
+    const g=await r.json().catch(()=>({}));
+    if(!r.ok)throw new Error(g.detail||'Hata');
+    TOKEN=g.token;
+    localStorage.setItem('adfix_merkez_token',TOKEN);
+    goster(false);
     listeYukle();
-  } catch(e) { alert(e.message); }
+  }catch(e){el.textContent=e.message}
 }
 
-async function isletmeSil(slug, ad) {
-  if(!confirm(ad+' isletmesi kalici olarak silinecek.\nIsletmenin veritabani dosyasi (data/'+slug+'.db) sunucuda korunur.\n\nDevam edilsin mi?')) return;
-  try {
-    await istek('/isletme/'+slug, {method:'DELETE'});
-    listeYukle();
-  } catch(e) { alert(e.message); }
+async function listeYukle(){
+  const el=document.getElementById('isletmeListe');
+  el.innerHTML='<div class="bos">Yükleniyor…</div>';
+  // Stat sıfırla
+  ['sToplam','sAktif','sPasif','sAcikAdisyon','sBugunCiro'].forEach(id=>{
+    document.getElementById(id).textContent='–';
+  });
+  document.getElementById('sAcikSub').textContent='';
+  try{
+    const liste=await istek('/isletme/liste');
+    if(!liste.length){el.innerHTML='<div class="bos">Henüz işletme eklenmemiş.</div>';_statsGuncelle([]);return;}
+    _tabloYaz(liste);
+    _statsGuncelle(liste);
+    _statsYukle(liste);
+  }catch(e){
+    if(e.message.includes('401')||e.message.includes('oturum')){cikis();return;}
+    el.innerHTML='<div class="hata" style="padding:20px">'+esc(e.message)+'</div>';
+  }
 }
 
-function cikis() {
-  TOKEN = null;
+function _statsGuncelle(liste){
+  const toplam=liste.length;
+  const aktif=liste.filter(i=>i.aktif).length;
+  document.getElementById('sToplam').textContent=toplam;
+  document.getElementById('sAktif').textContent=aktif;
+  document.getElementById('sPasif').textContent=toplam-aktif;
+}
+
+async function _statsYukle(liste){
+  // Paralel istatistik yükle (sadece aktif işletmeler)
+  let toplamAcik=0, toplamCiro=0;
+  const promises=liste.map(async isl=>{
+    if(!isl.aktif)return null;
+    try{
+      const s=await istek('/isletme/'+isl.slug+'/istatistik');
+      toplamAcik+=s.acik_adisyon||0;
+      toplamCiro+=s.bugun_ciro_kurus||0;
+      // Satır güncelle
+      const row=document.querySelector(`tr[data-slug="${CSS.escape(isl.slug)}"]`);
+      if(row){
+        const td=row.querySelectorAll('td');
+        // masa/acik (index 4), ciro (5), siparis (6)
+        const masaTd=row.querySelector('.td-masa');
+        const ciroTd=row.querySelector('.td-ciro');
+        const siparissTd=row.querySelector('.td-siparis');
+        if(masaTd)masaTd.innerHTML=
+          `<span style="font-weight:600">${s.masa_sayisi}</span>`+
+          (s.acik_adisyon>0?` <span class="acik-adisyon">(${s.acik_adisyon} açık)</span>`:'');
+        if(ciroTd){
+          if(s.bugun_ciro_kurus>0)
+            ciroTd.innerHTML=`<span class="ciro">${tl(s.bugun_ciro_kurus)} ₺</span>`;
+          else ciroTd.innerHTML='<span class="ciro-sifir">0,00 ₺</span>';
+        }
+        if(siparissTd)siparissTd.textContent=s.bugun_siparis;
+      }
+      return s;
+    }catch{
+      const row=document.querySelector(`tr[data-slug="${CSS.escape(isl.slug)}"]`);
+      if(row){
+        row.querySelector('.td-masa')?.innerHTML='<span class="c-sol">–</span>';
+        row.querySelector('.td-ciro')?.innerHTML='<span class="c-sol">–</span>';
+        row.querySelector('.td-siparis')?.innerHTML='<span class="c-sol">–</span>';
+      }
+      return null;
+    }
+  });
+  await Promise.all(promises);
+  document.getElementById('sAcikAdisyon').textContent=toplamAcik;
+  if(toplamAcik>0)document.getElementById('sAcikSub').textContent='anlık aktif masa';
+  document.getElementById('sBugunCiro').textContent=tl(toplamCiro)+' ₺';
+}
+
+function _tabloYaz(liste){
+  const el=document.getElementById('isletmeListe');
+  let html=`<table>
+  <tr>
+    <th>İşletme</th>
+    <th>URL Kodu</th>
+    <th>Durum</th>
+    <th>Kuruluş</th>
+    <th>Masalar</th>
+    <th>Bugün Ciro</th>
+    <th>Sipariş</th>
+    <th style="text-align:right">İşlemler</th>
+  </tr>`;
+  for(const i of liste){
+    const url=location.origin+'/i/'+i.slug+'/';
+    const rozet=i.aktif
+      ?'<span class="rozet rozet-aktif">Aktif</span>'
+      :'<span class="rozet rozet-pasif">Pasif</span>';
+    const tarih=i.olusturma?i.olusturma.split(' ')[0]:'–';
+    const toggleBtn=i.aktif
+      ?`<button class="btn btn-turuncu btn-xs" onclick="isletmeToggle('${esc(i.slug)}',0)">Pasife Al</button>`
+      :`<button class="btn btn-yesil btn-xs" onclick="isletmeToggle('${esc(i.slug)}',1)">Aktif Et</button>`;
+    const spin='<span class="spin"></span>';
+    html+=`<tr data-slug="${esc(i.slug)}">
+      <td>
+        <div class="ad-wrap" id="adwrap-${esc(i.slug)}">
+          <div class="ad-text">
+            <a href="${url}" target="_blank" title="${url}">${esc(i.ad)}</a>
+          </div>
+          <button class="ad-duzenle-btn" onclick="adDuzenle('${esc(i.slug)}')" title="Adı düzenle">✎</button>
+        </div>
+        <div class="ad-form" id="adform-${esc(i.slug)}">
+          <input class="ad-input" id="adinput-${esc(i.slug)}" value="${esc(i.ad)}"
+                 onkeydown="if(event.key==='Enter')adKaydet('${esc(i.slug)}');if(event.key==='Escape')adIptal('${esc(i.slug)}')">
+          <button class="btn btn-yesil btn-xs" onclick="adKaydet('${esc(i.slug)}')">✓</button>
+          <button class="btn btn-kirmizi btn-xs" onclick="adIptal('${esc(i.slug)}')">✕</button>
+        </div>
+      </td>
+      <td><code style="font-size:12px;color:var(--sol)">${esc(i.slug)}</code></td>
+      <td>${rozet}</td>
+      <td style="color:var(--sol);white-space:nowrap">${tarih}</td>
+      <td class="td-masa">${spin}</td>
+      <td class="td-ciro">${spin}</td>
+      <td class="td-siparis">${spin}</td>
+      <td>
+        <div class="islem-grubu">
+          ${toggleBtn}
+          <button class="btn btn-sol btn-xs" onclick="sifreModalAc('${esc(i.slug)}','${esc(i.ad)}')">🔑 Şifre</button>
+          <button class="btn btn-kirmizi btn-xs" onclick="isletmeSil('${esc(i.slug)}','${esc(i.ad)}')">Sil</button>
+        </div>
+      </td>
+    </tr>`;
+  }
+  html+='</table>';
+  el.innerHTML=html;
+}
+
+// ── İŞLETME CRUD ──
+
+async function isletmeOlustur(){
+  const el=document.getElementById('olusturMesaj');
+  el.innerHTML='';
+  const ad=document.getElementById('yeniAd').value.trim();
+  const slug=document.getElementById('yeniSlug').value.trim();
+  const sifre=document.getElementById('yeniSifre').value.trim();
+  if(!ad||!slug){el.innerHTML='<div class="hata">Ad ve slug gerekli</div>';return;}
+  try{
+    const r=await istek('/isletme/olustur',{method:'POST',
+      body:JSON.stringify({ad,slug,ilk_sifre:sifre||'adfix2026'})});
+    const url=location.origin+'/i/'+r.slug+'/';
+    el.innerHTML=`<div class="basari">${esc(r.mesaj)} — <a href="${url}" target="_blank">${url}</a></div>`;
+    document.getElementById('yeniAd').value='';
+    document.getElementById('yeniSlug').value='';
+    slugElle=false;
+    setTimeout(listeYukle,400);
+  }catch(e){el.innerHTML='<div class="hata">'+esc(e.message)+'</div>'}
+}
+
+async function isletmeToggle(slug,aktif){
+  try{
+    await istek('/isletme/'+slug,{method:'PATCH',body:JSON.stringify({aktif})});
+    listeYukle();
+  }catch(e){alert(e.message)}
+}
+
+async function isletmeSil(slug,ad){
+  if(!confirm(ad+' işletmesi listeden kaldırılacak.\n(Veritabanı dosyası korunur.)\n\nDevam edilsin mi?'))return;
+  try{
+    await istek('/isletme/'+slug,{method:'DELETE'});
+    listeYukle();
+  }catch(e){alert(e.message)}
+}
+
+// ── AD DÜZENLEME ──
+
+function adDuzenle(slug){
+  document.getElementById('adwrap-'+slug).style.display='none';
+  const form=document.getElementById('adform-'+slug);
+  form.style.display='flex';
+  document.getElementById('adinput-'+slug).focus();
+}
+
+function adIptal(slug){
+  document.getElementById('adwrap-'+slug).style.display='flex';
+  document.getElementById('adform-'+slug).style.display='none';
+}
+
+async function adKaydet(slug){
+  const input=document.getElementById('adinput-'+slug);
+  const yeniAd=input.value.trim();
+  if(!yeniAd)return;
+  try{
+    await istek('/isletme/'+slug,{method:'PATCH',body:JSON.stringify({ad:yeniAd})});
+    adIptal(slug);
+    const link=document.querySelector(`tr[data-slug="${CSS.escape(slug)}"] .ad-text a`);
+    if(link)link.textContent=yeniAd;
+    // input güncelle
+    input.value=yeniAd;
+  }catch(e){alert(e.message)}
+}
+
+// ── ŞİFRE SIFIRLAMA ──
+
+function sifreModalAc(slug,ad){
+  sifreModalSlug=slug;
+  document.getElementById('sifreModalAd').textContent=ad;
+  document.getElementById('yeniSifreInput').value='';
+  document.getElementById('sifreMesaj').innerHTML='';
+  document.getElementById('sifreModal').style.display='flex';
+  setTimeout(()=>document.getElementById('yeniSifreInput').focus(),80);
+}
+
+function sifreModalKapat(){
+  document.getElementById('sifreModal').style.display='none';
+  sifreModalSlug='';
+}
+
+async function sifreSifirlaOnayla(){
+  const sifre=document.getElementById('yeniSifreInput').value.trim();
+  const el=document.getElementById('sifreMesaj');
+  el.innerHTML='';
+  if(!sifre){el.innerHTML='<div class="hata">Şifre girin</div>';return;}
+  try{
+    const r=await istek('/isletme/'+sifreModalSlug+'/admin-sifre-sifirla',{
+      method:'POST',body:JSON.stringify({yeni_sifre:sifre})});
+    el.innerHTML='<div class="basari">'+esc(r.mesaj)+'</div>';
+    setTimeout(sifreModalKapat,1500);
+  }catch(e){el.innerHTML='<div class="hata">'+esc(e.message)+'</div>'}
+}
+
+// ── YENİ FORM TOGGLE ──
+
+function yeniToggle(){
+  const form=document.getElementById('yeniForm');
+  const btn=document.getElementById('yeniToggleBtn');
+  const ac=form.style.display!=='block';
+  form.style.display=ac?'block':'none';
+  btn.textContent=ac?'✕ Kapat':'+ Yeni İşletme';
+  if(ac)document.getElementById('yeniAd').focus();
+}
+
+// ── ÇIKIŞ ──
+
+function cikis(){
+  TOKEN=null;
   localStorage.removeItem('adfix_merkez_token');
-  goster(true, false);
+  goster(true);
 }
 
-function esc(s) {
-  const d = document.createElement('div');
-  d.textContent = s || '';
-  return d.innerHTML;
-}
-
-// Baslangic — token varsa once dogrula
-if(TOKEN) {
-  fetch(API + '/isletme/liste', {headers: baslik()})
-    .then(r => { if(!r.ok) throw new Error(); return r.json(); })
-    .then(() => { goster(false, true); listeYukle(); })
-    .catch(() => { cikis(); });
-} else {
-  goster(true, false);
+// ── BAŞLANGIÇ ──
+if(TOKEN){
+  fetch(API+'/isletme/liste',{headers:baslik()})
+    .then(r=>{if(!r.ok)throw new Error();return r.json()})
+    .then(()=>{goster(false);listeYukle()})
+    .catch(()=>{TOKEN=null;localStorage.removeItem('adfix_merkez_token');goster(true)});
+}else{
+  goster(true);
 }
 </script>
 </body>
