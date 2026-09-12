@@ -46,7 +46,7 @@ body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);c
 .btn:disabled{opacity:.45;cursor:not-allowed}
 
 /* ── GİRİŞ ── */
-#girisEkrani{display:none;min-height:100vh;align-items:center;justify-content:center;padding:24px 16px}
+#girisEkrani{display:flex;min-height:100vh;align-items:center;justify-content:center;padding:24px 16px}
 .giris-kart{background:var(--kart);border:1px solid var(--kenar);border-radius:16px;
             padding:32px;width:100%;max-width:380px}
 .giris-bas{text-align:center;margin-bottom:28px}
@@ -272,7 +272,8 @@ a:hover{text-decoration:underline}
 
 <script>
 const API = location.origin + '/api/merkez';
-let TOKEN = localStorage.getItem('adfix_merkez_token');
+let TOKEN = null;
+try { TOKEN = localStorage.getItem('adfix_merkez_token'); } catch(e) {}
 let slugElle = false;
 let sifreModalSlug = '';
 
@@ -316,7 +317,7 @@ async function girisYap(){
     const g=await r.json().catch(()=>({}));
     if(!r.ok)throw new Error(g.detail||'Hata');
     TOKEN=g.token;
-    localStorage.setItem('adfix_merkez_token',TOKEN);
+    try { localStorage.setItem('adfix_merkez_token',TOKEN); } catch(e) {}
     goster(false);
     listeYukle();
   }catch(e){el.textContent=e.message}
@@ -559,7 +560,7 @@ function yeniToggle(){
 
 function cikis(){
   TOKEN=null;
-  localStorage.removeItem('adfix_merkez_token');
+  try { localStorage.removeItem('adfix_merkez_token'); } catch(e) {}
   goster(true);
 }
 
@@ -568,7 +569,7 @@ if(TOKEN){
   fetch(API+'/isletme/liste',{headers:baslik()})
     .then(r=>{if(!r.ok)throw new Error();return r.json()})
     .then(()=>{goster(false);listeYukle()})
-    .catch(()=>{TOKEN=null;localStorage.removeItem('adfix_merkez_token');goster(true)});
+    .catch(()=>{TOKEN=null;try{localStorage.removeItem('adfix_merkez_token');}catch(e){}goster(true)});
 }else{
   goster(true);
 }
