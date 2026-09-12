@@ -382,9 +382,9 @@ async function _statsYukle(liste){
     }catch{
       const row=document.querySelector(`tr[data-slug="${CSS.escape(isl.slug)}"]`);
       if(row){
-        row.querySelector('.td-masa')?.innerHTML='<span class="c-sol">–</span>';
-        row.querySelector('.td-ciro')?.innerHTML='<span class="c-sol">–</span>';
-        row.querySelector('.td-siparis')?.innerHTML='<span class="c-sol">–</span>';
+        const m=row.querySelector('.td-masa');if(m)m.innerHTML='<span class="c-sol">–</span>';
+        const c=row.querySelector('.td-ciro');if(c)c.innerHTML='<span class="c-sol">–</span>';
+        const s2=row.querySelector('.td-siparis');if(s2)s2.innerHTML='<span class="c-sol">–</span>';
       }
       return null;
     }
