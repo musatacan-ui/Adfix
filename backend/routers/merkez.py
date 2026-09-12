@@ -8,7 +8,6 @@ from pydantic import BaseModel
 import os, re, jwt, datetime
 
 import database as db
-import tenant
 
 router = APIRouter()
 
@@ -74,6 +73,7 @@ def isletme_istatistik(slug: str, _=Depends(super_gerektir)):
     mc.close()
     if not isl:
         raise HTTPException(404, "Isletme bulunamadi")
+    import tenant
     tok = tenant.isletme_slug.set(slug)
     try:
         conn = db.get_conn()
@@ -115,6 +115,7 @@ def admin_sifre_sifirla(slug: str, form: SifreSifirlaForm, _=Depends(super_gerek
     if not isl:
         raise HTTPException(404, "Isletme bulunamadi")
     import auth as auth_mod
+    import tenant
     hash_ = auth_mod.hash_sifre(form.yeni_sifre)
     tok = tenant.isletme_slug.set(slug)
     try:
