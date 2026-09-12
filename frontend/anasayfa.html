@@ -3,573 +3,268 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adfix</title>
-<meta name="description" content="Restoran ve kafe için adisyon, masa yönetimi, QR menü ve raporlar.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%236246EA'/%3E%3Ctext y='68' x='50' font-size='52' text-anchor='middle' fill='%23fff' font-weight='700' font-family='system-ui'%3EA%3C/text%3E%3C/svg%3E">
+<title>Adfix — Restoran &amp; Kafe POS</title>
+<meta name="description" content="Adisyon takibini kolaylaştır. Masaları yönet, siparişleri anında ilet, müşterilere QR menü sun.">
+<meta name="theme-color" content="#1F4E48">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231F4E48'/%3E%3Ctext y='68' x='50' font-size='52' text-anchor='middle' fill='%23D4921A' font-weight='700' font-family='Georgia,serif'%3EA%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ── Tokens ── */
-:root {
-  --bg:      #FAFAF8;
-  --bg2:     #F3F1FC;
-  --bg3:     #ECEAF5;
-  --fg:      #141414;
-  --fg2:     #6B6B7A;
-  --brand:   #6246EA;
-  --amber:   #C88B00;
-  --amber-bg:#FFF5D6;
-  --divider: #E4E1F0;
-  --r: 14px;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#F7FAF9;--bg2:#EBF3F1;--fg:#0D1F1C;--fg2:#3D6560;
+  --brand:#1F4E48;--brand2:#2A7A6E;
+  --amber:#C47820;--amber-bg:#FFF3DC;
+  --divider:#C8DDD9;--white:#FFFFFF;
+  --r:10px;--shadow:0 2px 12px rgba(31,78,72,.10);--shadow-lg:0 8px 32px rgba(31,78,72,.14);
 }
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6}
+a{text-decoration:none;color:inherit}
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg:      #0F0E1A;
-    --bg2:     #1C1A2E;
-    --bg3:     #252340;
-    --fg:      #F0EFF9;
-    --fg2:     #9490AB;
-    --amber:   #FFB829;
-    --amber-bg:rgba(255,184,41,.1);
-    --divider: #2A2840;
-  }
-}
+/* NAV */
+nav{position:sticky;top:0;background:rgba(247,250,249,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--divider);padding:0 5%;height:64px;
+  display:flex;align-items:center;justify-content:space-between;z-index:100}
+.nav-logo{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:700;color:var(--brand)}
+.nav-logo span{color:var(--amber)}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{font-size:14px;font-weight:500;color:var(--fg2)}
+.nav-links a:hover{color:var(--brand)}
+.btn-nav{padding:8px 20px;background:var(--brand);color:#fff;border-radius:8px;
+  font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit}
+@media(max-width:640px){.nav-links>a{display:none}}
 
-:root[data-theme="dark"] {
-  --bg:      #0F0E1A;
-  --bg2:     #1C1A2E;
-  --bg3:     #252340;
-  --fg:      #F0EFF9;
-  --fg2:     #9490AB;
-  --amber:   #FFB829;
-  --amber-bg:rgba(255,184,41,.1);
-  --divider: #2A2840;
-}
+/* HERO */
+.hero{padding:72px 5% 56px;display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:center;max-width:1400px;margin:0 auto}
+@media(max-width:900px){.hero{grid-template-columns:1fr;gap:40px}}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--amber-bg);
+  border:1px solid #F0CC8C;border-radius:100px;padding:6px 14px;
+  font-size:12px;font-weight:600;color:var(--amber);letter-spacing:.4px;text-transform:uppercase;margin-bottom:20px}
+.badge-dot{width:6px;height:6px;background:var(--amber);border-radius:50%;display:inline-block}
+h1{font-family:'Fraunces',Georgia,serif;font-size:clamp(36px,5vw,54px);font-weight:700;
+  line-height:1.12;letter-spacing:-1px;color:var(--fg);margin-bottom:18px}
+h1 em{font-style:italic;color:var(--brand)}
+.hero-desc{font-size:17px;line-height:1.65;color:var(--fg2);max-width:420px;margin-bottom:32px}
+.hero-cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.btn-primary{padding:13px 26px;background:var(--brand);color:#fff;border-radius:var(--r);
+  font-size:15px;font-weight:600;border:none;cursor:pointer;font-family:inherit}
+.btn-outline{padding:13px 22px;background:transparent;color:var(--brand);
+  border:1.5px solid var(--brand);border-radius:var(--r);font-size:15px;font-weight:600;
+  cursor:pointer;font-family:inherit}
+.hero-stats{display:flex;gap:28px;margin-top:40px;padding-top:24px;border-top:1px solid var(--divider);flex-wrap:wrap}
+.stat-num{font-family:'Fraunces',Georgia,serif;font-size:26px;font-weight:600;color:var(--brand)}
+.stat-label{font-size:13px;color:var(--fg2);margin-top:3px}
 
-/* ── Reset ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+/* DASHBOARD VISUAL */
+.hero-visual{background:#0C1F1B;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-lg)}
+.db-bar{background:#152D28;padding:11px 14px;display:flex;align-items:center;gap:7px;
+  border-bottom:1px solid rgba(255,255,255,.06)}
+.db-dot{width:10px;height:10px;border-radius:50%}
+.db-bar-title{margin-left:7px;font-size:12px;color:rgba(255,255,255,.4);font-family:'Plus Jakarta Sans',sans-serif}
+.db-body{padding:14px}
+.db-tabs{display:flex;gap:4px;margin-bottom:12px}
+.db-tab{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif}
+.db-tab.on{background:#2A7A6E;color:#fff}
+.db-tab:not(.on){color:rgba(255,255,255,.35);background:rgba(255,255,255,.05)}
+.t-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
+.tc{background:rgba(255,255,255,.04);border-radius:7px;padding:10px;border:1px solid rgba(255,255,255,.06)}
+.tc.open{border-color:rgba(42,122,110,.45);background:rgba(42,122,110,.10)}
+.tc.wait{border-color:rgba(196,120,32,.45);background:rgba(196,120,32,.09)}
+.tc-n{font-size:10px;color:rgba(255,255,255,.3);font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:3px}
+.tc-s{font-size:12px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.2)}
+.tc.open .tc-s{color:#5BC4B3}
+.tc.wait .tc-s{color:#D4921A}
+.tc-t{font-size:10px;color:rgba(255,255,255,.25);margin-top:3px;font-family:'Plus Jakarta Sans',sans-serif}
+.tc.open .tc-t{color:rgba(91,196,179,.6)}
+.tc.wait .tc-t{color:rgba(212,146,26,.6)}
 
-body {
-  font-family: 'DM Sans', system-ui, sans-serif;
-  font-weight: 300;
-  font-size: 16px;
-  line-height: 1.6;
-  color: var(--fg);
-  background: var(--bg);
-  -webkit-font-smoothing: antialiased;
-}
+/* FEATURES */
+.features{padding:0 5% 72px;max-width:1400px;margin:0 auto}
+.sec-head{text-align:center;margin-bottom:40px}
+.sec-label{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--brand);margin-bottom:10px}
+.sec-title{font-family:'Fraunces',Georgia,serif;font-size:34px;font-weight:600;color:var(--fg)}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
+.feat-card{background:#fff;border-radius:14px;padding:26px;border:1px solid var(--divider);box-shadow:var(--shadow)}
+.feat-icon{width:42px;height:42px;background:var(--bg2);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;color:var(--brand);margin-bottom:14px}
+.feat-title{font-size:15px;font-weight:700;color:var(--fg);margin-bottom:7px}
+.feat-desc{font-size:13px;color:var(--fg2);line-height:1.6}
 
-a { text-decoration: none; color: inherit; }
+/* LOGIN */
+.login-wrap{padding:0 5% 72px;max-width:1400px;margin:0 auto;
+  display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+@media(max-width:900px){.login-wrap{grid-template-columns:1fr}}
+.login-info h2{font-family:'Fraunces',Georgia,serif;font-size:32px;font-weight:600;color:var(--fg);line-height:1.2;margin-bottom:14px}
+.login-info p{font-size:15px;color:var(--fg2);line-height:1.65;margin-bottom:22px}
+.check-list{display:flex;flex-direction:column;gap:10px}
+.check-item{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--fg2);line-height:1.5}
+.check-ico{width:19px;height:19px;background:var(--bg2);border-radius:50%;display:flex;
+  align-items:center;justify-content:center;color:var(--brand);font-size:10px;flex-shrink:0;margin-top:2px}
+.login-card{background:#fff;border-radius:16px;padding:36px;border:1px solid var(--divider);box-shadow:var(--shadow-lg)}
+.login-logo{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:700;color:var(--brand);margin-bottom:4px}
+.login-logo span{color:var(--amber)}
+.login-sub{font-size:13px;color:var(--fg2);margin-bottom:24px}
+.form-group{margin-bottom:14px}
+label{display:block;font-size:12px;font-weight:600;color:var(--fg);margin-bottom:5px}
+.input{width:100%;padding:10px 13px;border:1.5px solid var(--divider);border-radius:8px;
+  font-size:14px;color:var(--fg);background:var(--bg);font-family:inherit;outline:none}
+.input:focus{border-color:var(--brand)}
+.input-hint{font-size:11.5px;color:var(--fg2);margin-top:3px}
+.btn-login{width:100%;padding:12px;background:var(--brand);color:#fff;border-radius:8px;
+  font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:inherit;margin-top:4px}
+.btn-login:hover{background:var(--brand2)}
+.login-footer{font-size:12px;color:var(--fg2);text-align:center;margin-top:14px}
+.login-footer a{color:var(--brand);font-weight:600}
+.hata{color:#c0392b;font-size:12.5px;margin-top:6px;display:none}
 
-/* ── Nav ── */
-.nav {
-  position: fixed; top: 0; left: 0; right: 0;
-  z-index: 100;
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 18px 48px;
-  background: var(--bg);
-  border-bottom: 1px solid var(--divider);
-}
-
-.nav-logo {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 20px;
-  letter-spacing: -.04em;
-  color: var(--fg);
-}
-.nav-logo span { color: var(--brand); }
-
-.nav-cta {
-  padding: 9px 20px;
-  background: var(--brand);
-  color: #fff;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  transition: opacity .15s;
-}
-.nav-cta:hover { opacity: .87; }
-
-/* ── Hero ── */
-.hero {
-  min-height: 100vh;
-  padding: 108px 48px 80px;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 56px;
-  align-items: center;
-}
-
-.hero-etiket {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--brand);
-  margin-bottom: 18px;
-}
-
-.hero-left h1 {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: clamp(40px, 5vw, 60px);
-  letter-spacing: -.04em;
-  line-height: 1.06;
-  text-wrap: balance;
-  color: var(--fg);
-  margin-bottom: 20px;
-}
-
-.hero-left h1 em {
-  font-style: normal;
-  color: var(--brand);
-}
-
-.hero-desc {
-  font-size: 16px;
-  color: var(--fg2);
-  max-width: 400px;
-  line-height: 1.7;
-  margin-bottom: 36px;
-}
-
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 8px;
-  padding: 13px 26px;
-  background: var(--brand);
-  color: #fff;
-  border-radius: 10px;
-  font-size: 15px; font-weight: 500;
-  transition: opacity .15s, transform .12s;
-}
-.btn-primary:hover { opacity: .9; transform: translateY(-1px); }
-.btn-primary svg { flex-shrink: 0; }
-
-/* ── Masa Mockup ── */
-.masa-mockup {
-  background: var(--bg2);
-  border-radius: 20px;
-  padding: 28px;
-  border: 1px solid var(--divider);
-}
-
-.mockup-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 20px;
-}
-.mockup-baslik {
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-  color: var(--fg2);
-}
-.mockup-tarih {
-  font-size: 11px;
-  color: var(--fg2);
-}
-
-.masa-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.masa-k {
-  aspect-ratio: 1;
-  border-radius: 10px;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 3px;
-  cursor: default;
-}
-
-.masa-k-no {
-  font-family: 'Syne', sans-serif;
-  font-size: 15px; font-weight: 700;
-  line-height: 1;
-}
-.masa-k-durum {
-  font-size: 10px; font-weight: 400;
-}
-
-.masa-k.bos {
-  background: var(--bg);
-  border: 1.5px solid var(--divider);
-  color: var(--fg2);
-}
-.masa-k.acik {
-  background: rgba(98,70,234,.08);
-  border: 1.5px solid rgba(98,70,234,.2);
-  color: var(--brand);
-}
-.masa-k.bekleyen {
-  background: var(--amber-bg);
-  border: 1.5px solid rgba(200,139,0,.25);
-  color: var(--amber);
-}
-
-.mockup-ozet {
-  display: flex; gap: 8px;
-}
-
-.ozet-kart {
-  flex: 1;
-  padding: 10px 12px;
-  background: var(--bg);
-  border-radius: 10px;
-  border: 1px solid var(--divider);
-  text-align: center;
-}
-.ozet-sayi {
-  font-family: 'Syne', sans-serif;
-  font-size: 18px; font-weight: 700;
-  color: var(--fg);
-  line-height: 1;
-  margin-bottom: 3px;
-  font-variant-numeric: tabular-nums;
-}
-.ozet-sayi.marka { color: var(--brand); }
-.ozet-ad { font-size: 10px; color: var(--fg2); }
-
-/* ── Features ── */
-.features {
-  border-top: 1px solid var(--divider);
-  padding: 72px 48px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.features-ust {
-  display: flex; align-items: flex-end; justify-content: space-between;
-  margin-bottom: 40px;
-  gap: 24px;
-}
-
-.features-ust h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(24px, 3vw, 32px);
-  font-weight: 700;
-  letter-spacing: -.03em;
-  text-wrap: balance;
-  color: var(--fg);
-  max-width: 360px;
-}
-
-.features-ust p {
-  font-size: 14px;
-  color: var(--fg2);
-  max-width: 320px;
-  text-align: right;
-  line-height: 1.65;
-}
-
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-}
-
-.feat-kart {
-  background: var(--bg2);
-  border-radius: var(--r);
-  padding: 24px;
-  border: 1px solid var(--divider);
-  transition: background .15s;
-}
-.feat-kart:hover { background: var(--bg3); }
-
-.feat-ikon {
-  width: 36px; height: 36px;
-  background: rgba(98,70,234,.1);
-  border-radius: 9px;
-  display: flex; align-items: center; justify-content: center;
-  margin-bottom: 14px;
-}
-.feat-ikon svg {
-  width: 16px; height: 16px;
-  stroke: var(--brand); fill: none;
-  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
-}
-
-.feat-kart h3 {
-  font-family: 'Syne', sans-serif;
-  font-size: 14px; font-weight: 700;
-  letter-spacing: -.01em;
-  margin-bottom: 6px;
-  color: var(--fg);
-}
-.feat-kart p {
-  font-size: 13px;
-  color: var(--fg2);
-  line-height: 1.6;
-}
-
-/* ── Stats ── */
-.stats-bar {
-  background: var(--bg2);
-  border-top: 1px solid var(--divider);
-  border-bottom: 1px solid var(--divider);
-  padding: 40px 48px;
-}
-.stats-ic {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 32px;
-  text-align: center;
-}
-.stat-sayi {
-  font-family: 'Syne', sans-serif;
-  font-size: 36px; font-weight: 800;
-  letter-spacing: -.04em;
-  color: var(--brand);
-  line-height: 1;
-  margin-bottom: 6px;
-  font-variant-numeric: tabular-nums;
-}
-.stat-ad {
-  font-size: 13px;
-  color: var(--fg2);
-}
-
-/* ── Login ── */
-.login-section {
-  padding: 72px 24px 100px;
-  max-width: 480px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.login-section h2 {
-  font-family: 'Syne', sans-serif;
-  font-size: 26px; font-weight: 700;
-  letter-spacing: -.03em;
-  margin-bottom: 8px;
-  color: var(--fg);
-}
-.login-section .login-aciklama {
-  font-size: 14px;
-  color: var(--fg2);
-  margin-bottom: 28px;
-}
-
-.login-satir {
-  display: flex; gap: 8px;
-}
-
-.login-satir input {
-  flex: 1;
-  padding: 12px 16px;
-  background: var(--bg2);
-  border: 1.5px solid var(--divider);
-  border-radius: 10px;
-  font-size: 14px;
-  color: var(--fg);
-  font-family: inherit;
-  outline: none;
-  transition: border-color .15s;
-}
-.login-satir input:focus { border-color: var(--brand); }
-.login-satir input::placeholder { color: var(--fg2); opacity: .55; }
-
-.login-satir button {
-  padding: 12px 22px;
-  background: var(--brand);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 14px; font-weight: 500;
-  cursor: pointer;
-  font-family: inherit;
-  white-space: nowrap;
-  transition: opacity .15s;
-}
-.login-satir button:hover { opacity: .87; }
-
-.hata { color: #D32F2F; font-size: 12px; margin-top: 8px; min-height: 16px; text-align: left; }
-
-/* ── Footer ── */
-footer {
-  border-top: 1px solid var(--divider);
-  padding: 24px 48px;
-  text-align: center;
-  font-size: 12px;
-  color: var(--fg2);
-}
-
-/* ── Responsive ── */
-@media (max-width: 960px) {
-  .nav { padding: 14px 24px; }
-  .hero { grid-template-columns: 1fr; gap: 40px; padding: 90px 24px 60px; }
-  .features { padding: 56px 24px; }
-  .features-ust { flex-direction: column; align-items: flex-start; }
-  .features-ust p { text-align: left; max-width: none; }
-  .features-grid { grid-template-columns: 1fr 1fr; }
-  .stats-bar { padding: 36px 24px; }
-  .stats-ic { grid-template-columns: 1fr 1fr; gap: 24px; }
-  footer { padding: 24px; }
-}
-
-@media (max-width: 560px) {
-  .features-grid { grid-template-columns: 1fr; }
-  .stats-ic { grid-template-columns: 1fr 1fr; }
-  .masa-grid { grid-template-columns: repeat(4, 1fr); }
-  .login-satir { flex-direction: column; }
-  .login-satir button { width: 100%; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition: none !important; animation: none !important; }
-}
+/* FOOTER */
+footer{background:var(--brand);color:rgba(255,255,255,.55);padding:28px 5%;
+  display:flex;align-items:center;justify-content:space-between;font-size:13px;flex-wrap:wrap;gap:12px}
+.footer-logo{font-family:'Fraunces',Georgia,serif;color:#fff;font-size:17px;font-weight:700}
+.footer-logo span{color:#D4921A}
 </style>
 </head>
 <body>
 
-<!-- ── Nav ── -->
-<nav class="nav">
-  <span class="nav-logo">Ad<span>fix</span></span>
-  <a href="#giris" class="nav-cta">İşletme Girişi</a>
+<nav>
+  <div class="nav-logo">Adfix<span>.</span></div>
+  <div class="nav-links">
+    <a href="#ozellikler">Özellikler</a>
+    <a href="#giris">Giriş</a>
+    <button class="btn-nav" onclick="document.getElementById('giris').scrollIntoView({behavior:'smooth'})">Giriş Yap</button>
+  </div>
 </nav>
 
-<!-- ── Hero ── -->
 <section class="hero">
-  <div class="hero-left">
-    <span class="hero-etiket">Restoran &amp; Kafe Yönetimi</span>
-    <h1>Adisyon,<br>masalarda değil<br><em>ekranda.</em></h1>
-    <p class="hero-desc">Masa takibi, QR menü, mutfak ekranı ve ciro raporları — tek sistemde, sıfır karmaşa.</p>
-    <a href="#giris" class="btn-primary">
-      İşletmenize Giriş Yapın
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-    </a>
-  </div>
-
-  <div class="masa-mockup">
-    <div class="mockup-header">
-      <span class="mockup-baslik">Salon Görünümü</span>
-      <span class="mockup-tarih">Bugün · 19:42</span>
+  <div>
+    <div class="hero-badge"><span class="badge-dot"></span>Restoran &amp; Kafe POS</div>
+    <h1>Adisyon takibini <em>kolaylaştır</em></h1>
+    <p class="hero-desc">Masaları yönet, siparişleri anında ilet, müşterilere QR menü sun. Küçük işletmeden zincir restorana tek platform.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" onclick="document.getElementById('giris').scrollIntoView({behavior:'smooth'})">Giriş Yap</button>
+      <button class="btn-outline" onclick="document.getElementById('ozellikler').scrollIntoView({behavior:'smooth'})">Özellikleri Gör</button>
     </div>
-    <div class="masa-grid">
-      <div class="masa-k acik"><span class="masa-kart-no">1</span><span class="masa-k-durum">Açık</span></div>
-      <div class="masa-k bos"><span class="masa-kart-no">2</span><span class="masa-k-durum">Boş</span></div>
-      <div class="masa-k acik"><span class="masa-kart-no">3</span><span class="masa-k-durum">Açık</span></div>
-      <div class="masa-k bekleyen"><span class="masa-kart-no">4</span><span class="masa-k-durum">Bekliyor</span></div>
-      <div class="masa-k bos"><span class="masa-kart-no">5</span><span class="masa-k-durum">Boş</span></div>
-      <div class="masa-k acik"><span class="masa-kart-no">6</span><span class="masa-k-durum">Açık</span></div>
-      <div class="masa-k bekleyen"><span class="masa-kart-no">7</span><span class="masa-k-durum">Bekliyor</span></div>
-      <div class="masa-k bos"><span class="masa-kart-no">8</span><span class="masa-k-durum">Boş</span></div>
-    </div>
-    <div class="mockup-ozet">
-      <div class="ozet-kart">
-        <div class="ozet-sayi marka">3</div>
-        <div class="ozet-ad">Açık masa</div>
-      </div>
-      <div class="ozet-kart">
-        <div class="ozet-sayi" style="color:var(--amber)">2</div>
-        <div class="ozet-ad">Bekliyor</div>
-      </div>
-      <div class="ozet-kart">
-        <div class="ozet-sayi marka">₺1.240</div>
-        <div class="ozet-ad">Bugün ciro</div>
-      </div>
+    <div class="hero-stats">
+      <div><div class="stat-num">18ms</div><div class="stat-label">Ortalama Yanıt</div></div>
+      <div><div class="stat-num">99.9%</div><div class="stat-label">Çalışma Süresi</div></div>
+      <div><div class="stat-num">Ücretsiz</div><div class="stat-label">Başlamak İçin</div></div>
     </div>
   </div>
-</section>
-
-<!-- ── Features ── -->
-<section class="features">
-  <div class="features-ust">
-    <h2>Restoran yönetimi,<br>baştan sona.</h2>
-    <p>Mutfaktan kasaya, masadan menüye ihtiyacınız olan her şey tek çatı altında.</p>
-  </div>
-  <div class="features-grid">
-    <div class="feat-kart">
-      <div class="feat-ikon">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-      </div>
-      <h3>Masa Yönetimi</h3>
-      <p>Salon haritasından adisyon açın, ürün ekleyin, tahsilat alın.</p>
+  <div class="hero-visual">
+    <div class="db-bar">
+      <div class="db-dot" style="background:#FF5F57"></div>
+      <div class="db-dot" style="background:#FFBD2E"></div>
+      <div class="db-dot" style="background:#28CA41"></div>
+      <span class="db-bar-title">Adfix — Yönetim Paneli</span>
     </div>
-    <div class="feat-kart">
-      <div class="feat-ikon">
-        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+    <div class="db-body">
+      <div class="db-tabs">
+        <div class="db-tab on">Tüm Masalar</div>
+        <div class="db-tab">Açık (8)</div>
+        <div class="db-tab">Bekleyen (3)</div>
       </div>
-      <h3>QR Menü & Sipariş</h3>
-      <p>Müşteri masadan QR okutarak sipariş versin, garson çağırsın.</p>
-    </div>
-    <div class="feat-kart">
-      <div class="feat-ikon">
-        <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4M16 6V4M3 10h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V10z"/></svg>
+      <div class="t-grid">
+        <div class="tc open"><div class="tc-n">Masa 1</div><div class="tc-s">AÇIK</div><div class="tc-t">₺248</div></div>
+        <div class="tc"><div class="tc-n">Masa 2</div><div class="tc-s">BOŞ</div><div class="tc-t">—</div></div>
+        <div class="tc wait"><div class="tc-n">Masa 3</div><div class="tc-s">HESAP</div><div class="tc-t">₺632</div></div>
+        <div class="tc open"><div class="tc-n">Masa 4</div><div class="tc-s">AÇIK</div><div class="tc-t">₺89</div></div>
+        <div class="tc open"><div class="tc-n">Masa 5</div><div class="tc-s">AÇIK</div><div class="tc-t">₺440</div></div>
+        <div class="tc"><div class="tc-n">Masa 6</div><div class="tc-s">BOŞ</div><div class="tc-t">—</div></div>
+        <div class="tc wait"><div class="tc-n">Masa 7</div><div class="tc-s">HESAP</div><div class="tc-t">₺315</div></div>
+        <div class="tc open"><div class="tc-n">Masa 8</div><div class="tc-s">AÇIK</div><div class="tc-t">₺175</div></div>
+        <div class="tc"><div class="tc-n">Masa 9</div><div class="tc-s">BOŞ</div><div class="tc-t">—</div></div>
+        <div class="tc open"><div class="tc-n">Masa 10</div><div class="tc-s">AÇIK</div><div class="tc-t">₺58</div></div>
       </div>
-      <h3>Mutfak Ekranı</h3>
-      <p>Siparişler anında mutfak ekranına düşsün, hazır olunca işaretleyin.</p>
-    </div>
-    <div class="feat-kart">
-      <div class="feat-ikon">
-        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-      </div>
-      <h3>Raporlar</h3>
-      <p>Günlük ciro, en çok satan ürünler ve saatlik grafik anlık görünür.</p>
     </div>
   </div>
 </section>
 
-<!-- ── Stats ── -->
-<div class="stats-bar">
-  <div class="stats-ic">
-    <div>
-      <div class="stat-sayi">0 ₺</div>
-      <div class="stat-ad">SaaS aboneliği yok</div>
+<section class="features" id="ozellikler">
+  <div class="sec-head">
+    <div class="sec-label">Neden Adfix?</div>
+    <div class="sec-title">Her masanın ihtiyacı için</div>
+  </div>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <div class="feat-title">Gerçek Zamanlı Masa</div>
+      <div class="feat-desc">Masa durumlarını anında görün; açık, bekleyen ve boş masaları tek bakışta ayırt edin.</div>
     </div>
-    <div>
-      <div class="stat-sayi">%100</div>
-      <div class="stat-ad">Veriler sizin sunucunuzda</div>
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+      </div>
+      <div class="feat-title">QR Sipariş Menüsü</div>
+      <div class="feat-desc">Müşteriler kendi telefonlarından menüyü tarar, garsonlara bağımlılık azalır.</div>
     </div>
-    <div>
-      <div class="stat-sayi">7/24</div>
-      <div class="stat-ad">İnternet olmadan çalışır</div>
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 17H7A5 5 0 0 1 7 7h2M15 7h2a5 5 0 0 1 0 10h-2M8 12h8"/></svg>
+      </div>
+      <div class="feat-title">Çoklu Mekan</div>
+      <div class="feat-desc">Her şubeyi ayrı URL ile yönetin. Tek merkez panel, sınırsız mekan.</div>
     </div>
-    <div>
-      <div class="stat-sayi">&lt;1 s</div>
-      <div class="stat-ad">Sayfa yükleme süresi</div>
+    <div class="feat-card">
+      <div class="feat-icon">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      </div>
+      <div class="feat-title">Anlık Raporlama</div>
+      <div class="feat-desc">Günlük, haftalık ve aylık ciro rakamlarına istediğiniz zaman ulaşın.</div>
     </div>
   </div>
-</div>
-
-<!-- ── Login ── -->
-<section class="login-section" id="giris">
-  <h2>Giriş Yapın</h2>
-  <p class="login-aciklama">İşletme kodunuzu girin.</p>
-  <div class="login-satir">
-    <input id="kodInput" placeholder="ornek-kafe" autocomplete="off" autocapitalize="off"
-           oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')"
-           onkeydown="if(event.key==='Enter')kodGit()">
-    <button onclick="kodGit()">Giriş</button>
-  </div>
-  <div class="hata" id="hata"></div>
 </section>
 
-<!-- ── Footer ── -->
+<section class="login-wrap" id="giris">
+  <div class="login-info">
+    <h2>İşletmenize bugün başlayın</h2>
+    <p>İşletme kodunuzu girin, saniyeler içinde panelinize erişin.</p>
+    <div class="check-list">
+      <div class="check-item"><div class="check-ico">✓</div>Kurulum gerektirmez, tarayıcıdan çalışır</div>
+      <div class="check-item"><div class="check-ico">✓</div>QR menü müşterilere sınırsız ücretsiz</div>
+      <div class="check-item"><div class="check-ico">✓</div>Türkçe destek, yerel altyapı</div>
+      <div class="check-item"><div class="check-ico">✓</div>İstediğiniz zaman erişim, veri sizin</div>
+    </div>
+  </div>
+  <div class="login-card">
+    <div class="login-logo">Adfix<span>.</span></div>
+    <div class="login-sub">İşletme panelinize giriş yapın</div>
+    <div class="form-group">
+      <label>İşletme Kodu (slug)</label>
+      <input class="input" type="text" id="kodInput" placeholder="ornek-kafe"
+             autocomplete="off" autocapitalize="off"
+             oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')"
+             onkeydown="if(event.key==='Enter')kodGit()">
+      <div class="input-hint">adfixapp.com.tr/i/<strong id="slugOnizleme">ornek-kafe</strong></div>
+    </div>
+    <button class="btn-login" onclick="kodGit()">Giriş Yap</button>
+    <div class="hata" id="hata"></div>
+    <div class="login-footer"><a href="/merkez/">Merkez Yönetim</a></div>
+  </div>
+</section>
+
 <footer>
-  &copy; 2026 Adfix — Adisyon &amp; Masa Yönetim Sistemi
+  <div class="footer-logo">Adfix<span>.</span></div>
+  <div>© 2026 Adfix — Restoran &amp; Kafe Adisyon Sistemi</div>
+  <div>Gizlilik · Kullanım Koşulları</div>
 </footer>
 
 <script>
+const kodInput = document.getElementById('kodInput');
+const slugOnizleme = document.getElementById('slugOnizleme');
+
+kodInput.addEventListener('input', function() {
+  slugOnizleme.textContent = this.value || 'ornek-kafe';
+});
+
 function kodGit() {
-  const kod = document.getElementById('kodInput').value.trim();
+  const kod = kodInput.value.trim();
   const hata = document.getElementById('hata');
-  if (!kod) { hata.textContent = 'İşletme kodunu girin'; return; }
-  if (kod.length < 2) { hata.textContent = 'Kod en az 2 karakter olmalı'; return; }
-  hata.textContent = '';
+  if (!kod) { hata.textContent = 'İşletme kodunu girin'; hata.style.display = 'block'; return; }
+  if (kod.length < 2) { hata.textContent = 'Kod en az 2 karakter olmalı'; hata.style.display = 'block'; return; }
+  hata.style.display = 'none';
   location.href = '/i/' + encodeURIComponent(kod) + '/';
 }
 </script>

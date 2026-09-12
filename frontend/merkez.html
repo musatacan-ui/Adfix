@@ -3,48 +3,63 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adfix — Merkez Yonetim</title>
+<title>Adfix — Merkez Yönetim</title>
+<meta name="theme-color" content="#1F4E48">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231F4E48'/%3E%3Ctext y='68' x='50' font-size='52' text-anchor='middle' fill='%23D4921A' font-weight='700' font-family='Georgia,serif'%3EA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0f172a;--kart:#1e293b;--kenar:#334155;--yazi:#e2e8f0;--sol:#94a3b8;
-      --mavi:#3b82f6;--yesil:#22c55e;--kirmizi:#ef4444;--turuncu:#f59e0b}
-body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--yazi);
+:root{--bg:#0C1F1B;--kart:#152D28;--kenar:rgba(255,255,255,.08);--yazi:#E8F5F2;--sol:#7AADA4;
+      --teal:#2A7A6E;--teal-l:#3DA394;--yesil:#27AE60;--kirmizi:#E74C3C;--amber:#D4921A}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--yazi);
      min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
-.kapsam{max-width:720px;width:100%}
-h1{font-size:28px;margin-bottom:8px;text-align:center}
-.aciklama{text-align:center;color:var(--sol);margin-bottom:32px;font-size:14px}
-.kart{background:var(--kart);border:1px solid var(--kenar);border-radius:12px;padding:24px;margin-bottom:20px}
-.kart h2{font-size:18px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
-label{display:block;font-size:13px;color:var(--sol);margin-bottom:4px}
-input,select{width:100%;padding:10px 12px;border:1px solid var(--kenar);border-radius:8px;
-       background:var(--bg);color:var(--yazi);font-size:14px;margin-bottom:12px}
-input:focus{outline:none;border-color:var(--mavi)}
+.kapsam{max-width:760px;width:100%}
+.page-header{text-align:center;margin-bottom:32px}
+.logo{font-family:'Fraunces',Georgia,serif;font-size:28px;font-weight:700;color:var(--teal-l);margin-bottom:4px}
+.logo span{color:var(--amber)}
+.aciklama{color:var(--sol);font-size:13px;letter-spacing:.5px;text-transform:uppercase}
+.kart{background:var(--kart);border:1px solid var(--kenar);border-radius:14px;padding:24px;margin-bottom:20px}
+.kart h2{font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;color:var(--yazi)}
+label{display:block;font-size:11px;font-weight:700;color:var(--sol);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px}
+input,select{width:100%;padding:9px 12px;border:1px solid rgba(255,255,255,.12);border-radius:8px;
+       background:rgba(255,255,255,.05);color:var(--yazi);font-size:14px;margin-bottom:12px;
+       font-family:inherit;outline:none}
+input:focus,select:focus{border-color:var(--teal-l)}
+option{background:#152D28}
 .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border:none;
-     border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s}
-.btn-mavi{background:var(--mavi);color:#fff}.btn-mavi:hover{filter:brightness(1.1)}
-.btn-yesil{background:var(--yesil);color:#fff}.btn-yesil:hover{filter:brightness(1.1)}
-.btn-kirmizi{background:var(--kirmizi);color:#fff}.btn-kirmizi:hover{filter:brightness(1.1)}
+     border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit}
+.btn-mavi{background:var(--teal);color:#fff}.btn-mavi:hover{background:var(--teal-l)}
+.btn-yesil{background:rgba(39,174,96,.15);color:var(--yesil);border:1px solid rgba(39,174,96,.25)}
+.btn-yesil:hover{background:rgba(39,174,96,.25)}
+.btn-kirmizi{background:rgba(231,76,60,.12);color:var(--kirmizi);border:1px solid rgba(231,76,60,.2)}
+.btn-kirmizi:hover{background:rgba(231,76,60,.22)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .hata{color:var(--kirmizi);font-size:13px;margin-top:4px}
 .basari{color:var(--yesil);font-size:13px;margin-top:4px}
-table{width:100%;border-collapse:collapse;margin-top:12px}
+table{width:100%;border-collapse:collapse;margin-top:8px}
 th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--kenar);font-size:13px}
-th{color:var(--sol);font-weight:600}
-.rozet{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
-.rozet-aktif{background:rgba(34,197,94,.15);color:var(--yesil)}
-.rozet-pasif{background:rgba(239,68,68,.15);color:var(--kirmizi)}
-a{color:var(--mavi);text-decoration:none}a:hover{text-decoration:underline}
+th{color:var(--sol);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.5px}
+tr:hover td{background:rgba(255,255,255,.02)}
+.rozet{display:inline-block;padding:3px 8px;border-radius:5px;font-size:11px;font-weight:700}
+.rozet-aktif{background:rgba(39,174,96,.15);color:var(--yesil)}
+.rozet-pasif{background:rgba(231,76,60,.12);color:var(--kirmizi)}
+a{color:var(--teal-l);text-decoration:none}a:hover{text-decoration:underline}
 .row{display:flex;gap:12px}.row>*{flex:1}
 #girisEkrani,#panelEkrani{display:none}
 .bos{text-align:center;color:var(--sol);padding:24px;font-size:14px}
 .btn-kucuk{padding:5px 12px;font-size:12px;border-radius:6px}
-.btn-turuncu{background:var(--turuncu);color:#fff}.btn-turuncu:hover{filter:brightness(1.1)}
+.btn-turuncu{background:rgba(212,146,26,.15);color:var(--amber);border:1px solid rgba(212,146,26,.25)}
+.btn-turuncu:hover{background:rgba(212,146,26,.25)}
 </style>
 </head>
 <body>
 <div class="kapsam">
-  <h1>Adfix Merkez</h1>
-  <p class="aciklama">Isletme yonetim paneli</p>
+  <div class="page-header">
+    <div class="logo">Adfix<span>.</span></div>
+    <p class="aciklama">Merkez Yönetim Paneli</p>
+  </div>
 
   <!-- GIRIS -->
   <div id="girisEkrani" class="kart">

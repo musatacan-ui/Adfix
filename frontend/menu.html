@@ -4,18 +4,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
 <title>Menü</title>
-<meta name="theme-color" content="#8052ff">
+<meta name="theme-color" content="#1F4E48">
 <meta name="description" content="Dijital menü ve sipariş">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%238052ff'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231F4E48'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --ana:#8052ff; --ana-koyu:#8052ff; --ana-acik:#1a1130;
-  --metin:#ffffff; --soluk:#9a9a9a; --cizgi:#1f1f1f; --zemin:#000000; --kart:#111111;
-  --yesil:#15846e; --uyari:#ffb829; --kirmizi:#DC2626;
+  --ana:#2A7A6E; --ana-koyu:#1F4E48; --ana-acik:#0C2420;
+  --metin:#E8F5F2; --soluk:#7AADA4; --cizgi:rgba(255,255,255,.08); --zemin:#0C1F1B; --kart:#152D28;
+  --yesil:#27AE60; --uyari:#D4921A; --kirmizi:#E74C3C;
 }
 html,body{overscroll-behavior-y:contain}
-body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+body{font-family:'Plus Jakarta Sans',Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
   background:var(--zemin);color:var(--metin);line-height:1.5;
   padding-bottom:calc(90px + env(safe-area-inset-bottom))}
 button{font-family:inherit;font-size:14px;cursor:pointer}
@@ -23,9 +26,9 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
   stroke-linecap:round;stroke-linejoin:round;vertical-align:-.15em;flex-shrink:0}
 
 /* ── başlık ── */
-.ust{background:#000000;border-bottom:1px solid var(--cizgi);
+.ust{background:var(--kart);border-bottom:1px solid var(--cizgi);
   color:#fff;padding:calc(26px + env(safe-area-inset-top)) 20px 26px;text-align:center}
-.logo{width:78px;height:78px;margin:0 auto 12px;border-radius:20px;background:#111111;
+.logo{width:78px;height:78px;margin:0 auto 12px;border-radius:20px;background:var(--zemin);
   display:flex;align-items:center;justify-content:center;overflow:hidden;
   border:1px solid var(--cizgi)}
 .logo img{width:100%;height:100%;object-fit:contain}
@@ -99,7 +102,7 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 
 /* ── durum takip düğmesi ── */
 .durum-btn{position:fixed;top:calc(20px + env(safe-area-inset-top));right:14px;z-index:12;
-  background:#111111;color:#fff;border:1px solid var(--cizgi);
+  background:var(--kart);color:#fff;border:1px solid var(--cizgi);
   padding:8px 12px;border-radius:9999px;font-weight:600;font-size:12.5px;
   display:none;align-items:center;gap:6px}
 .durum-btn.acik{display:inline-flex}
@@ -115,7 +118,7 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 .sayfa-ust{position:sticky;top:0;background:var(--kart);border-bottom:1px solid var(--cizgi);
   padding:14px 18px;display:flex;align-items:center;justify-content:space-between;z-index:2}
 .sayfa-ust h3{font-size:17px;font-weight:800;letter-spacing:-.3px}
-.kapat{background:#1f1f1f;border:none;color:var(--metin);width:34px;height:34px;
+.kapat{background:rgba(255,255,255,.07);border:none;color:var(--metin);width:34px;height:34px;
   border-radius:11px;display:flex;align-items:center;justify-content:center}
 .sayfa-icerik{padding:16px 18px;flex:1}
 .sayfa-alt{position:sticky;bottom:0;background:var(--kart);border-top:1px solid var(--cizgi);
@@ -136,8 +139,8 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 .sp-not-btn.dolu{border-style:solid;color:var(--ana-koyu);border-color:var(--ana)}
 .sp-sag{display:flex;flex-direction:column;align-items:flex-end;gap:8px;justify-content:space-between}
 .sp-fy{font-weight:800;color:var(--uyari);font-size:14px;white-space:nowrap}
-.sayac{display:flex;align-items:center;background:#000000;border-radius:10px;padding:3px}
-.sayac button{width:30px;height:30px;border:none;background:#1f1f1f;border-radius:8px;
+.sayac{display:flex;align-items:center;background:var(--zemin);border-radius:10px;padding:3px}
+.sayac button{width:30px;height:30px;border:none;background:rgba(255,255,255,.07);border-radius:8px;
   color:var(--metin);display:flex;align-items:center;justify-content:center;font-size:0}
 .sayac button .ik{width:16px;height:16px;stroke-width:2.5}
 .sayac span{padding:0 10px;font-weight:700;min-width:26px;text-align:center}
@@ -162,7 +165,7 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 .d-etk{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:9999px;
   text-transform:uppercase;letter-spacing:.04em;display:inline-flex;align-items:center;gap:4px}
 .d-etk .ik{width:11px;height:11px;stroke-width:3}
-.d-bekliyor{background:rgba(255,184,41,.15);color:#ffb829}
+.d-bekliyor{background:rgba(255,184,41,.15);color:var(--uyari)}
 .d-hazir{background:rgba(21,132,110,.2);color:#4ADE80}
 .d-ikram{background:rgba(147,197,253,.15);color:#93C5FD}
 
@@ -189,7 +192,7 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 .aksiyon-btn .ik{width:18px;height:18px;stroke-width:2.5}
 
 /* ── popüler rozet ── */
-.populer-rozet{position:absolute;top:6px;left:6px;background:#ffb829;color:#000000;
+.populer-rozet{position:absolute;top:6px;left:6px;background:var(--uyari);color:#000000;
   font-size:10px;font-weight:800;padding:2px 7px;border-radius:9999px;
   display:flex;align-items:center;gap:3px;letter-spacing:.02em}
 .populer-rozet .ik{width:11px;height:11px;stroke-width:3}
@@ -204,8 +207,8 @@ button{font-family:inherit;font-size:14px;cursor:pointer}
 .yukleniyor{animation:solup 1.3s ease-in-out infinite}
 @keyframes solup{50%{opacity:.4}}
 ::-webkit-scrollbar{width:6px;height:6px}
-::-webkit-scrollbar-track{background:#000000}
-::-webkit-scrollbar-thumb{background:#1f1f1f;border-radius:3px}
+::-webkit-scrollbar-track{background:var(--zemin)}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.07);border-radius:3px}
 ::-webkit-scrollbar-thumb:hover{background:#2a2a2a}
 @media(min-width:640px){
   body{max-width:680px;margin:0 auto;border-left:1px solid var(--cizgi);border-right:1px solid var(--cizgi)}
@@ -396,12 +399,12 @@ function ciz() {
     </div>
 
     ${!m.siparis_acik && D.masaId ? `<div style="margin:16px 16px 0;padding:12px 14px;
-      background:rgba(255,184,41,.1);color:#ffb829;border:1px solid rgba(255,184,41,.2);border-radius:12px;font-size:13px;
+      background:rgba(255,184,41,.1);color:var(--uyari);border:1px solid rgba(255,184,41,.2);border-radius:12px;font-size:13px;
       display:flex;gap:9px;align-items:flex-start">${ik('triangle-alert')}
       <div><b>Sadece görüntüleme.</b> Bu işletme şu an QR ile sipariş almıyor —
       sipariş vermek için garsona sesleniniz.</div></div>` : ''}
     ${!D.masaId && m.siparis_acik ? `<div style="margin:16px 16px 0;padding:12px 14px;
-      background:rgba(128,82,255,.1);color:#a78bfa;border:1px solid rgba(128,82,255,.2);border-radius:12px;font-size:13px;
+      background:rgba(42,122,110,.12);color:#3DA394;border:1px solid rgba(42,122,110,.25);border-radius:12px;font-size:13px;
       display:flex;gap:9px;align-items:flex-start">${ik('triangle-alert')}
       <div>Genel karekodu okuttunuz. Sipariş vermek için masanızdaki karekodu okutun.</div></div>` : ''}
 
@@ -718,7 +721,7 @@ function durumCiz() {
       <div class="sayfa-icerik">
         ${d.satirlar.length ? `
           ${bekleyen || hazir ? `<div style="display:flex;gap:8px;margin-bottom:14px">
-            ${bekleyen ? `<div style="flex:1;background:rgba(255,184,41,.12);color:#ffb829;padding:11px;
+            ${bekleyen ? `<div style="flex:1;background:rgba(255,184,41,.12);color:var(--uyari);padding:11px;
               border-radius:11px;text-align:center">
               <div style="font-size:22px;font-weight:800">${bekleyen}</div>
               <div style="font-size:11.5px;font-weight:700">HAZIRLANIYOR</div></div>` : ''}
@@ -751,7 +754,7 @@ function durumCiz() {
       </div>
       ${D.menu.siparis_acik && D.masaId ? `<div class="sayfa-alt">
         <button class="gonder" onclick="sepetKapat();clearInterval(D.durumZaman)"
-          style="background:#1f1f1f;color:var(--metin)">
+          style="background:rgba(255,255,255,.07);color:var(--metin)">
           ${ik('plus')} Menüden Yeni Ürün Ekle</button>
       </div>` : ''}
     </div>`;

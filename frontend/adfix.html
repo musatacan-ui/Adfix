@@ -5,26 +5,29 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Adfix — Adisyon Sistemi</title>
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#8052ff">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%238052ff'/%3E%3Ctext y='72' x='50' font-size='58' text-anchor='middle'%3E%F0%9F%A7%A8%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#1F4E48">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231F4E48'/%3E%3Ctext y='68' x='50' font-size='52' text-anchor='middle' fill='%23D4921A' font-weight='700' font-family='Georgia,serif'%3EA%3C/text%3E%3C/svg%3E">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --ana:#8052ff; --ana-koyu:#6B3FE8; --ana-acik:#1a1230;
-  --koyu:#ffffff; --koyu2:#0a0a0a; --gri:#9a9a9a; --cizgi:#1f1f1f;
-  --zemin:#000000; --kart:#111111;
-  --yesil:#15846e; --kirmizi:#DC2626; --mavi:#8052ff; --mor:#8052ff; --sari:#ffb829;
-  --turuncu:#ffb829;
+  --ana:#2A7A6E; --ana-koyu:#1F4E48; --ana-acik:#0C2420;
+  --koyu:#E8F5F2; --koyu2:#0C1F1B; --gri:#7AADA4; --cizgi:rgba(255,255,255,.08);
+  --zemin:#0C1F1B; --kart:#152D28;
+  --yesil:#27AE60; --kirmizi:#E74C3C; --mavi:#2A7A6E; --mor:#2A7A6E; --sari:#D4921A;
+  --turuncu:#D4921A;
 }
 /* Lucide ikonları — currentColor ile metnin rengini alır, her boyutta net */
 .ik{width:1.08em;height:1.08em;fill:none;stroke:currentColor;stroke-width:2;
   stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;vertical-align:-.16em}
 .ik-b{width:1.35em;height:1.35em}
 .ik-xl{width:2.2em;height:2.2em;stroke-width:1.6}
-body{font-family:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  font-size:14px;font-weight:300;background:#000000;color:#ffffff;overflow:hidden}
+body{font-family:'Plus Jakarta Sans',Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:14px;font-weight:400;background:var(--zemin);color:var(--koyu);overflow:hidden}
 input,select,textarea,button{font-family:inherit;font-size:14px;color:inherit}
-option{background:#111111;color:#fff}
+option{background:var(--kart);color:#fff}
 ::placeholder{color:#666;opacity:1}
 .gizli{display:none!important}
 ::-webkit-scrollbar{width:9px;height:9px}
@@ -34,19 +37,19 @@ option{background:#111111;color:#fff}
 
 /* ───────────── giriş ───────────── */
 #girisEkran{display:flex;align-items:center;justify-content:center;min-height:100vh;
-  background:#000000}
-.giris-kutu{background:#111111;border:1px solid #1f1f1f;border-radius:24px;padding:34px;width:360px;max-width:92vw}
+  background:var(--zemin)}
+.giris-kutu{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;padding:34px;width:360px;max-width:92vw}
 .marka{text-align:center;margin-bottom:26px}
 .marka-ikon{width:64px;height:64px;margin:0 auto 12px;border-radius:18px;
-  background:linear-gradient(140deg,#8052ff,#6B3FE8);display:flex;align-items:center;
+  background:linear-gradient(140deg,#2A7A6E,#1F4E48);display:flex;align-items:center;
   justify-content:center;font-size:32px}
 .marka h1{font-size:27px;font-weight:800;letter-spacing:-.6px;color:#fff}
 .marka p{font-size:11px;color:var(--gri);letter-spacing:3px;margin-top:3px;text-transform:uppercase}
 .alan{margin-bottom:14px}
 .alan label{display:block;font-size:11px;font-weight:700;color:var(--gri);
   margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em}
-.alan input,.alan select,.alan textarea{width:100%;padding:11px 13px;border:1.5px solid #1f1f1f;
-  border-radius:12px;background:#111111;color:#fff;transition:border .15s}
+.alan input,.alan select,.alan textarea{width:100%;padding:11px 13px;border:1.5px solid rgba(255,255,255,.07);
+  border-radius:12px;background:var(--kart);color:#fff;transition:border .15s}
 .alan input:focus,.alan select:focus,.alan textarea:focus{outline:none;border-color:var(--ana)}
 .btn{padding:11px 18px;border:none;border-radius:24px;font-weight:600;cursor:pointer;
   transition:transform .08s,filter .15s;background:var(--ana);color:#fff}
@@ -54,17 +57,17 @@ option{background:#111111;color:#fff}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 .btn-tam{width:100%;padding:13px;font-size:15px}
-.btn-gri{background:#1f1f1f;color:#bdbdbd}
+.btn-gri{background:rgba(255,255,255,.07);color:#bdbdbd}
 .btn-yesil{background:var(--yesil)}
 .btn-kirmizi{background:var(--kirmizi)}
 .btn-mavi{background:var(--mavi)}
-.btn-koyu{background:#1f1f1f;color:#fff}
-.btn-cizgi{background:transparent;color:#fff;border:1.5px solid #1f1f1f}
+.btn-koyu{background:rgba(255,255,255,.07);color:#fff}
+.btn-cizgi{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.07)}
 .btn-kucuk{padding:7px 11px;font-size:12.5px;border-radius:9999px}
 .hata{background:#2a1010;color:#f87171;padding:9px 13px;border-radius:9px;
   font-size:12.5px;margin-bottom:12px;display:none;border:1px solid #4a1c1c}
 .demo-not{margin-top:16px;font-size:11.5px;color:var(--gri);text-align:center;line-height:1.7}
-.demo-not code{background:#1f1f1f;padding:1px 6px;border-radius:4px;font-size:11px;color:#bdbdbd}
+.demo-not code{background:rgba(255,255,255,.07);padding:1px 6px;border-radius:4px;font-size:11px;color:#bdbdbd}
 
 /* ───────────── iskelet ───────────── */
 #uygulama{display:none;height:100vh}
@@ -73,17 +76,17 @@ option{background:#111111;color:#fff}
 .yan-ust{padding:16px 15px;border-bottom:1px solid rgba(255,255,255,.08)}
 .yan-marka{display:flex;align-items:center;gap:9px}
 .yan-marka-ikon{width:32px;height:32px;border-radius:9px;
-  background:linear-gradient(140deg,#8052ff,#6B3FE8);display:flex;align-items:center;
+  background:linear-gradient(140deg,#2A7A6E,#1F4E48);display:flex;align-items:center;
   justify-content:center;font-size:17px}
-.yan-marka b{color:#fff;font-size:17px;font-weight:800;letter-spacing:-.3px}
-.yan-kul{font-size:11px;color:#9a9a9a;margin-top:9px;line-height:1.5}
-.yan-kul b{color:#8052ff;display:block;font-size:12px}
+.yan-marka b{color:var(--koyu);font-size:17px;font-weight:800;letter-spacing:-.3px}
+.yan-kul{font-size:11px;color:var(--gri);margin-top:9px;line-height:1.5}
+.yan-kul b{color:#3DA394;display:block;font-size:12px}
 .menu{flex:1;padding:8px 0;overflow-y:auto}
 .menu-og{display:flex;align-items:center;gap:10px;padding:11px 15px;cursor:pointer;
   color:#bdbdbd;font-size:13.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.025em;
   border-left:3px solid transparent;transition:all .13s}
 .menu-og:hover{background:rgba(255,255,255,.05);color:#fff}
-.menu-og.aktif{background:rgba(128,82,255,.14);color:#a78bfa;border-left-color:var(--ana);font-weight:600}
+.menu-og.aktif{background:rgba(42,122,110,.14);color:#3DA394;border-left-color:var(--ana);font-weight:600}
 .menu-og .ik{width:18px;height:18px}
 .menu-rozet{margin-left:auto;background:var(--kirmizi);color:#fff;font-size:10px;
   font-weight:700;padding:1px 6px;border-radius:9px;min-width:18px;text-align:center}
@@ -91,7 +94,7 @@ option{background:#111111;color:#fff}
 .yan-cikis{font-size:12px;color:#9a9a9a;cursor:pointer}
 .yan-cikis:hover{color:#f87171}
 .govde{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.ust{background:#000000;border-bottom:1px solid #1f1f1f;padding:11px 18px;
+.ust{background:var(--zemin);border-bottom:1px solid var(--cizgi);padding:11px 18px;
   display:flex;align-items:center;gap:14px;flex-shrink:0;min-height:56px}
 .ust h2{font-size:17px;font-weight:700}
 .ust-bilgi{font-size:12px;color:var(--gri)}
@@ -114,11 +117,11 @@ option{background:#111111;color:#fff}
   animation:zipl .3s ease-out}
 @keyframes zipl{from{transform:scale(0)}}
 .bildirim-acik{position:absolute;top:100%;right:0;min-width:280px;max-width:360px;
-  background:#111111;border:1px solid #1f1f1f;border-radius:24px;
+  background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;
   z-index:30;overflow:hidden}
-.bildirim-acik .baslik{padding:10px 14px;border-bottom:1px solid #1f1f1f;
+.bildirim-acik .baslik{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.07);
   font-size:12px;font-weight:700;color:var(--gri);display:flex;justify-content:space-between}
-.bildirim-satir{padding:10px 14px;border-bottom:1px solid #1f1f1f;display:flex;
+.bildirim-satir{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;
   align-items:center;gap:10px}
 .bildirim-satir:last-child{border-bottom:none}
 .bildirim-satir .tip{width:28px;height:28px;border-radius:8px;display:flex;
@@ -139,18 +142,18 @@ option{background:#111111;color:#fff}
 
 /* ───────────── masa planı ───────────── */
 .salon-sekme{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
-.sekme{padding:8px 15px;border-radius:9999px;background:#111111;border:1.5px solid #1f1f1f;
+.sekme{padding:8px 15px;border-radius:9999px;background:var(--kart);border:1.5px solid rgba(255,255,255,.07);
   cursor:pointer;font-size:13px;font-weight:600;color:#bdbdbd;transition:all .15s;
   display:inline-flex;align-items:center;gap:7px}
 .sekme:hover{border-color:#333}
 .sekme.aktif{background:var(--ana);border-color:var(--ana);color:#fff}
 .masa-izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:13px}
-.masa{background:#111111;border:2px solid #1f1f1f;border-radius:24px;padding:13px;
+.masa{background:var(--kart);border:2px solid var(--cizgi);border-radius:14px;padding:13px;
   cursor:pointer;transition:all .15s;min-height:112px;display:flex;flex-direction:column;
   position:relative;overflow:hidden}
 .masa:hover{transform:translateY(-2px)}
-.masa.dolu{border-color:rgba(128,82,255,.5);background:#111111}
-.masa.odendi{border-color:rgba(21,132,110,.5);background:#111111}
+.masa.dolu{border-color:rgba(42,122,110,.45);background:rgba(42,122,110,.08)}
+.masa.odendi{border-color:rgba(212,146,26,.45);background:rgba(212,146,26,.07)}
 .masa-ad{font-size:19px;font-weight:800;letter-spacing:-.4px}
 .masa-bos{font-size:12px;color:#9a9a9a;margin-top:auto}
 .masa-tutar{font-size:18px;font-weight:800;color:var(--ana);margin-top:auto}
@@ -164,12 +167,12 @@ option{background:#111111;color:#fff}
 
 /* ───────────── özet kartları ───────────── */
 .kart-sira{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:12px;margin-bottom:18px}
-.ozet-kart{background:#111111;border:1px solid #1f1f1f;border-radius:24px;padding:14px 16px}
+.ozet-kart{background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:14px 16px}
 .ozet-kart .etiket{font-size:11px;color:var(--gri);text-transform:uppercase;
   letter-spacing:.05em;font-weight:700}
 .ozet-kart .deger{font-size:23px;font-weight:800;margin-top:5px;letter-spacing:-.6px}
 .ozet-kart .alt{font-size:11.5px;color:var(--gri);margin-top:2px}
-.ozet-kart.vurgu{background:linear-gradient(140deg,#8052ff,#6B3FE8);border:none;color:#fff}
+.ozet-kart.vurgu{background:linear-gradient(140deg,var(--ana),var(--ana-koyu));border:none;color:#fff}
 .ozet-kart.vurgu .etiket,.ozet-kart.vurgu .alt{color:rgba(255,255,255,.8)}
 
 /* ───────────── adisyon ekranı ───────────── */
@@ -180,7 +183,7 @@ option{background:#111111;color:#fff}
   display:inline-flex;align-items:center;gap:6px}
 .urun-izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));
   gap:9px;overflow-y:auto;align-content:start;padding-right:4px}
-.urun{background:#111111;border:1.5px solid #1f1f1f;border-radius:24px;padding:11px 10px;
+.urun{background:var(--kart);border:1.5px solid rgba(255,255,255,.07);border-radius:24px;padding:11px 10px;
   cursor:pointer;text-align:left;transition:all .12s;min-height:74px;display:flex;
   flex-direction:column;justify-content:space-between}
 .urun:hover{border-color:var(--ana);background:#1a1230;transform:translateY(-1px)}
@@ -191,8 +194,8 @@ option{background:#111111;color:#fff}
   display:flex;align-items:center;justify-content:center;background:var(--zemin)}
 .urun-gorsel img{width:100%;height:100%;object-fit:cover;display:block}
 .urun-gorsel .ik{width:26px;height:26px;opacity:.85;stroke-width:1.6}
-.gorsel-kutu{display:flex;align-items:center;gap:13px;padding:12px;border:1.5px dashed #1f1f1f;
-  border-radius:11px;background:#111111}
+.gorsel-kutu{display:flex;align-items:center;gap:13px;padding:12px;border:1.5px dashed rgba(255,255,255,.07);
+  border-radius:11px;background:var(--kart)}
 .gorsel-onizleme{width:74px;height:74px;border-radius:10px;overflow:hidden;flex-shrink:0;
   background:var(--zemin);display:flex;align-items:center;justify-content:center;color:var(--gri)}
 .gorsel-onizleme img{width:100%;height:100%;object-fit:cover}
@@ -201,21 +204,21 @@ option{background:#111111;color:#fff}
   border:1px solid var(--cizgi)}
 .logo-onizleme img{max-width:100%;max-height:100%;object-fit:contain}
 .marka-ikon img,.yan-marka-ikon img{width:100%;height:100%;object-fit:contain;
-  border-radius:inherit;background:#111111}
-.qr-kart{background:#111111;border:1px solid #1f1f1f;border-radius:24px;padding:14px;
+  border-radius:inherit;background:var(--kart)}
+.qr-kart{background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:14px;
   text-align:center;break-inside:avoid}
 .qr-kart svg{width:100%;height:auto;max-width:190px;margin:0 auto;display:block;
   background:#fff;padding:8px;border-radius:6px;box-sizing:border-box}
 .qr-kart .qr-ad{font-size:16px;font-weight:800;margin-bottom:8px}
 .qr-kart .qr-alt{font-size:11px;color:var(--gri);margin-top:8px;word-break:break-all}
 .qr-izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:13px}
-.sepet-panel{background:#111111;border:1px solid #1f1f1f;border-radius:24px;
+.sepet-panel{background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;
   display:flex;flex-direction:column;overflow:hidden}
-.sepet-ust{padding:13px 15px;border-bottom:1px solid #1f1f1f;background:#0a0a0a}
+.sepet-ust{padding:13px 15px;border-bottom:1px solid rgba(255,255,255,.07);background:var(--zemin)}
 .sepet-ust h3{font-size:16px;font-weight:800}
 .sepet-ust .alt{font-size:11.5px;color:var(--gri);margin-top:2px}
 .sepet-liste{flex:1;overflow-y:auto;padding:6px 0}
-.sepet-satir{display:flex;align-items:center;gap:9px;padding:8px 14px;border-bottom:1px solid #1f1f1f}
+.sepet-satir{display:flex;align-items:center;gap:9px;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.07)}
 .sepet-satir.ikram{background:#0d2a22}
 .sepet-satir.iptal{background:#2a1010;opacity:.62;text-decoration:line-through}
 .sepet-satir.yeni{background:#1a1700}
@@ -225,7 +228,7 @@ option{background:#111111;color:#fff}
 .sepet-satir .kck{font-size:11px;color:var(--gri);margin-top:1px}
 .sepet-satir .tut{font-size:13.5px;font-weight:700;min-width:76px;text-align:right}
 .adet-kutu{display:flex;align-items:center;gap:2px;background:var(--zemin);border-radius:8px;padding:2px}
-.adet-kutu button{width:26px;height:26px;border:none;background:#1f1f1f;border-radius:6px;
+.adet-kutu button{width:26px;height:26px;border:none;background:rgba(255,255,255,.07);border-radius:6px;
   cursor:pointer;color:#bdbdbd;line-height:0;display:inline-flex;
   align-items:center;justify-content:center}
 .adet-kutu button:hover{background:var(--ana);color:#fff}
@@ -233,10 +236,10 @@ option{background:#111111;color:#fff}
 .satir-menu{background:none;border:none;cursor:pointer;color:#9a9a9a;font-size:17px;
   padding:2px 4px;line-height:0}
 .satir-menu:hover{color:var(--kirmizi)}
-.sepet-alt{border-top:2px solid #1f1f1f;padding:13px 15px;background:#0a0a0a}
+.sepet-alt{border-top:2px solid rgba(255,255,255,.07);padding:13px 15px;background:var(--zemin)}
 .top-satir{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px;color:#bdbdbd}
 .top-satir.buyuk{font-size:20px;font-weight:800;color:#fff;padding-top:8px;
-  border-top:1px dashed #1f1f1f;margin-top:8px}
+  border-top:1px dashed rgba(255,255,255,.07);margin-top:8px}
 .top-satir.yesil{color:var(--yesil);font-weight:700}
 .top-satir.kirmizi{color:var(--kirmizi);font-weight:700}
 .islem-sira{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}
@@ -244,14 +247,14 @@ option{background:#111111;color:#fff}
 
 /* ───────────── mutfak ───────────── */
 .mutfak-izgara{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:12px}
-.fis-kart{background:#111111;border-left:5px solid var(--mavi);border-radius:24px;padding:13px}
+.fis-kart{background:var(--kart);border-left:5px solid var(--mavi);border-radius:24px;padding:13px}
 .fis-kart.uyari{border-left-color:var(--sari);background:#1a1700}
 .fis-kart.gecikti{border-left-color:var(--kirmizi);background:#2a1010;animation:nabiz 1.8s infinite}
 @keyframes nabiz{50%{border-color:#ff4444}}
 .fis-ust{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
 .fis-masa{font-size:16px;font-weight:800}
 .fis-sure{font-size:12px;font-weight:700;padding:2px 8px;border-radius:9999px;
-  background:#1f1f1f;color:#bdbdbd}
+  background:rgba(255,255,255,.07);color:#bdbdbd}
 .fis-sure.gec{background:#3a1010;color:#f87171}
 .fis-urun{font-size:14px;font-weight:600;padding:4px 0}
 .fis-urun .adet{display:inline-block;background:var(--koyu);color:#fff;font-size:11.5px;
@@ -262,22 +265,22 @@ option{background:#111111;color:#fff}
 .fis-garson{font-size:11px;color:var(--gri)}
 
 /* ───────────── tablo ───────────── */
-.tablo-sar{background:#111111;border:1px solid #1f1f1f;border-radius:24px;overflow:auto}
+.tablo-sar{background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;overflow:auto}
 table{width:100%;border-collapse:collapse;font-size:13px;color:#fff}
-th{background:#0a0a0a;padding:10px 12px;text-align:left;font-size:11px;font-weight:700;
-  color:var(--gri);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid #1f1f1f;
+th{background:var(--zemin);padding:10px 12px;text-align:left;font-size:11px;font-weight:700;
+  color:var(--gri);text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid rgba(255,255,255,.07);
   white-space:nowrap;position:sticky;top:0;z-index:2}
-td{padding:9px 12px;border-bottom:1px solid #1f1f1f;vertical-align:middle}
+td{padding:9px 12px;border-bottom:1px solid rgba(255,255,255,.07);vertical-align:middle}
 tbody tr:hover{background:#1a1a1a}
 .sag{text-align:right}
 .orta{text-align:center}
 .para{font-variant-numeric:tabular-nums;font-weight:600}
 .etiket-durum{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;
   border-radius:9px;text-transform:uppercase;letter-spacing:.03em}
-.d-acik{background:#1a1230;color:#a78bfa}
+.d-acik{background:#1a1230;color:#3DA394}
 .d-kapali{background:#0d2a22;color:#5eead4}
 .d-iptal{background:#3a1010;color:#f87171}
-.d-pasif{background:#1f1f1f;color:#9a9a9a}
+.d-pasif{background:rgba(255,255,255,.07);color:#9a9a9a}
 .bolum{margin-bottom:22px}
 .bolum h3{font-size:14px;font-weight:700;margin-bottom:10px;display:flex;
   align-items:center;gap:8px}
@@ -287,17 +290,17 @@ tbody tr:hover{background:#1a1a1a}
 .perde{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;
   align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
 .perde.acik{display:flex}
-.modal{background:#111111;border:1px solid #1f1f1f;border-radius:24px;width:440px;max-width:96vw;max-height:92vh;
+.modal{background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;width:440px;max-width:96vw;max-height:92vh;
   overflow-y:auto}
 .modal.genis{width:680px}
-.modal-ust{padding:16px 20px;border-bottom:1px solid #1f1f1f;display:flex;
-  align-items:center;justify-content:space-between;position:sticky;top:0;background:#111111;z-index:3}
+.modal-ust{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;
+  align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--kart);z-index:3}
 .modal-ust h3{font-size:16px;font-weight:700}
 .modal-kapat{background:none;border:none;cursor:pointer;color:#9a9a9a;line-height:0;padding:4px}
 .modal-kapat:hover{color:#fff}
 .modal-govde{padding:20px 20px 26px}
-.modal-alt{padding:14px 20px;border-top:1px solid #1f1f1f;display:flex;gap:9px;
-  justify-content:flex-end;background:#0a0a0a;position:sticky;bottom:0}
+.modal-alt{padding:14px 20px;border-top:1px solid rgba(255,255,255,.07);display:flex;gap:9px;
+  justify-content:flex-end;background:var(--zemin);position:sticky;bottom:0}
 
 /* ───────────── ödeme ───────────── */
 .odeme-ozet{background:var(--koyu2);color:#fff;border-radius:13px;padding:17px;margin-bottom:16px}
@@ -305,23 +308,23 @@ tbody tr:hover{background:#1a1a1a}
 .odeme-ozet .kalan{font-size:35px;font-weight:800;letter-spacing:-1.2px;margin-top:3px}
 .odeme-ozet .detay{font-size:11.5px;color:#9a9a9a;margin-top:6px}
 .tur-sec{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
-.tur{padding:13px 9px;border:2px solid #1f1f1f;border-radius:24px;background:#111111;
+.tur{padding:13px 9px;border:2px solid rgba(255,255,255,.07);border-radius:24px;background:var(--kart);
   cursor:pointer;text-align:center;font-weight:600;font-size:13px;transition:all .13s;color:#bdbdbd}
 .tur:hover{border-color:#333}
-.tur.aktif{border-color:var(--ana);background:var(--ana-acik);color:#a78bfa}
+.tur.aktif{border-color:var(--ana);background:var(--ana-acik);color:#3DA394}
 .tur-ik{display:block;margin-bottom:5px;color:var(--gri)}
 .tur.aktif .tur-ik{color:var(--ana)}
 .tus-takim{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}
-.tus{padding:15px;border:1.5px solid #1f1f1f;border-radius:24px;background:#111111;
+.tus{padding:15px;border:1.5px solid rgba(255,255,255,.07);border-radius:24px;background:var(--kart);
   font-size:19px;font-weight:700;cursor:pointer;transition:all .1s;color:#fff}
 .tus:hover{background:#1a1a1a}
 .tus:active{background:var(--ana);color:#fff;transform:scale(.95)}
-.tus.islem{background:#0a0a0a;font-size:15px;color:#bdbdbd}
+.tus.islem{background:var(--zemin);font-size:15px;color:#bdbdbd}
 .tutar-goster{font-size:31px;font-weight:800;text-align:right;padding:13px 15px;
-  background:#0a0a0a;border-radius:24px;font-variant-numeric:tabular-nums;
-  border:2px solid #1f1f1f;color:#fff}
+  background:var(--zemin);border-radius:24px;font-variant-numeric:tabular-nums;
+  border:2px solid rgba(255,255,255,.07);color:#fff}
 .hizli-sira{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
-.hizli{padding:7px 12px;border:1.5px solid #1f1f1f;border-radius:9999px;background:#111111;
+.hizli{padding:7px 12px;border:1.5px solid rgba(255,255,255,.07);border-radius:9999px;background:var(--kart);
   font-size:12.5px;font-weight:600;cursor:pointer;color:#bdbdbd}
 .hizli:hover{border-color:var(--ana);color:var(--ana-koyu)}
 .ustu-kutu{background:#0d2a22;border:1px solid #1a4a3a;border-radius:10px;padding:11px 14px;
@@ -331,8 +334,8 @@ tbody tr:hover{background:#1a1a1a}
 /* ───────────── bildirim ───────────── */
 #bildirimler{position:fixed;bottom:16px;right:16px;z-index:400;display:flex;
   flex-direction:column;gap:8px;max-width:340px}
-.bildirim{background:#111111;color:#fff;padding:12px 16px;border-radius:24px;
-  font-size:13px;animation:gir .22s ease;border:1px solid #1f1f1f;
+.bildirim{background:var(--kart);color:#fff;padding:12px 16px;border-radius:24px;
+  font-size:13px;animation:gir .22s ease;border:1px solid rgba(255,255,255,.07);
   border-left:4px solid var(--ana)}
 .bildirim.iyi{border-left-color:var(--yesil)}
 .bildirim.kotu{border-left-color:var(--kirmizi)}
@@ -960,7 +963,7 @@ function urunGorseli(u) {
   if (u.gorsel)
     return `<div class="urun-gorsel"><img src="${u.gorsel}" alt="" loading="lazy"></div>`;
   const k = S.menu.find(k => k.id === u.kategori_id) || {};
-  const renk = k.renk || '#8052ff';
+  const renk = k.renk || 'var(--ana)';
   return `<div class="urun-gorsel" style="background:${renk}1A;color:${renk}">
     ${ik(k.ikon || 'utensils')}</div>`;
 }
@@ -1055,7 +1058,7 @@ function sepetCiz() {
       <div class="alt">${a.masa_ad ? kacis(a.masa_ad) : (a.tip === 'paket' ? 'Paket' : 'Gel-Al')}
         · ${a.kisi} kişi ${a.musteri_ad ? '· ' + kacis(a.musteri_ad) : ''}</div>
       ${a.aciklama && a.aciklama.includes('Müşteri') ? `<div style="margin-top:6px;padding:6px 10px;
-        background:#1a1230;border:1px solid #2d1f5e;border-radius:8px;font-size:12px;color:#a78bfa">
+        background:#1a1230;border:1px solid #2d1f5e;border-radius:8px;font-size:12px;color:#3DA394">
         ${ik('pencil')} ${kacis(a.aciklama)}</div>` : ''}
     </div>
     <div class="sepet-liste">
@@ -1179,7 +1182,7 @@ function odemeCiz() {
       <div style="font-size:11px;font-weight:700;color:var(--gri);text-transform:uppercase;
         letter-spacing:.05em;margin-bottom:7px">Alınan Ödemeler</div>
       ${a.odemeler.map(p => `<div style="display:flex;justify-content:space-between;
-        align-items:center;font-size:12.5px;padding:5px 0;border-bottom:1px solid #1f1f1f">
+        align-items:center;font-size:12.5px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.07)">
         <span>${odemeIk(p.tur)} ${ODEME_AD[p.tur]}
           <span style="color:var(--gri)">· ${saatFmt(p.zaman)} · ${kacis(p.alan_ad || '')}</span></span>
         <span><b class="para">${tl(p.tutar_kurus)}</b>
@@ -1310,7 +1313,7 @@ async function bolAc(kisi) {
         <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:9px">
           <span>Toplam</span><b class="para">${tl(b.net_toplam)}</b></div>
         ${b.paylar.map((p, i) => `<div style="display:flex;justify-content:space-between;
-          font-size:14px;padding:6px 0;border-top:1px dashed #1f1f1f">
+          font-size:14px;padding:6px 0;border-top:1px dashed rgba(255,255,255,.07)">
           <span>${i + 1}. kişi</span><b class="para">${tl(p)}</b></div>`).join('')}
       </div>
       <p style="font-size:11.5px;color:var(--gri);margin-top:11px;line-height:1.6">
@@ -1528,13 +1531,13 @@ async function mutfakCiz() {
     if (mutfakListe.length) {
       h += `<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
         <span style="font-size:16px;font-weight:700;color:#fff">${ik('chef-hat')} Mutfak</span>
-        <span style="background:#8052ff;color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px">${mutfakListe.length}</span></div>
+        <span style="background:var(--ana);color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px">${mutfakListe.length}</span></div>
         <div class="mutfak-izgara">${kartlarHTML(mutfakListe)}</div>`;
     }
     if (barListe.length) {
       h += `<div style="display:flex;align-items:center;gap:8px;margin:${mutfakListe.length ? '24px' : '0'} 0 12px">
         <span style="font-size:16px;font-weight:700;color:#fff">${ik('wine')} Bar</span>
-        <span style="background:#6B3FE8;color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px">${barListe.length}</span></div>
+        <span style="background:var(--ana-koyu);color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:10px">${barListe.length}</span></div>
         <div class="mutfak-izgara">${kartlarHTML(barListe)}</div>`;
     }
     document.getElementById('sayfa').innerHTML = h;
@@ -1702,7 +1705,7 @@ async function raporCiz(bas, bit) {
     ${r.saatler && r.saatler.length ? (() => {
       const maxA = Math.max(1, ...r.saatler.map(s => s.adisyon));
       return `<div class="bolum"><h3>${ik('clock')} Saatlik Satış Dağılımı</h3>
-        <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;padding:14px 16px;overflow-x:auto">
+        <div style="background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:14px 16px;overflow-x:auto">
           <div class="saat-grafik">
             ${r.saatler.map(s => {
               const yuzde = Math.round(s.adisyon * 100 / maxA);
@@ -1758,7 +1761,7 @@ async function raporCiz(bas, bit) {
     </div>
 
     <div class="bolum"><h3>${ik('lock')} Gün Sonu (Z Raporu)</h3>
-      <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;padding:16px">
+      <div style="background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:16px">
         ${gs.adisyon_sayisi ? `
           <div style="font-size:13px;color:var(--gri);margin-bottom:12px">
             Henüz gün sonuna girmemiş <b style="color:#fff">${gs.adisyon_sayisi}</b> kapalı adisyon var.</div>
@@ -2254,7 +2257,7 @@ async function yLog() {
 
 function yHesap() {
   document.getElementById('yonetimGovde').innerHTML = `
-    <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;
+    <div style="background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;
       padding:20px;max-width:420px">
       <h3 style="font-size:15px;margin-bottom:14px">Şifre Değiştir</h3>
       <div class="alan"><label>Mevcut Şifre</label><input id="hEski" type="password"></div>
@@ -2351,7 +2354,7 @@ async function yIsletme() {
       <div>
       <div class="bolum">
         <h3>${ik('image-up')} Logo</h3>
-        <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;padding:16px">
+        <div style="background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:16px">
           <div style="display:flex;gap:16px;align-items:center">
             <div class="logo-onizleme" id="logoOnizleme">${
               a.logo ? `<img src="${a.logo}" alt="">` : ik('image', 'ik-xl')}</div>
@@ -2372,7 +2375,7 @@ async function yIsletme() {
 
       <div class="bolum">
         <h3>${ik('printer')} Fiş Önizleme <small>çıktı böyle görünür</small></h3>
-        <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;padding:18px;
+        <div style="background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:18px;
           display:flex;justify-content:center">
           <div style="width:280px;font-family:'Courier New',monospace;font-size:12px;color:#000;background:#fff;
             border:1px dashed #ccc;padding:14px;border-radius:8px">
@@ -2398,7 +2401,7 @@ async function yIsletme() {
 
       <div class="bolum">
         <h3>${ik('building-2')} İşletme Bilgileri</h3>
-        <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;padding:16px">
+        <div style="background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;padding:16px">
           <div class="alan"><label>İşletme Adı</label>
             <input id="ayAd" value="${kacis(a.isletme_adi)}" placeholder="Örn. Sofra Restoran"></div>
           <div class="alan"><label>Slogan</label>
@@ -2497,7 +2500,7 @@ async function yQr() {
         </div>
       </div>`}
 
-    <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;
+    <div style="background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;
       padding:16px;margin-bottom:18px">
       ${domainMi && ayarsiz ? `
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
@@ -2534,7 +2537,7 @@ async function yQr() {
       </div>`}
     </div>
 
-    <div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;
+    <div style="background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;
       padding:16px;margin-bottom:18px">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
         <div>
@@ -2552,12 +2555,12 @@ async function yQr() {
           <span style="position:absolute;inset:0;background:${S.ayar.qr_siparis_acik === '1' ? 'var(--yesil)' : '#333'};
             border-radius:14px;transition:.2s"></span>
           <span style="position:absolute;top:2px;left:${S.ayar.qr_siparis_acik === '1' ? '26px' : '2px'};
-            width:24px;height:24px;background:#1f1f1f;border-radius:50%;transition:.2s"></span>
+            width:24px;height:24px;background:rgba(255,255,255,.07);border-radius:50%;transition:.2s"></span>
         </label>
       </div>
     </div>
 
-    ${domainMi ? '' : `<div style="background:#111111;border:1px solid #1f1f1f;border-radius:24px;
+    ${domainMi ? '' : `<div style="background:var(--kart);border:1px solid rgba(255,255,255,.07);border-radius:24px;
       padding:16px;margin-bottom:18px">
       <div style="display:flex;align-items:center;gap:9px;margin-bottom:11px">
         ${ik('triangle-alert')}<b style="font-size:14px">Telefonda açılmıyorsa</b>
