@@ -404,6 +404,39 @@ with TestClient(main.app) as c:
         "rol": "garson", "aktif": 1})
     kontrol("son yönetici rolü düşürülemiyor", r.status_code == 400, r.text[:70])
 
+    print("\n[25] E-ink masa ekranı + QR token döngüsü")
+    tum = [m for s in c.get("/api/masa/plan", headers=admin).json()["salonlar"]
+           for m in s["masalar"]]
+    em = next(m for m in tum
+              if c.get(f"/api/acik/masa/{m['id']}/ekran").json()["durum"] == "kapali")
+    e0 = c.get(f"/api/acik/masa/{em['id']}/ekran").json()
+    kontrol("ekran ucu kimliksiz erişilebilir", e0["masa_ad"] == em["ad"], str(e0)[:80])
+    kontrol("ekran ucu sadece izinli alanları döner (HC12)",
+            set(e0) == {"masa_ad", "salon", "durum", "adisyon_id", "toplam_kurus", "qr_token"},
+            str(sorted(e0)))
+    kontrol("olmayan masa 404",
+            c.get("/api/acik/masa/999999/ekran").status_code == 404)
+
+    ea = c.post("/api/adisyon/ac", headers=garson,
+                json={"tip": "masa", "masa_id": em["id"], "kisi": 1}).json()
+    es = c.post(f"/api/adisyon/{ea['id']}/siparis", headers=garson,
+                json={"satirlar": [{"urun_id": kunefe["id"], "adet": 2}]}).json()
+    e1 = c.get(f"/api/acik/masa/{em['id']}/ekran").json()
+    kontrol("açılışta ekran açık + doğru tutar",
+            e1["durum"] == "acik" and e1["adisyon_id"] == ea["id"]
+            and e1["toplam_kurus"] > 0
+            and e1["toplam_kurus"] == es["ozet"]["ara_toplam"], str(e1)[:90])
+    kontrol("açılışta QR token yenilendi",
+            e1["qr_token"] and e1["qr_token"] != e0["qr_token"])
+
+    c.post(f"/api/adisyon/{ea['id']}/odeme", headers=kasa,
+           json={"tur": "nakit", "tutar_kurus": es["ozet"]["net_toplam"]})
+    c.post(f"/api/adisyon/{ea['id']}/kapat", headers=kasa)
+    e2 = c.get(f"/api/acik/masa/{em['id']}/ekran").json()
+    kontrol("kapanışta ekran boş", e2["durum"] == "kapali" and e2["toplam_kurus"] == 0)
+    kontrol("kapanışta QR token yine yenilendi",
+            e2["qr_token"] and e2["qr_token"] not in (e0["qr_token"], e1["qr_token"]))
+
 print(f"\n{'='*54}\n{ok} test geçti, {len(hata)} hata")
 for h in hata: print("  ! " + h)
 sys.exit(1 if hata else 0)

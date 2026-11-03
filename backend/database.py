@@ -13,7 +13,7 @@ MULTI-TENANT:
   tenant.isletme_slug ContextVar'ı aktif işletmeyi belirler.
   Slug yoksa varsayılan adfix.db kullanılır (geriye uyumlu tek-işletme modu).
 """
-import sqlite3, os
+import sqlite3, os, secrets
 import tenant
 
 # ─── Yollar ───
@@ -261,6 +261,24 @@ def init_db():
         olusturma TEXT NOT NULL DEFAULT (datetime('now','localtime'))
     );
     CREATE INDEX IF NOT EXISTS ix_bildirim_durum ON masa_bildirim(durum);
+
+    CREATE TABLE IF NOT EXISTS masa_qr_token (
+        masa_id    INTEGER PRIMARY KEY REFERENCES masalar(id),
+        token      TEXT    NOT NULL,
+        adisyon_id INTEGER,
+        olusturma  TEXT    NOT NULL DEFAULT (datetime('now','localtime'))
+    );
+
+    CREATE TABLE IF NOT EXISTS qr_log (
+        id         INTEGER PRIMARY KEY AUTOINCREMENT,
+        masa_id    INTEGER NOT NULL REFERENCES masalar(id),
+        adisyon_id INTEGER,
+        token      TEXT NOT NULL,
+        olusturma  TEXT NOT NULL DEFAULT (datetime('now','localtime')),
+        gecersiz   TEXT
+    );
+    CREATE INDEX IF NOT EXISTS ix_qr_log_masa ON qr_log(masa_id);
+    CREATE INDEX IF NOT EXISTS ix_qr_log_adisyon ON qr_log(adisyon_id);
     """)
     conn.commit()
     _gocler(conn)
@@ -280,6 +298,43 @@ def _gocler(conn):
             conn.execute(f"ALTER TABLE {tablo} ADD COLUMN {sutun} {tanim}")
             print(f"[goc] {tablo}.{sutun} eklendi")
     conn.commit()
+
+
+# ─────────────────────────── QR TOKEN ───────────────────────────
+
+def qr_token_yenile(conn, masa_id: int, adisyon_id=None) -> str:
+    """Masa için yeni token üretir, masa_qr_token'ı günceller ve qr_log'a yazar.
+    Önceki aktif token varsa gecersiz zamanını kapatır."""
+    yeni = secrets.token_urlsafe(12)
+    mevcut = conn.execute(
+        "SELECT token FROM masa_qr_token WHERE masa_id=?", (masa_id,)
+    ).fetchone()
+    if mevcut:
+        conn.execute(
+            """UPDATE qr_log SET gecersiz=datetime('now','localtime')
+               WHERE masa_id=? AND token=? AND gecersiz IS NULL""",
+            (masa_id, mevcut["token"])
+        )
+    conn.execute(
+        """INSERT INTO masa_qr_token(masa_id, token, adisyon_id)
+           VALUES(?,?,?)
+           ON CONFLICT(masa_id) DO UPDATE SET token=excluded.token,
+           adisyon_id=excluded.adisyon_id, olusturma=datetime('now','localtime')""",
+        (masa_id, yeni, adisyon_id)
+    )
+    conn.execute(
+        "INSERT INTO qr_log(masa_id, adisyon_id, token) VALUES(?,?,?)",
+        (masa_id, adisyon_id, yeni)
+    )
+    return yeni
+
+
+def qr_token_al(conn, masa_id: int) -> str | None:
+    """Masanın mevcut geçerli tokenını döner, yoksa None."""
+    r = conn.execute(
+        "SELECT token FROM masa_qr_token WHERE masa_id=?", (masa_id,)
+    ).fetchone()
+    return r["token"] if r else None
 
 
 # ─────────────────────────── AYARLAR ───────────────────────────

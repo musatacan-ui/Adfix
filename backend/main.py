@@ -78,6 +78,13 @@ async def lifespan(_a: FastAPI):
     db.init_merkez_db()
     db.init_db()
     db.seed_data()
+    # Mevcut işletme DB'leri yeni tablo/sütunları ancak burada alır
+    for isl in db.isletme_listesi():
+        tok = tenant.isletme_slug.set(isl["slug"])
+        try:
+            db.init_db()
+        finally:
+            tenant.isletme_slug.reset(tok)
     print(f"\nAdfix hazir (multi-tenant)")
     print(f"  Adres            : http://localhost:{PORT}")
     taban = ag.onerilen_taban(PORT)

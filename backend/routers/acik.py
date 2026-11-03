@@ -342,3 +342,54 @@ def masa_durumu(masa_id: int):
     ozet = _masa_ozeti(conn, a["id"])
     conn.close()
     return ozet
+
+
+# ─────────────────────────── E-INK / ESL POLLING ───────────────────────────
+
+@router.get("/masa/{masa_id}/ekran")
+def masa_ekran(masa_id: int):
+    """E-ink ekran veya ESL cihazı için polling endpoint.
+
+    Cihaz bu endpoint'i düzenli aralıklarla sorgular (örn. 30 saniyede bir).
+    Yanıt değişmişse ekranı yeniler, değişmemişse geçer.
+
+    Dönen bilgiler:
+      - masa_ad: masa adı (ekranda gösterilir)
+      - durum: 'acik' | 'kapali'
+      - toplam_kurus: açık adisyon varsa güncel tutar (kuruş)
+      - qr_token: güncel QR token (menü URL'sine eklenir)
+      - adisyon_id: açık adisyon id (arşiv/eşleştirme için)
+
+    Güvenlik: ciro/personel/ödeme bilgisi dönmez (HC12)."""
+    conn = db.get_conn()
+    m = conn.execute(
+        "SELECT m.ad, s.ad AS salon FROM masalar m "
+        "LEFT JOIN salonlar s ON s.id=m.salon_id WHERE m.id=? AND m.aktif=1",
+        (masa_id,)).fetchone()
+    if not m:
+        conn.close()
+        raise HTTPException(404, "Masa bulunamadı")
+
+    a = conn.execute(
+        "SELECT id FROM adisyonlar WHERE masa_id=? AND durum='acik'",
+        (masa_id,)).fetchone()
+
+    token = db.qr_token_al(conn, masa_id)
+    toplam = 0
+    adisyon_id = None
+
+    if a:
+        adisyon_id = a["id"]
+        import hesap as hesap_mod
+        o = hesap_mod.ozet(conn, adisyon_id)
+        toplam = o["ara_toplam"]
+
+    conn.close()
+    return {
+        "masa_ad":      m["ad"],
+        "salon":        m["salon"] or "",
+        "durum":        "acik" if a else "kapali",
+        "adisyon_id":   adisyon_id,
+        "toplam_kurus": toplam,
+        "qr_token":     token,
+    }
