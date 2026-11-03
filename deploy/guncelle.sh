@@ -1,12 +1,10 @@
 #!/bin/bash
-# Adfix — Sunucuda git pull ile güncelleme
-# Kullanım (sunucuda): bash /home/sagunmed/SagunMedBeta/Adfix/deploy/guncelle.sh [branch]
-# Örnek: bash guncelle.sh
-#         bash guncelle.sh claude/adisyon-programi-tasarimi-qxc7pq
+# Adfix — Sunucuda git pull ile güncelleme (SagunMed'e dokunmaz)
+# Kullanım (sunucuda): bash /home/sagunmed/Adfix-yeni/deploy/guncelle.sh [branch]
 set -euo pipefail
 
-REPO="/home/sagunmed/SagunMedBeta"
-BRANCH="${1:-master}"
+REPO="/home/sagunmed/Adfix-yeni"
+BRANCH="${1:-main}"
 
 echo "═══ Adfix Güncelleme ═══"
 echo "Branch: $BRANCH"
@@ -15,8 +13,7 @@ echo
 cd "$REPO"
 
 echo "[1/3] Git pull…"
-git fetch origin "$BRANCH"
-git merge "origin/$BRANCH" --no-edit
+git pull --ff-only origin "$BRANCH"
 
 echo "[2/3] PM2 restart…"
 pm2 restart adfix

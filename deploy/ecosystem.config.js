@@ -4,7 +4,7 @@
 module.exports = {
   apps: [{
     name: "adfix",
-    cwd: "/home/sagunmed/SagunMedBeta/Adfix/backend",
+    cwd: "/home/sagunmed/Adfix-yeni/backend",
     script: "main.py",
     interpreter: "python3",
     env: {
