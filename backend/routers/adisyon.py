@@ -183,6 +183,8 @@ def adisyon_ac(form: AcForm, mevcut: dict = Depends(auth.token_dogrula)):
 
     aid = cur.lastrowid
     db.kayit_log(conn, mevcut, "adisyon_acildi", f"#{kod} ({form.tip})")
+    if form.masa_id:
+        db.qr_token_yenile(conn, form.masa_id, aid)
     conn.commit()
     d = _detay(conn, aid)
     conn.close()
@@ -552,6 +554,8 @@ def kapat(aid: int, mevcut: dict = Depends(auth.kasiyer_gerektir)):
                  (mevcut["id"], aid))
     db.kayit_log(conn, mevcut, "adisyon_kapandi",
                  f"#{a['kod']}: {o['net_toplam']} kr")
+    if a["masa_id"]:
+        db.qr_token_yenile(conn, a["masa_id"], None)
     conn.commit()
     d = _detay(conn, aid)
     conn.close()

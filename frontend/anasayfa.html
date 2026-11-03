@@ -3,270 +3,1270 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adfix — Restoran &amp; Kafe POS</title>
-<meta name="description" content="Adisyon takibini kolaylaştır. Masaları yönet, siparişleri anında ilet, müşterilere QR menü sun.">
-<meta name="theme-color" content="#1F4E48">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231F4E48'/%3E%3Ctext y='68' x='50' font-size='52' text-anchor='middle' fill='%23D4921A' font-weight='700' font-family='Georgia,serif'%3EA%3C/text%3E%3C/svg%3E">
+<title>Adfix — Adisyon & Masa Yönetimi</title>
+<meta name="description" content="Restoran ve kafeler için masa yönetimi, QR sipariş, mutfak ekranı ve e-ink masa ekranı. Tek sunucu, sıfır SaaS ücreti.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%231F4E48'/%3E%3Ctext y='68' x='50' font-size='52' text-anchor='middle' fill='%23fff' font-weight='700' font-family='system-ui'%3EA%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#F7FAF9;--bg2:#EBF3F1;--fg:#0D1F1C;--fg2:#3D6560;
-  --brand:#1F4E48;--brand2:#2A7A6E;
-  --amber:#C47820;--amber-bg:#FFF3DC;
-  --divider:#C8DDD9;--white:#FFFFFF;
-  --r:10px;--shadow:0 2px 12px rgba(31,78,72,.10);--shadow-lg:0 8px 32px rgba(31,78,72,.14);
+/* ── Tokens ── */
+:root {
+  --bg:       #F5F8F7;
+  --bg2:      #E8F0EE;
+  --bg3:      #D4E6E2;
+  --fg:       #0A1A17;
+  --fg2:      #446960;
+  --brand:    #1F4E48;
+  --brand2:   #2E7268;
+  --amber:    #B8711C;
+  --amber-bg: #FDF0E0;
+  --divider:  #C0D8D3;
+  --dark:     #071210;
+  --dark2:    #0E1E1B;
+  --dark3:    #152D28;
+  --dark-fg:  #D8EDEA;
+  --dark-fg2: #7AACA6;
+  --r:        16px;
+  --r-sm:     10px;
 }
-body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--fg);line-height:1.6}
-a{text-decoration:none;color:inherit}
 
-/* NAV */
-nav{position:sticky;top:0;background:rgba(247,250,249,.92);backdrop-filter:blur(10px);
-  border-bottom:1px solid var(--divider);padding:0 5%;height:64px;
-  display:flex;align-items:center;justify-content:space-between;z-index:100}
-.nav-logo{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:700;color:var(--brand)}
-.nav-logo span{color:var(--amber)}
-.nav-links{display:flex;gap:28px;align-items:center}
-.nav-links a{font-size:14px;font-weight:500;color:var(--fg2)}
-.nav-links a:hover{color:var(--brand)}
-.btn-nav{padding:8px 20px;background:var(--brand);color:#fff;border-radius:8px;
-  font-size:14px;font-weight:600;cursor:pointer;border:none;font-family:inherit}
-@media(max-width:640px){.nav-links>a{display:none}}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:       #071210;
+    --bg2:      #0E1E1B;
+    --bg3:      #152D28;
+    --fg:       #D8EDEA;
+    --fg2:      #7AACA6;
+    --brand:    #2E7268;
+    --brand2:   #3D9089;
+    --amber:    #D4921A;
+    --amber-bg: rgba(212,146,26,.12);
+    --divider:  #152D28;
+    --dark:     #030A09;
+    --dark2:    #071210;
+    --dark3:    #0E1E1B;
+  }
+}
 
-/* HERO */
-.hero{padding:72px 5% 56px;display:grid;grid-template-columns:1fr 1.1fr;gap:56px;align-items:center;max-width:1400px;margin:0 auto}
-@media(max-width:900px){.hero{grid-template-columns:1fr;gap:40px}}
-.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--amber-bg);
-  border:1px solid #F0CC8C;border-radius:100px;padding:6px 14px;
-  font-size:12px;font-weight:600;color:var(--amber);letter-spacing:.4px;text-transform:uppercase;margin-bottom:20px}
-.badge-dot{width:6px;height:6px;background:var(--amber);border-radius:50%;display:inline-block}
-h1{font-family:'Fraunces',Georgia,serif;font-size:clamp(36px,5vw,54px);font-weight:700;
-  line-height:1.12;letter-spacing:-1px;color:var(--fg);margin-bottom:18px}
-h1 em{font-style:italic;color:var(--brand)}
-.hero-desc{font-size:17px;line-height:1.65;color:var(--fg2);max-width:420px;margin-bottom:32px}
-.hero-cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-.btn-primary{padding:13px 26px;background:var(--brand);color:#fff;border-radius:var(--r);
-  font-size:15px;font-weight:600;border:none;cursor:pointer;font-family:inherit}
-.btn-outline{padding:13px 22px;background:transparent;color:var(--brand);
-  border:1.5px solid var(--brand);border-radius:var(--r);font-size:15px;font-weight:600;
-  cursor:pointer;font-family:inherit}
-.hero-stats{display:flex;gap:28px;margin-top:40px;padding-top:24px;border-top:1px solid var(--divider);flex-wrap:wrap}
-.stat-num{font-family:'Fraunces',Georgia,serif;font-size:26px;font-weight:600;color:var(--brand)}
-.stat-label{font-size:13px;color:var(--fg2);margin-top:3px}
+:root[data-theme="dark"] {
+  --bg:       #071210;
+  --bg2:      #0E1E1B;
+  --bg3:      #152D28;
+  --fg:       #D8EDEA;
+  --fg2:      #7AACA6;
+  --brand:    #2E7268;
+  --brand2:   #3D9089;
+  --amber:    #D4921A;
+  --amber-bg: rgba(212,146,26,.12);
+  --divider:  #152D28;
+  --dark:     #030A09;
+  --dark2:    #071210;
+  --dark3:    #0E1E1B;
+}
 
-/* DASHBOARD VISUAL */
-.hero-visual{background:#0C1F1B;border-radius:16px;overflow:hidden;box-shadow:var(--shadow-lg)}
-.db-bar{background:#152D28;padding:11px 14px;display:flex;align-items:center;gap:7px;
-  border-bottom:1px solid rgba(255,255,255,.06)}
-.db-dot{width:10px;height:10px;border-radius:50%}
-.db-bar-title{margin-left:7px;font-size:12px;color:rgba(255,255,255,.4);font-family:'Plus Jakarta Sans',sans-serif}
-.db-body{padding:14px}
-.db-tabs{display:flex;gap:4px;margin-bottom:12px}
-.db-tab{padding:5px 12px;border-radius:6px;font-size:11px;font-weight:600;font-family:'Plus Jakarta Sans',sans-serif}
-.db-tab.on{background:#2A7A6E;color:#fff}
-.db-tab:not(.on){color:rgba(255,255,255,.35);background:rgba(255,255,255,.05)}
-.t-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:7px}
-.tc{background:rgba(255,255,255,.04);border-radius:7px;padding:10px;border:1px solid rgba(255,255,255,.06)}
-.tc.open{border-color:rgba(42,122,110,.45);background:rgba(42,122,110,.10)}
-.tc.wait{border-color:rgba(196,120,32,.45);background:rgba(196,120,32,.09)}
-.tc-n{font-size:10px;color:rgba(255,255,255,.3);font-family:'Plus Jakarta Sans',sans-serif;margin-bottom:3px}
-.tc-s{font-size:12px;font-weight:700;font-family:'Plus Jakarta Sans',sans-serif;color:rgba(255,255,255,.2)}
-.tc.open .tc-s{color:#5BC4B3}
-.tc.wait .tc-s{color:#D4921A}
-.tc-t{font-size:10px;color:rgba(255,255,255,.25);margin-top:3px;font-family:'Plus Jakarta Sans',sans-serif}
-.tc.open .tc-t{color:rgba(91,196,179,.6)}
-.tc.wait .tc-t{color:rgba(212,146,26,.6)}
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+a { text-decoration: none; color: inherit; }
 
-/* FEATURES */
-.features{padding:0 5% 72px;max-width:1400px;margin:0 auto}
-.sec-head{text-align:center;margin-bottom:40px}
-.sec-label{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--brand);margin-bottom:10px}
-.sec-title{font-family:'Fraunces',Georgia,serif;font-size:34px;font-weight:600;color:var(--fg)}
-.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px}
-.feat-card{background:#fff;border-radius:14px;padding:26px;border:1px solid var(--divider);box-shadow:var(--shadow)}
-.feat-icon{width:42px;height:42px;background:var(--bg2);border-radius:10px;
-  display:flex;align-items:center;justify-content:center;color:var(--brand);margin-bottom:14px}
-.feat-title{font-size:15px;font-weight:700;color:var(--fg);margin-bottom:7px}
-.feat-desc{font-size:13px;color:var(--fg2);line-height:1.6}
+/* ── Nav ── */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 48px;
+  background: rgba(7,18,16,.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255,255,255,.07);
+}
+.nav-left { display: flex; align-items: center; gap: 12px; }
+.nav-logo {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 900; font-size: 22px;
+  letter-spacing: -.06em;
+  color: #fff;
+}
+.nav-logo em { font-style: normal; color: #4DB8AE; }
+.nav-ver {
+  font-size: 10px; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--amber); background: rgba(184,113,28,.15);
+  border: 1px solid rgba(184,113,28,.4);
+  border-radius: 20px; padding: 2px 9px;
+}
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+  font-size: 13px; font-weight: 500; color: rgba(255,255,255,.65);
+  transition: color .15s;
+}
+.nav-links a:hover { color: #fff; }
+.nav-cta {
+  padding: 9px 22px;
+  background: #2E7268;
+  color: #fff; border-radius: var(--r-sm);
+  font-size: 13px; font-weight: 600;
+  transition: background .15s;
+}
+.nav-cta:hover { background: #3D9089; }
 
-/* LOGIN */
-.login-wrap{padding:0 5% 72px;max-width:1400px;margin:0 auto;
-  display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
-@media(max-width:900px){.login-wrap{grid-template-columns:1fr}}
-.login-info h2{font-family:'Fraunces',Georgia,serif;font-size:32px;font-weight:600;color:var(--fg);line-height:1.2;margin-bottom:14px}
-.login-info p{font-size:15px;color:var(--fg2);line-height:1.65;margin-bottom:22px}
-.check-list{display:flex;flex-direction:column;gap:10px}
-.check-item{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:var(--fg2);line-height:1.5}
-.check-ico{width:19px;height:19px;background:var(--bg2);border-radius:50%;display:flex;
-  align-items:center;justify-content:center;color:var(--brand);font-size:10px;flex-shrink:0;margin-top:2px}
-.login-card{background:#fff;border-radius:16px;padding:36px;border:1px solid var(--divider);box-shadow:var(--shadow-lg)}
-.login-logo{font-family:'Fraunces',Georgia,serif;font-size:22px;font-weight:700;color:var(--brand);margin-bottom:4px}
-.login-logo span{color:var(--amber)}
-.login-sub{font-size:13px;color:var(--fg2);margin-bottom:24px}
-.form-group{margin-bottom:14px}
-label{display:block;font-size:12px;font-weight:600;color:var(--fg);margin-bottom:5px}
-.input{width:100%;padding:10px 13px;border:1.5px solid var(--divider);border-radius:8px;
-  font-size:14px;color:var(--fg);background:var(--bg);font-family:inherit;outline:none}
-.input:focus{border-color:var(--brand)}
-.input-hint{font-size:11.5px;color:var(--fg2);margin-top:3px}
-.btn-login{width:100%;padding:12px;background:var(--brand);color:#fff;border-radius:8px;
-  font-size:15px;font-weight:700;border:none;cursor:pointer;font-family:inherit;margin-top:4px}
-.btn-login:hover{background:var(--brand2)}
-.login-footer{font-size:12px;color:var(--fg2);text-align:center;margin-top:14px}
-.login-footer a{color:var(--brand);font-weight:600}
-.hata{color:#c0392b;font-size:12.5px;margin-top:6px;display:none}
+/* ── Hero ── */
+.hero {
+  min-height: 100vh;
+  background: var(--dark);
+  color: #fff;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: center;
+  padding: 100px 72px 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 60% at 70% 50%, rgba(46,114,104,.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.12), transparent);
+}
 
-/* FOOTER */
-footer{background:var(--brand);color:rgba(255,255,255,.55);padding:28px 5%;
-  display:flex;align-items:center;justify-content:space-between;font-size:13px;flex-wrap:wrap;gap:12px}
-.footer-logo{font-family:'Fraunces',Georgia,serif;color:#fff;font-size:17px;font-weight:700}
-.footer-logo span{color:#D4921A}
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11px; font-weight: 600; letter-spacing: .1em;
+  text-transform: uppercase;
+  color: #4DB8AE;
+  margin-bottom: 24px;
+}
+.hero-eyebrow span {
+  width: 24px; height: 1px; background: #4DB8AE;
+}
+
+.hero-left h1 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 900;
+  font-size: clamp(44px, 5.5vw, 72px);
+  letter-spacing: -.045em;
+  line-height: 1.0;
+  text-wrap: balance;
+  margin-bottom: 24px;
+}
+.hero-left h1 i {
+  font-style: italic;
+  color: #4DB8AE;
+}
+
+.hero-sub {
+  font-size: 17px; font-weight: 400;
+  color: rgba(255,255,255,.6);
+  max-width: 420px; line-height: 1.65;
+  margin-bottom: 40px;
+}
+
+.hero-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+.btn-hero {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 14px 28px;
+  background: #2E7268;
+  color: #fff; border-radius: var(--r-sm);
+  font-size: 15px; font-weight: 600;
+  transition: background .15s, transform .12s;
+}
+.btn-hero:hover { background: #3D9089; transform: translateY(-1px); }
+
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 14px 24px;
+  color: rgba(255,255,255,.7);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: var(--r-sm);
+  font-size: 15px; font-weight: 500;
+  transition: border-color .15s, color .15s;
+}
+.btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,.4); }
+
+/* Hero mockup */
+.hero-mockup {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-left: 40px;
+}
+
+.app-frame {
+  background: #0E1E1B;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 440px;
+  overflow: hidden;
+  box-shadow: 0 32px 80px rgba(0,0,0,.7), 0 0 0 1px rgba(255,255,255,.05);
+}
+.af-topbar {
+  background: #071210;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.af-logo { font-family: 'Fraunces', Georgia, serif; font-weight: 800; font-size: 15px; color: #fff; letter-spacing: -.04em; }
+.af-logo em { font-style: normal; color: #4DB8AE; }
+.af-time { font-size: 11px; color: rgba(255,255,255,.4); }
+.af-body { padding: 20px; }
+.af-salon-label { font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.35); margin-bottom: 12px; }
+.af-masalar {
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 8px;
+  margin-bottom: 16px;
+}
+.af-m {
+  aspect-ratio: 1; border-radius: 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+}
+.af-m-no { font-family: 'Fraunces', serif; font-size: 16px; font-weight: 800; line-height: 1; }
+.af-m-st { font-size: 8px; font-weight: 500; }
+.af-m.bos { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); color: rgba(255,255,255,.3); }
+.af-m.acik { background: rgba(46,114,104,.2); border: 1px solid rgba(77,184,174,.25); color: #4DB8AE; }
+.af-m.bek { background: rgba(184,113,28,.12); border: 1px solid rgba(184,113,28,.2); color: #E8A040; }
+
+.af-ozet { display: flex; gap: 8px; }
+.af-oz-k {
+  flex: 1; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.07);
+  border-radius: var(--r-sm); padding: 10px; text-align: center;
+}
+.af-oz-sayi { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 800; color: #4DB8AE; line-height: 1; margin-bottom: 2px; }
+.af-oz-ad { font-size: 9px; color: rgba(255,255,255,.4); }
+
+/* ── Tagline strap ── */
+.strap {
+  background: var(--brand);
+  padding: 0;
+  overflow: hidden;
+}
+.strap-ic {
+  display: flex;
+  max-width: 100%;
+}
+.strap-item {
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 10px;
+  padding: 18px 40px;
+  font-size: 13px; font-weight: 600; color: rgba(255,255,255,.85);
+  border-right: 1px solid rgba(255,255,255,.12);
+  white-space: nowrap;
+}
+.strap-item svg { opacity: .7; flex-shrink: 0; }
+
+/* ── Bento Features ── */
+.bento {
+  padding: 96px 48px;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.bento-ust {
+  margin-bottom: 56px;
+}
+.bento-ust h2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 800; font-size: clamp(28px,3.5vw,42px);
+  letter-spacing: -.04em; line-height: 1.1;
+  text-wrap: balance; color: var(--fg);
+  max-width: 540px; margin-bottom: 14px;
+}
+.bento-ust p { font-size: 16px; color: var(--fg2); max-width: 440px; line-height: 1.65; }
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-template-rows: auto;
+  gap: 16px;
+}
+
+/* Card base */
+.b-kart {
+  background: var(--bg2);
+  border: 1px solid var(--divider);
+  border-radius: var(--r);
+  padding: 32px;
+  overflow: hidden;
+  position: relative;
+  transition: border-color .2s, transform .2s;
+}
+.b-kart:hover { border-color: var(--brand2); transform: translateY(-2px); }
+
+/* Layout spans */
+.b-masa   { grid-column: span 5; grid-row: span 2; }
+.b-qr     { grid-column: span 4; }
+.b-mutfak { grid-column: span 3; }
+.b-rapor  { grid-column: span 4; }
+.b-eink   { grid-column: span 8; }
+
+.b-kart-ikon {
+  width: 44px; height: 44px;
+  background: rgba(31,78,72,.1);
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+}
+.b-kart-ikon svg {
+  width: 20px; height: 20px;
+  stroke: var(--brand); fill: none;
+  stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round;
+}
+.b-kart h3 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 17px; font-weight: 700;
+  letter-spacing: -.025em;
+  color: var(--fg); margin-bottom: 8px;
+}
+.b-kart p { font-size: 13px; color: var(--fg2); line-height: 1.65; }
+
+/* Masa kartı iç mockup */
+.b-masa-vis {
+  margin-top: 24px;
+  background: var(--bg3);
+  border-radius: var(--r-sm);
+  padding: 16px;
+  border: 1px solid var(--divider);
+}
+.b-masa-vis-g {
+  display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; margin-bottom: 10px;
+}
+.b-mv {
+  aspect-ratio: 1; border-radius: 8px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 2px;
+}
+.b-mv.a { background: rgba(31,78,72,.12); border: 1px solid rgba(31,78,72,.2); color: var(--brand); }
+.b-mv.b { background: var(--bg2); border: 1px solid var(--divider); color: var(--fg2); }
+.b-mv.w { background: var(--amber-bg); border: 1px solid rgba(184,113,28,.2); color: var(--amber); }
+.b-mv-no { font-family: 'Fraunces', serif; font-weight: 800; font-size: 14px; line-height: 1; }
+.b-mv-st { font-size: 8px; }
+.b-masa-ciro {
+  display: flex; align-items: baseline; gap: 6px;
+}
+.b-masa-ciro-s { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 800; color: var(--brand); letter-spacing: -.03em; }
+.b-masa-ciro-l { font-size: 11px; color: var(--fg2); }
+
+/* QR kart */
+.b-qr-vis {
+  margin-top: 20px;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.b-qr-phone {
+  background: var(--fg);
+  color: var(--bg);
+  border-radius: 10px;
+  padding: 8px;
+  width: 72px; height: 110px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.b-qr-phone svg { opacity: .9; }
+.b-qr-phone-t { font-size: 7px; font-weight: 600; letter-spacing: .3px; opacity: .6; text-align: center; }
+.b-qr-items { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.b-qr-item {
+  background: var(--bg3); border-radius: 6px; padding: 5px 8px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.b-qr-item-ad { font-size: 10px; font-weight: 500; color: var(--fg); }
+.b-qr-item-f { font-size: 10px; font-weight: 700; color: var(--brand); }
+
+/* Mutfak kart */
+.b-mutfak-vis {
+  margin-top: 20px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.b-kds-item {
+  background: var(--bg3); border-radius: 6px;
+  padding: 6px 10px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.b-kds-item-ad { font-size: 10px; font-weight: 500; color: var(--fg); }
+.b-kds-item-s {
+  font-size: 8px; font-weight: 700; padding: 2px 6px; border-radius: 4px;
+  text-transform: uppercase; letter-spacing: .4px;
+}
+.b-kds-item-s.bekle { background: var(--amber-bg); color: var(--amber); }
+.b-kds-item-s.hazir { background: rgba(31,78,72,.12); color: var(--brand); }
+
+/* Rapor kart */
+.b-rapor-vis {
+  margin-top: 20px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.b-rapor-bar { display: flex; align-items: center; gap: 8px; }
+.b-rapor-bar-label { font-size: 10px; color: var(--fg2); min-width: 70px; }
+.b-rapor-bar-track {
+  flex: 1; height: 5px;
+  background: var(--bg3); border-radius: 99px; overflow: hidden;
+}
+.b-rapor-bar-fill {
+  height: 100%; background: var(--brand); border-radius: 99px;
+}
+.b-rapor-bar-val { font-size: 10px; font-weight: 700; color: var(--brand); min-width: 44px; text-align: right; }
+
+/* E-ink bento kart — dark */
+.b-eink {
+  background: #0A1A17;
+  border-color: rgba(255,255,255,.08);
+  color: #fff;
+}
+.b-eink:hover { border-color: rgba(77,184,174,.3); }
+.b-eink .b-kart-ikon { background: rgba(77,184,174,.12); }
+.b-eink .b-kart-ikon svg { stroke: #4DB8AE; }
+.b-eink h3 { color: #fff; }
+.b-eink p { color: rgba(255,255,255,.55); }
+
+.b-eink-ic {
+  display: flex; gap: 32px; align-items: flex-start; margin-top: 24px;
+  flex-wrap: wrap;
+}
+.b-eink-bullets {
+  display: flex; flex-direction: column; gap: 8px; flex: 1; min-width: 180px;
+}
+.b-eink-bullet {
+  display: flex; gap: 10px; align-items: flex-start;
+  font-size: 12px; color: rgba(255,255,255,.6); line-height: 1.5;
+}
+.b-eink-bullet::before {
+  content: '';
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #4DB8AE; flex-shrink: 0; margin-top: 5px;
+}
+
+.b-eink-panels {
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.mini-panel {
+  background: #111;
+  border-radius: 7px;
+  padding: 5px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.5);
+}
+.mini-scr {
+  background: #f4f3ee;
+  border-radius: 3px;
+  padding: 8px;
+  width: 108px;
+  font-family: 'Courier New', monospace;
+  position: relative;
+  overflow: hidden;
+}
+.mini-scr.off { background: #e6e5e0; }
+.ms-salon { font-size: 6px; color: #666; letter-spacing: 1px; text-transform: uppercase; }
+.ms-masa { font-size: 20px; font-weight: 900; color: #0a0a0a; line-height: 1; letter-spacing: -1px; }
+.ms-hr { height: 1px; background: #ccc; margin: 4px 0; }
+.ms-label { font-size: 6px; color: #888; text-transform: uppercase; letter-spacing: .5px; }
+.ms-tutar { font-size: 14px; font-weight: 800; color: #0a0a0a; letter-spacing: -.5px; }
+.ms-alt { font-size: 5px; color: #aaa; margin-bottom: 4px; }
+.ms-durum {
+  position: absolute; top: 6px; right: 6px;
+  font-size: 5px; font-weight: 700; letter-spacing: .5px;
+  border: 1px solid #0a0a0a; color: #0a0a0a;
+  padding: 1px 3px; border-radius: 2px; text-transform: uppercase;
+}
+.ms-qr {
+  display: grid; grid-template-columns: repeat(5,1fr); gap: 1px;
+  width: 36px; height: 36px; margin: 0 auto 2px;
+}
+.ms-qr span { background: #111; border-radius: 1px; }
+.ms-qr span.w { background: transparent; }
+.ms-qr-hint { font-size: 5px; color: #888; text-align: center; }
+.ms-bos { font-size: 7px; color: #999; text-align: center; padding: 10px 0 2px; }
+.mini-usb { width: 12px; height: 2px; background: #333; border-radius: 1px; margin: 3px auto 0; }
+
+/* Yeni rozet */
+.yeni-rozet {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase;
+  color: var(--amber); background: var(--amber-bg);
+  border: 1px solid rgba(184,113,28,.35); border-radius: 20px;
+  padding: 3px 10px; margin-bottom: 10px;
+}
+
+/* ── Nasıl Çalışır ── */
+.nasil {
+  background: var(--dark2);
+  border-top: 1px solid rgba(255,255,255,.06);
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  padding: 96px 48px;
+  color: #fff;
+}
+.nasil-ic { max-width: 1100px; margin: 0 auto; }
+.nasil-ust {
+  text-align: center; margin-bottom: 64px;
+}
+.nasil-ust h2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 800; font-size: clamp(26px,3vw,38px);
+  letter-spacing: -.04em; color: #fff; margin-bottom: 10px;
+}
+.nasil-ust p { font-size: 15px; color: rgba(255,255,255,.5); }
+.nasil-adimlar {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 2px;
+  position: relative;
+}
+.nasil-adimlar::before {
+  content: '';
+  position: absolute; top: 28px; left: calc(16.6% + 24px); right: calc(16.6% + 24px);
+  height: 1px; background: rgba(255,255,255,.1);
+}
+.nasil-adim {
+  padding: 32px 32px 32px;
+  background: var(--dark3);
+  border: 1px solid rgba(255,255,255,.07);
+  border-radius: var(--r);
+  position: relative;
+  transition: border-color .2s;
+}
+.nasil-adim:hover { border-color: rgba(77,184,174,.3); }
+.nasil-no {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--dark2); border: 1px solid rgba(77,184,174,.4);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif; font-weight: 800; font-size: 16px;
+  color: #4DB8AE; margin-bottom: 24px;
+}
+.nasil-adim h3 {
+  font-family: 'Fraunces', serif; font-weight: 700; font-size: 17px;
+  color: #fff; letter-spacing: -.02em; margin-bottom: 10px;
+}
+.nasil-adim p { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.65; }
+
+/* ── E-ink showcase full section ── */
+.eink-sahne-bolum {
+  background: var(--dark);
+  padding: 96px 48px;
+  color: #fff;
+  border-top: 1px solid rgba(255,255,255,.05);
+}
+.eink-sahne-ic {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 72px; align-items: center;
+}
+.es-metin .yeni-rozet { margin-bottom: 20px; }
+.es-metin h2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 800; font-size: clamp(28px,3.2vw,44px);
+  letter-spacing: -.04em; line-height: 1.1; color: #fff;
+  margin-bottom: 20px;
+}
+.es-metin p { font-size: 15px; color: rgba(255,255,255,.55); line-height: 1.7; margin-bottom: 28px; }
+.es-liste { display: flex; flex-direction: column; gap: 12px; }
+.es-li {
+  display: flex; gap: 12px; align-items: flex-start;
+  font-size: 13px; color: rgba(255,255,255,.65); line-height: 1.55;
+}
+.es-li-ic {
+  width: 22px; height: 22px; border-radius: 6px;
+  background: rgba(77,184,174,.12);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.es-li-ic svg { width: 11px; height: 11px; stroke: #4DB8AE; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+.es-paneller {
+  display: flex; gap: 16px; justify-content: center; align-items: flex-end; flex-wrap: wrap;
+}
+.es-panel {
+  background: #0E0E0E;
+  border-radius: 12px; padding: 8px;
+  box-shadow: 0 16px 56px rgba(0,0,0,.7);
+}
+.es-scr {
+  background: #f5f4ef; border-radius: 5px;
+  padding: 12px; width: 150px;
+  font-family: 'Courier New', monospace;
+  position: relative; overflow: hidden;
+}
+.es-scr::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: repeating-conic-gradient(rgba(0,0,0,.03) 0% 25%, transparent 0% 50%) 0 0 / 4px 4px;
+  pointer-events: none;
+}
+.es-scr.off { background: #e8e7e2; }
+.es-salon { font-size: 7px; color: #555; letter-spacing: 1px; text-transform: uppercase; }
+.es-masa { font-size: 26px; font-weight: 900; color: #0a0a0a; line-height: 1; letter-spacing: -1.5px; }
+.es-hr { height: 1px; background: #c8c8c8; margin: 5px 0; }
+.es-label { font-size: 6px; color: #888; text-transform: uppercase; letter-spacing: .5px; }
+.es-tutar { font-size: 20px; font-weight: 800; color: #0a0a0a; letter-spacing: -.5px; }
+.es-alt { font-size: 6px; color: #aaa; margin-bottom: 5px; }
+.es-durum {
+  position: absolute; top: 8px; right: 8px;
+  font-size: 6px; font-weight: 700; letter-spacing: .5px;
+  text-transform: uppercase;
+  border: 1px solid #0a0a0a; color: #0a0a0a;
+  padding: 1px 4px; border-radius: 2px;
+}
+.es-qr {
+  display: grid; grid-template-columns: repeat(7,1fr); gap: 1.5px;
+  width: 56px; height: 56px; margin: 0 auto 4px;
+}
+.es-qr s { display: block; background: #0a0a0a; border-radius: 1.5px; }
+.es-qr s.w { background: transparent; }
+.es-qr-hint { font-size: 6px; color: #666; text-align: center; }
+.es-bos { font-size: 8px; color: #888; text-align: center; padding: 14px 0 4px; letter-spacing: .5px; }
+.es-usb { width: 18px; height: 3px; background: #222; border-radius: 2px; margin: 6px auto 0; }
+.es-panel-label {
+  text-align: center; margin-top: 8px;
+  font-size: 9px; font-weight: 600; letter-spacing: .05em;
+  color: rgba(255,255,255,.35); text-transform: uppercase;
+}
+
+/* ── Stats ── */
+.stats {
+  background: var(--brand);
+  padding: 60px 48px;
+}
+.stats-ic {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 24px; text-align: center;
+}
+.stat-s {
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(32px,4vw,52px); font-weight: 900;
+  letter-spacing: -.05em; color: #fff;
+  line-height: 1; margin-bottom: 6px;
+}
+.stat-a { font-size: 13px; color: rgba(255,255,255,.65); font-weight: 500; }
+
+/* ── Login ── */
+.giris-wrap {
+  padding: 96px 24px 112px;
+  display: flex; justify-content: center;
+}
+.giris-kart {
+  background: var(--bg2);
+  border: 1px solid var(--divider);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%; max-width: 440px;
+  box-shadow: 0 4px 32px rgba(0,0,0,.06);
+}
+.giris-kart h2 {
+  font-family: 'Fraunces', Georgia, serif;
+  font-weight: 800; font-size: 26px; letter-spacing: -.04em;
+  color: var(--fg); margin-bottom: 6px;
+}
+.giris-kart .giris-sub { font-size: 14px; color: var(--fg2); margin-bottom: 28px; }
+
+.tab-bar {
+  display: flex; border: 1.5px solid var(--divider);
+  border-radius: var(--r-sm); overflow: hidden; margin-bottom: 24px;
+}
+.tab-btn {
+  flex: 1; padding: 10px 12px;
+  background: transparent; border: none; cursor: pointer;
+  font-family: inherit; font-size: 13px; font-weight: 600;
+  color: var(--fg2); transition: background .12s, color .12s;
+}
+.tab-btn.aktif { background: var(--brand); color: #fff; }
+
+.giris-form { display: flex; flex-direction: column; gap: 12px; }
+.form-alan { display: flex; flex-direction: column; gap: 5px; }
+.form-alan label { font-size: 12px; font-weight: 600; color: var(--fg2); letter-spacing: .01em; }
+.form-alan input {
+  padding: 11px 14px;
+  background: var(--bg);
+  border: 1.5px solid var(--divider);
+  border-radius: var(--r-sm);
+  font-size: 14px; color: var(--fg);
+  font-family: inherit; outline: none;
+  transition: border-color .15s;
+}
+.form-alan input:focus { border-color: var(--brand); }
+.form-alan input::placeholder { color: var(--fg2); opacity: .5; }
+.giris-btn {
+  margin-top: 4px; padding: 13px;
+  background: var(--brand); color: #fff; border: none;
+  border-radius: var(--r-sm);
+  font-size: 15px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  transition: background .15s;
+}
+.giris-btn:hover { background: var(--brand2); }
+.giris-btn:disabled { opacity: .55; cursor: not-allowed; }
+.hata { color: #EF4444; font-size: 12px; min-height: 16px; }
+
+/* ── Footer ── */
+footer {
+  background: var(--dark);
+  border-top: 1px solid rgba(255,255,255,.07);
+  padding: 32px 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 16px;
+}
+.footer-logo {
+  font-family: 'Fraunces', serif; font-weight: 900; font-size: 18px;
+  letter-spacing: -.05em; color: #fff;
+}
+.footer-logo em { font-style: normal; color: #4DB8AE; }
+.footer-copy { font-size: 12px; color: rgba(255,255,255,.35); }
+
+/* ── Fade-in ── */
+.fade-in {
+  opacity: 0; transform: translateY(16px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.fade-in.vis { opacity: 1; transform: none; }
+
+/* ── Responsive ── */
+@media (max-width: 1024px) {
+  .nav { padding: 14px 24px; }
+  .nav-links { display: none; }
+  .hero { grid-template-columns: 1fr; padding: 100px 32px 72px; gap: 48px; }
+  .hero-mockup { padding-left: 0; }
+  .bento { padding: 72px 24px; }
+  .bento-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .b-masa   { grid-column: span 2; grid-row: span 1; }
+  .b-qr     { grid-column: span 1; }
+  .b-mutfak { grid-column: span 1; }
+  .b-rapor  { grid-column: span 1; }
+  .b-eink   { grid-column: span 2; }
+  .nasil { padding: 72px 24px; }
+  .nasil-adimlar { grid-template-columns: 1fr; gap: 12px; }
+  .nasil-adimlar::before { display: none; }
+  .eink-sahne-bolum { padding: 72px 24px; }
+  .eink-sahne-ic { grid-template-columns: 1fr; gap: 48px; }
+  .stats { padding: 48px 24px; }
+  .stats-ic { grid-template-columns: repeat(2,1fr); gap: 32px; }
+  footer { padding: 28px 24px; }
+}
+@media (max-width: 600px) {
+  .hero { padding: 88px 20px 64px; }
+  .strap-ic { flex-wrap: wrap; }
+  .bento { padding: 56px 16px; }
+  .bento-grid { grid-template-columns: 1fr; }
+  .b-masa,.b-qr,.b-mutfak,.b-rapor,.b-eink { grid-column: span 1; }
+  .es-paneller { gap: 10px; }
+  .stats-ic { grid-template-columns: repeat(2,1fr); }
+  .giris-kart { padding: 28px 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+  .fade-in { opacity: 1; transform: none; }
+}
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="nav-logo">Adfix<span>.</span></div>
+<!-- ── Nav ── -->
+<nav class="nav">
+  <div class="nav-left">
+    <span class="nav-logo">Ad<em>fix</em></span>
+    <span class="nav-ver">v1.4</span>
+  </div>
   <div class="nav-links">
     <a href="#ozellikler">Özellikler</a>
+    <a href="#nasil-calisir">Nasıl Çalışır</a>
+    <a href="#eink">E-ink Ekran</a>
     <a href="#giris">Giriş</a>
-    <button class="btn-nav" onclick="document.getElementById('giris').scrollIntoView({behavior:'smooth'})">Giriş Yap</button>
   </div>
+  <a href="#giris" class="nav-cta">İşletme Girişi</a>
 </nav>
 
+<!-- ── Hero ── -->
 <section class="hero">
-  <div>
-    <div class="hero-badge"><span class="badge-dot"></span>Restoran &amp; Kafe POS</div>
-    <h1>Adisyon takibini <em>kolaylaştır</em></h1>
-    <p class="hero-desc">Masaları yönet, siparişleri anında ilet, müşterilere QR menü sun. Küçük işletmeden zincir restorana tek platform.</p>
-    <div class="hero-cta">
-      <button class="btn-primary" onclick="document.getElementById('giris').scrollIntoView({behavior:'smooth'})">Giriş Yap</button>
-      <button class="btn-outline" onclick="document.getElementById('ozellikler').scrollIntoView({behavior:'smooth'})">Özellikleri Gör</button>
-    </div>
-    <div class="hero-stats">
-      <div><div class="stat-num">18ms</div><div class="stat-label">Ortalama Yanıt</div></div>
-      <div><div class="stat-num">99.9%</div><div class="stat-label">Çalışma Süresi</div></div>
-      <div><div class="stat-num">Ücretsiz</div><div class="stat-label">Başlamak İçin</div></div>
+  <div class="hero-left fade-in">
+    <div class="hero-eyebrow"><span></span>Restoran &amp; Kafe Yönetimi</div>
+    <h1>Adisyonu<br><i>hallet.</i></h1>
+    <p class="hero-sub">Masa takibi, QR sipariş, mutfak ekranı, e-ink masa ekranı ve ciro raporları — tek sistemde, kendi sunucunuzda, sıfır SaaS ücreti.</p>
+    <div class="hero-actions">
+      <a href="#giris" class="btn-hero">
+        Giriş Yapın
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#ozellikler" class="btn-ghost">
+        Özellikleri Keşfet
+      </a>
     </div>
   </div>
-  <div class="hero-visual">
-    <div class="db-bar">
-      <div class="db-dot" style="background:#FF5F57"></div>
-      <div class="db-dot" style="background:#FFBD2E"></div>
-      <div class="db-dot" style="background:#28CA41"></div>
-      <span class="db-bar-title">Adfix — Yönetim Paneli</span>
-    </div>
-    <div class="db-body">
-      <div class="db-tabs">
-        <div class="db-tab on">Tüm Masalar</div>
-        <div class="db-tab">Açık (8)</div>
-        <div class="db-tab">Bekleyen (3)</div>
+  <div class="hero-mockup fade-in" style="transition-delay:.15s">
+    <div class="app-frame">
+      <div class="af-topbar">
+        <span class="af-logo">Ad<em>fix</em></span>
+        <span class="af-time">Bugün · 20:14</span>
       </div>
-      <div class="t-grid">
-        <div class="tc open"><div class="tc-n">Masa 1</div><div class="tc-s">AÇIK</div><div class="tc-t">₺248</div></div>
-        <div class="tc"><div class="tc-n">Masa 2</div><div class="tc-s">BOŞ</div><div class="tc-t">—</div></div>
-        <div class="tc wait"><div class="tc-n">Masa 3</div><div class="tc-s">HESAP</div><div class="tc-t">₺632</div></div>
-        <div class="tc open"><div class="tc-n">Masa 4</div><div class="tc-s">AÇIK</div><div class="tc-t">₺89</div></div>
-        <div class="tc open"><div class="tc-n">Masa 5</div><div class="tc-s">AÇIK</div><div class="tc-t">₺440</div></div>
-        <div class="tc"><div class="tc-n">Masa 6</div><div class="tc-s">BOŞ</div><div class="tc-t">—</div></div>
-        <div class="tc wait"><div class="tc-n">Masa 7</div><div class="tc-s">HESAP</div><div class="tc-t">₺315</div></div>
-        <div class="tc open"><div class="tc-n">Masa 8</div><div class="tc-s">AÇIK</div><div class="tc-t">₺175</div></div>
-        <div class="tc"><div class="tc-n">Masa 9</div><div class="tc-s">BOŞ</div><div class="tc-t">—</div></div>
-        <div class="tc open"><div class="tc-n">Masa 10</div><div class="tc-s">AÇIK</div><div class="tc-t">₺58</div></div>
+      <div class="af-body">
+        <div class="af-salon-label">Salon A — 8 masa</div>
+        <div class="af-masalar">
+          <div class="af-m acik"><span class="af-m-no">1</span><span class="af-m-st">Açık</span></div>
+          <div class="af-m bos"><span class="af-m-no">2</span><span class="af-m-st">Boş</span></div>
+          <div class="af-m acik"><span class="af-m-no">3</span><span class="af-m-st">Açık</span></div>
+          <div class="af-m bek"><span class="af-m-no">4</span><span class="af-m-st">Bekliyor</span></div>
+          <div class="af-m bos"><span class="af-m-no">5</span><span class="af-m-st">Boş</span></div>
+          <div class="af-m acik"><span class="af-m-no">6</span><span class="af-m-st">Açık</span></div>
+          <div class="af-m bek"><span class="af-m-no">7</span><span class="af-m-st">Bekliyor</span></div>
+          <div class="af-m bos"><span class="af-m-no">8</span><span class="af-m-st">Boş</span></div>
+        </div>
+        <div class="af-ozet">
+          <div class="af-oz-k"><div class="af-oz-sayi">3</div><div class="af-oz-ad">Açık</div></div>
+          <div class="af-oz-k"><div class="af-oz-sayi" style="color:#E8A040">2</div><div class="af-oz-ad">Bekliyor</div></div>
+          <div class="af-oz-k"><div class="af-oz-sayi">₺2.840</div><div class="af-oz-ad">Bugün ciro</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Strap ── -->
+<div class="strap">
+  <div class="strap-ic">
+    <div class="strap-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      Aylık 0 ₺ SaaS ücreti
+    </div>
+    <div class="strap-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      Veriler kendi sunucunuzda
+    </div>
+    <div class="strap-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
+      İnternet kesilince de çalışır
+    </div>
+    <div class="strap-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      QR sipariş dahil
+    </div>
+    <div class="strap-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      E-ink masa ekranı
+    </div>
+  </div>
+</div>
+
+<!-- ── Bento Features ── -->
+<section class="bento" id="ozellikler">
+  <div class="bento-ust fade-in">
+    <h2>İhtiyacınız olan her şey,<br>tek çatı altında.</h2>
+    <p>Mutfaktan kasaya, masadan müşteri menüsüne, e-ink ekrana kadar. Birbirinden bağımsız modüller, bir arada çalışır.</p>
+  </div>
+  <div class="bento-grid">
+
+    <!-- Masa & Adisyon -->
+    <div class="b-kart b-masa fade-in">
+      <div class="b-kart-ikon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      </div>
+      <div class="yeni-rozet" style="display:none"></div>
+      <h3>Masa & Adisyon Yönetimi</h3>
+      <p>Salon haritasından masayı seçin, adisyon açın, ürün ekleyin, bölünmüş ödeme alın. Tüm akış tek ekranda.</p>
+      <div class="b-masa-vis">
+        <div class="b-masa-vis-g">
+          <div class="b-mv a"><span class="b-mv-no">A1</span><span class="b-mv-st">₺148</span></div>
+          <div class="b-mv b"><span class="b-mv-no">A2</span><span class="b-mv-st">Boş</span></div>
+          <div class="b-mv w"><span class="b-mv-no">A3</span><span class="b-mv-st">Bekl.</span></div>
+          <div class="b-mv a"><span class="b-mv-no">B1</span><span class="b-mv-st">₺72</span></div>
+          <div class="b-mv a"><span class="b-mv-no">B2</span><span class="b-mv-st">₺210</span></div>
+          <div class="b-mv b"><span class="b-mv-no">B3</span><span class="b-mv-st">Boş</span></div>
+        </div>
+        <div class="b-masa-ciro">
+          <span class="b-masa-ciro-s">₺4.280</span>
+          <span class="b-masa-ciro-l">bugünkü ciro</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Menü -->
+    <div class="b-kart b-qr fade-in" style="transition-delay:.08s">
+      <div class="b-kart-ikon">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </div>
+      <h3>QR Menü & Sipariş</h3>
+      <p>Masadan QR okutulsun, müşteri sipariş versin. Garson onaylar, mutfağa düşer.</p>
+      <div class="b-qr-vis">
+        <div class="b-qr-phone">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span class="b-qr-phone-t">Sipariş ver</span>
+        </div>
+        <div class="b-qr-items">
+          <div class="b-qr-item"><span class="b-qr-item-ad">Cheeseburger</span><span class="b-qr-item-f">₺180</span></div>
+          <div class="b-qr-item"><span class="b-qr-item-ad">Patates Kızartması</span><span class="b-qr-item-f">₺80</span></div>
+          <div class="b-qr-item"><span class="b-qr-item-ad">Ayran</span><span class="b-qr-item-f">₺40</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mutfak Ekranı -->
+    <div class="b-kart b-mutfak fade-in" style="transition-delay:.12s">
+      <div class="b-kart-ikon">
+        <svg viewBox="0 0 24 24"><path d="M3 6h18M8 6V4M16 6V4M3 10h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V10z"/></svg>
+      </div>
+      <h3>Mutfak Ekranı</h3>
+      <p>KDS ekranında siparişler anlık görünür, hazır olunca işaretlenir.</p>
+      <div class="b-mutfak-vis">
+        <div class="b-kds-item"><span class="b-kds-item-ad">A3 — Çoban Salata</span><span class="b-kds-item-s bekle">Bekliyor</span></div>
+        <div class="b-kds-item"><span class="b-kds-item-ad">B1 — Izgara Tavuk</span><span class="b-kds-item-s hazir">Hazır ✓</span></div>
+        <div class="b-kds-item"><span class="b-kds-item-ad">A1 — Cheesecake</span><span class="b-kds-item-s bekle">Hazırlanıyor</span></div>
+      </div>
+    </div>
+
+    <!-- Raporlar -->
+    <div class="b-kart b-rapor fade-in" style="transition-delay:.16s">
+      <div class="b-kart-ikon">
+        <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+      </div>
+      <h3>Ciro & Raporlar</h3>
+      <p>Günlük ciro, en çok satan ürünler, saatlik grafik — anlık.</p>
+      <div class="b-rapor-vis">
+        <div class="b-rapor-bar">
+          <span class="b-rapor-bar-label">Çay/Kahve</span>
+          <div class="b-rapor-bar-track"><div class="b-rapor-bar-fill" style="width:85%"></div></div>
+          <span class="b-rapor-bar-val">₺1.240</span>
+        </div>
+        <div class="b-rapor-bar">
+          <span class="b-rapor-bar-label">Ana Yemek</span>
+          <div class="b-rapor-bar-track"><div class="b-rapor-bar-fill" style="width:67%"></div></div>
+          <span class="b-rapor-bar-val">₺970</span>
+        </div>
+        <div class="b-rapor-bar">
+          <span class="b-rapor-bar-label">Tatlı</span>
+          <div class="b-rapor-bar-track"><div class="b-rapor-bar-fill" style="width:40%"></div></div>
+          <span class="b-rapor-bar-val">₺580</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- E-ink — dark card -->
+    <div class="b-kart b-eink fade-in" style="transition-delay:.2s">
+      <div class="b-kart-ikon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <div class="yeni-rozet">
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        Yeni — v1.4
+      </div>
+      <h3>E-ink Masa Ekranı</h3>
+      <p>ESP32 + e-paper ekran, WiFi üzerinden adisyon tutarını ve QR kodunu canlı gösterir. Pil ömrü yıllarca, güç kablosu yok.</p>
+      <div class="b-eink-ic">
+        <ul class="b-eink-bullets">
+          <li class="b-eink-bullet">Anlık tutar + sipariş QR'ı</li>
+          <li class="b-eink-bullet">Adisyon kapanınca token yenilenir</li>
+          <li class="b-eink-bullet">Plug &amp; play, lehim yok</li>
+          <li class="b-eink-bullet">Mevcut API ile sıfır entegrasyon çabası</li>
+        </ul>
+        <div class="b-eink-panels">
+          <!-- Açık panel -->
+          <div class="mini-panel">
+            <div class="mini-scr">
+              <div class="ms-durum">AÇIK</div>
+              <div class="ms-salon">İç Mekan</div>
+              <div class="ms-masa">A1</div>
+              <div class="ms-hr"></div>
+              <div class="ms-label">Toplam</div>
+              <div class="ms-tutar">₺148,50</div>
+              <div class="ms-alt">Adisyon #42</div>
+              <div class="ms-hr"></div>
+              <div class="ms-qr">
+                <span></span><span class="w"></span><span></span><span class="w"></span><span></span>
+                <span class="w"></span><span></span><span class="w"></span><span></span><span class="w"></span>
+                <span></span><span class="w"></span><span></span><span class="w"></span><span></span>
+                <span class="w"></span><span></span><span class="w"></span><span></span><span class="w"></span>
+                <span></span><span class="w"></span><span></span><span class="w"></span><span></span>
+              </div>
+              <div style="font-size:5px;color:#777;text-align:center">Sipariş için okutun</div>
+            </div>
+            <div class="mini-usb"></div>
+          </div>
+          <!-- Boş panel -->
+          <div class="mini-panel" style="margin-top:20px">
+            <div class="mini-scr off">
+              <div class="ms-durum" style="border-color:#888;color:#888">BOŞ</div>
+              <div class="ms-salon">Teras</div>
+              <div class="ms-masa" style="color:#333">B2</div>
+              <div class="ms-hr"></div>
+              <div class="ms-bos">MASA BOŞ</div>
+              <div class="ms-qr" style="opacity:.45">
+                <span></span><span class="w"></span><span></span><span class="w"></span><span></span>
+                <span class="w"></span><span></span><span class="w"></span><span></span><span class="w"></span>
+                <span></span><span class="w"></span><span class="w"></span><span class="w"></span><span></span>
+                <span class="w"></span><span></span><span class="w"></span><span></span><span class="w"></span>
+                <span></span><span class="w"></span><span></span><span class="w"></span><span></span>
+              </div>
+              <div style="font-size:5px;color:#999;text-align:center">Menü için okutun</div>
+            </div>
+            <div class="mini-usb"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── Nasıl Çalışır ── -->
+<section class="nasil" id="nasil-calisir">
+  <div class="nasil-ic">
+    <div class="nasil-ust fade-in">
+      <h2>Üç adımda hazır.</h2>
+      <p>Kendi sunucunuza kurun, QR kodları asın, yönetmeye başlayın.</p>
+    </div>
+    <div class="nasil-adimlar">
+      <div class="nasil-adim fade-in">
+        <div class="nasil-no">1</div>
+        <h3>Sistemi Kurun</h3>
+        <p>Python + SQLite. Tek komutla çalışır. Bulut aboneliği yok, sunucunuz tam kontrolünüzde.</p>
+      </div>
+      <div class="nasil-adim fade-in" style="transition-delay:.1s">
+        <div class="nasil-no">2</div>
+        <h3>Masaları Tanımlayın</h3>
+        <p>Salon ve masa gruplarını oluşturun. QR kodları otomatik üretilir, masalara asın.</p>
+      </div>
+      <div class="nasil-adim fade-in" style="transition-delay:.2s">
+        <div class="nasil-no">3</div>
+        <h3>Yönetmeye Başlayın</h3>
+        <p>Tabletten veya PC'den adisyon açın, mutfak ekranını izleyin, günsonunda raporu görün.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section class="features" id="ozellikler">
-  <div class="sec-head">
-    <div class="sec-label">Neden Adfix?</div>
-    <div class="sec-title">Her masanın ihtiyacı için</div>
-  </div>
-  <div class="feat-grid">
-    <div class="feat-card">
-      <div class="feat-icon">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+<!-- ── E-ink Full Section ── -->
+<section class="eink-sahne-bolum" id="eink">
+  <div class="eink-sahne-ic">
+    <div class="es-metin fade-in">
+      <div class="yeni-rozet">
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        v1.4 — E-ink Masa Ekranı
       </div>
-      <div class="feat-title">Gerçek Zamanlı Masa</div>
-      <div class="feat-desc">Masa durumlarını anında görün; açık, bekleyen ve boş masaları tek bakışta ayırt edin.</div>
+      <h2>Her masada<br>canlı adisyon<br>ekranı.</h2>
+      <p>Pil ömrü yıllarca süren e-ink ekranlar masaların başına koyulur. WiFi üzerinden polling yaparak adisyon tutarını ve sipariş QR kodunu gerçek zamanlı gösterir. Adisyon kapandığında QR token otomatik yenilenir — eski bağlantılar geçersiz olur.</p>
+      <ul class="es-liste">
+        <li class="es-li">
+          <div class="es-li-ic"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          Pil ömrü 2–5 yıl, güç kablosu yok
+        </li>
+        <li class="es-li">
+          <div class="es-li-ic"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          Adisyon açılışında tutar, kapanışında yeni QR
+        </li>
+        <li class="es-li">
+          <div class="es-li-ic"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          <code style="font-size:11px;background:rgba(255,255,255,.08);padding:1px 6px;border-radius:4px">GET /api/acik/masa/{id}/ekran</code> — kimlik doğrulama gerekmez
+        </li>
+        <li class="es-li">
+          <div class="es-li-ic"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          ESP32 + Waveshare/Elecrow 4.2" e-paper — lehim yok
+        </li>
+        <li class="es-li">
+          <div class="es-li-ic"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+          Mevcut Adfix altyapısıyla sıfır ek konfigürasyon
+        </li>
+      </ul>
     </div>
-    <div class="feat-card">
-      <div class="feat-icon">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+    <div class="es-paneller fade-in" style="transition-delay:.15s">
+      <!-- Panel 1: Açık, tutarlı -->
+      <div>
+        <div class="es-panel">
+          <div class="es-scr">
+            <div class="es-durum">AÇIK</div>
+            <div class="es-salon">İç Mekan</div>
+            <div class="es-masa">A1</div>
+            <div class="es-hr"></div>
+            <div class="es-label">Toplam</div>
+            <div class="es-tutar">₺148,50</div>
+            <div class="es-alt">Adisyon #42 · 3 kalem</div>
+            <div class="es-hr"></div>
+            <div class="es-qr">
+              <s></s><s class="w"></s><s></s><s class="w"></s><s></s><s class="w"></s><s></s>
+              <s class="w"></s><s></s><s class="w"></s><s></s><s class="w"></s><s></s><s class="w"></s>
+              <s></s><s class="w"></s><s></s><s class="w"></s><s class="w"></s><s class="w"></s><s></s>
+              <s class="w"></s><s class="w"></s><s class="w"></s><s></s><s class="w"></s><s></s><s class="w"></s>
+              <s></s><s class="w"></s><s></s><s class="w"></s><s></s><s class="w"></s><s></s>
+              <s class="w"></s><s></s><s class="w"></s><s></s><s class="w"></s><s class="w"></s><s class="w"></s>
+              <s></s><s class="w"></s><s></s><s class="w"></s><s></s><s class="w"></s><s></s>
+            </div>
+            <div class="es-qr-hint">Sipariş için okutun</div>
+          </div>
+          <div class="es-usb"></div>
+        </div>
+        <div class="es-panel-label">Açık masa</div>
       </div>
-      <div class="feat-title">QR Sipariş Menüsü</div>
-      <div class="feat-desc">Müşteriler kendi telefonlarından menüyü tarar, garsonlara bağımlılık azalır.</div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 17H7A5 5 0 0 1 7 7h2M15 7h2a5 5 0 0 1 0 10h-2M8 12h8"/></svg>
+      <!-- Panel 2: Boş -->
+      <div style="margin-top:28px">
+        <div class="es-panel">
+          <div class="es-scr off">
+            <div class="es-durum" style="border-color:#888;color:#888">BOŞ</div>
+            <div class="es-salon">Teras</div>
+            <div class="es-masa" style="color:#333">B2</div>
+            <div class="es-hr"></div>
+            <div class="es-bos">MASA BOŞ</div>
+            <div class="es-qr" style="opacity:.4">
+              <s></s><s class="w"></s><s></s><s class="w"></s><s></s><s class="w"></s><s></s>
+              <s class="w"></s><s></s><s class="w"></s><s></s><s class="w"></s><s></s><s class="w"></s>
+              <s></s><s class="w"></s><s class="w"></s><s class="w"></s><s></s><s class="w"></s><s></s>
+              <s class="w"></s><s></s><s class="w"></s><s class="w"></s><s class="w"></s><s></s><s class="w"></s>
+              <s></s><s class="w"></s><s></s><s class="w"></s><s></s><s class="w"></s><s></s>
+              <s class="w"></s><s class="w"></s><s class="w"></s><s></s><s class="w"></s><s></s><s class="w"></s>
+              <s></s><s class="w"></s><s></s><s class="w"></s><s></s><s class="w"></s><s></s>
+            </div>
+            <div class="es-qr-hint" style="color:#aaa">Menüyü görüntülemek için okutun</div>
+          </div>
+          <div class="es-usb"></div>
+        </div>
+        <div class="es-panel-label">Boş masa</div>
       </div>
-      <div class="feat-title">Çoklu Mekan</div>
-      <div class="feat-desc">Her şubeyi ayrı URL ile yönetin. Tek merkez panel, sınırsız mekan.</div>
-    </div>
-    <div class="feat-card">
-      <div class="feat-icon">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-      </div>
-      <div class="feat-title">Anlık Raporlama</div>
-      <div class="feat-desc">Günlük, haftalık ve aylık ciro rakamlarına istediğiniz zaman ulaşın.</div>
     </div>
   </div>
 </section>
 
-<section class="login-wrap" id="giris">
-  <div class="login-info">
-    <h2>İşletmenize bugün başlayın</h2>
-    <p>İşletme kodunuzu girin, saniyeler içinde panelinize erişin.</p>
-    <div class="check-list">
-      <div class="check-item"><div class="check-ico">✓</div>Kurulum gerektirmez, tarayıcıdan çalışır</div>
-      <div class="check-item"><div class="check-ico">✓</div>QR menü müşterilere sınırsız ücretsiz</div>
-      <div class="check-item"><div class="check-ico">✓</div>Türkçe destek, yerel altyapı</div>
-      <div class="check-item"><div class="check-ico">✓</div>İstediğiniz zaman erişim, veri sizin</div>
+<!-- ── Stats ── -->
+<div class="stats">
+  <div class="stats-ic">
+    <div class="fade-in">
+      <div class="stat-s">0 ₺</div>
+      <div class="stat-a">Aylık SaaS ücreti</div>
+    </div>
+    <div class="fade-in" style="transition-delay:.08s">
+      <div class="stat-s">%100</div>
+      <div class="stat-a">Veriler sizin sunucunuzda</div>
+    </div>
+    <div class="fade-in" style="transition-delay:.16s">
+      <div class="stat-s">7/24</div>
+      <div class="stat-a">İnternet olmadan çalışır</div>
+    </div>
+    <div class="fade-in" style="transition-delay:.24s">
+      <div class="stat-s">&lt;1 s</div>
+      <div class="stat-a">Sayfa yükleme süresi</div>
     </div>
   </div>
-  <div class="login-card">
-    <div class="login-logo">Adfix<span>.</span></div>
-    <div class="login-sub">İşletme panelinize giriş yapın</div>
-    <div class="form-group">
-      <label>İşletme Kodu (slug)</label>
-      <input class="input" type="text" id="kodInput" placeholder="ornek-kafe"
-             autocomplete="off" autocapitalize="off"
-             oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')"
-             onkeydown="if(event.key==='Enter')kodGit()">
-      <div class="input-hint">adfixapp.com.tr/i/<strong id="slugOnizleme">ornek-kafe</strong></div>
+</div>
+
+<!-- ── Login ── -->
+<section class="giris-wrap" id="giris">
+  <div class="giris-kart fade-in">
+    <h2>Giriş Yapın</h2>
+    <p class="giris-sub">İşletme panelinize veya merkez yönetimine erişin.</p>
+    <div class="tab-bar">
+      <button class="tab-btn aktif" id="tab0" onclick="tabSec(0)">Kafe Girişi</button>
+      <button class="tab-btn" id="tab1" onclick="tabSec(1)">Merkez Yönetimi</button>
     </div>
-    <button class="btn-login" onclick="kodGit()">Giriş Yap</button>
-    <div class="hata" id="hata"></div>
-    <div class="login-footer"><a href="/merkez/">Merkez Yönetim</a></div>
+    <div id="kafePanel" class="giris-form">
+      <div class="form-alan">
+        <label>İşletme Kodu</label>
+        <input id="kSlug" placeholder="ornek-kafe" autocomplete="off" autocapitalize="off"
+               oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')">
+      </div>
+      <div class="form-alan">
+        <label>Kullanıcı Adı</label>
+        <input id="kAdi" placeholder="admin" autocomplete="username">
+      </div>
+      <div class="form-alan">
+        <label>Şifre</label>
+        <input id="kSifre" type="password" autocomplete="current-password">
+      </div>
+      <div class="hata" id="kafeHata"></div>
+      <button class="giris-btn" id="kafeBt" onclick="kafeGiris()">Giriş Yap</button>
+    </div>
+    <div id="merkezPanel" class="giris-form" hidden>
+      <div class="form-alan">
+        <label>Merkez Yönetici Şifresi</label>
+        <input id="mSifre" type="password" autocomplete="current-password">
+      </div>
+      <div class="hata" id="merkezHata"></div>
+      <button class="giris-btn" id="merkezBt" onclick="merkezGiris()">Giriş Yap</button>
+    </div>
   </div>
 </section>
 
+<!-- ── Footer ── -->
 <footer>
-  <div class="footer-logo">Adfix<span>.</span></div>
-  <div>© 2026 Adfix — Restoran &amp; Kafe Adisyon Sistemi</div>
-  <div>Gizlilik · Kullanım Koşulları</div>
+  <span class="footer-logo">Ad<em>fix</em></span>
+  <span class="footer-copy">&copy; 2026 Adfix — Adisyon &amp; Masa Yönetim Sistemi &middot; v1.4</span>
 </footer>
 
 <script>
-const kodInput = document.getElementById('kodInput');
-const slugOnizleme = document.getElementById('slugOnizleme');
-
-kodInput.addEventListener('input', function() {
-  slugOnizleme.textContent = this.value || 'ornek-kafe';
-});
-
-function kodGit() {
-  const kod = kodInput.value.trim();
-  const hata = document.getElementById('hata');
-  if (!kod) { hata.textContent = 'İşletme kodunu girin'; hata.style.display = 'block'; return; }
-  if (kod.length < 2) { hata.textContent = 'Kod en az 2 karakter olmalı'; hata.style.display = 'block'; return; }
-  hata.style.display = 'none';
-  location.href = '/i/' + encodeURIComponent(kod) + '/';
+// Tab
+function tabSec(n) {
+  document.getElementById('tab0').classList.toggle('aktif', n === 0);
+  document.getElementById('tab1').classList.toggle('aktif', n === 1);
+  document.getElementById('kafePanel').hidden = n !== 0;
+  document.getElementById('merkezPanel').hidden = n !== 1;
+  if (n === 0) document.getElementById('kSlug').focus();
+  else document.getElementById('mSifre').focus();
 }
+
+// Kafe girişi
+async function kafeGiris() {
+  const slug  = document.getElementById('kSlug').value.trim();
+  const adi   = document.getElementById('kAdi').value.trim();
+  const sifre = document.getElementById('kSifre').value;
+  const hata  = document.getElementById('kafeHata');
+  const btn   = document.getElementById('kafeBt');
+  hata.textContent = '';
+  if (!slug)  { hata.textContent = 'İşletme kodu gerekli'; return; }
+  if (!adi || !sifre) { hata.textContent = 'Kullanıcı adı ve şifre gerekli'; return; }
+  btn.disabled = true; btn.textContent = 'Giriş yapılıyor…';
+  try {
+    const r = await fetch('/i/' + encodeURIComponent(slug) + '/api/kullanici/giris', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ kullanici_adi: adi, sifre })
+    });
+    const g = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(g.detail || 'Giriş başarısız (' + r.status + ')');
+    localStorage.setItem('adfix_token_' + slug, g.token);
+    localStorage.setItem('adfix_kul_' + slug, JSON.stringify(g.kullanici));
+    location.href = '/i/' + encodeURIComponent(slug) + '/';
+  } catch(e) {
+    hata.textContent = e.message;
+    btn.disabled = false; btn.textContent = 'Giriş Yap';
+  }
+}
+
+// Merkez girişi
+async function merkezGiris() {
+  const sifre = document.getElementById('mSifre').value;
+  const hata  = document.getElementById('merkezHata');
+  const btn   = document.getElementById('merkezBt');
+  hata.textContent = '';
+  if (!sifre) { hata.textContent = 'Şifre gerekli'; return; }
+  btn.disabled = true; btn.textContent = 'Giriş yapılıyor…';
+  try {
+    const r = await fetch('/api/merkez/giris', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sifre })
+    });
+    const g = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(g.detail || 'Şifre hatalı');
+    localStorage.setItem('adfix_merkez_token', g.token);
+    location.href = '/merkez/';
+  } catch(e) {
+    hata.textContent = e.message;
+    btn.disabled = false; btn.textContent = 'Giriş Yap';
+  }
+}
+
+// Enter gezintisi
+document.getElementById('kSlug').addEventListener('keydown',  e => { if (e.key === 'Enter') document.getElementById('kAdi').focus(); });
+document.getElementById('kAdi').addEventListener('keydown',   e => { if (e.key === 'Enter') document.getElementById('kSifre').focus(); });
+document.getElementById('kSifre').addEventListener('keydown', e => { if (e.key === 'Enter') kafeGiris(); });
+document.getElementById('mSifre').addEventListener('keydown', e => { if (e.key === 'Enter') merkezGiris(); });
+
+// Scroll fade-in
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('vis'); obs.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
 </script>
 </body>
 </html>
