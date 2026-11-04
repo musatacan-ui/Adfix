@@ -88,7 +88,7 @@ certbot nginx config'i otomatik günceller ve yenileme cron'u kurar.
 
 ```bash
 ssh sagunmed@sagunmed.com -p 22667
-cd /home/sagunmed/SagunMedBeta/Adfix/backend
+cd /home/sagunmed/Adfix-yeni/backend
 
 # Güçlü anahtar üret
 python3 -c "import secrets;print('ADFIX_JWT_SECRET='+secrets.token_urlsafe(48))" > .env

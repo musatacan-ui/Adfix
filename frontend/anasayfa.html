@@ -498,55 +498,206 @@ a { text-decoration: none; color: inherit; }
   padding: 3px 10px; margin-bottom: 10px;
 }
 
-/* ── Nasıl Çalışır ── */
-.nasil {
+/* ── Adım adım: bir adisyonun yolculuğu ── */
+.yol {
   background: var(--dark2);
   border-top: 1px solid rgba(255,255,255,.06);
   border-bottom: 1px solid rgba(255,255,255,.06);
   padding: 96px 48px;
   color: #fff;
 }
-.nasil-ic { max-width: 1100px; margin: 0 auto; }
-.nasil-ust {
-  text-align: center; margin-bottom: 64px;
-}
-.nasil-ust h2 {
+.yol-ic { max-width: 1180px; margin: 0 auto; }
+.yol-ust { text-align: center; margin-bottom: 48px; }
+.yol-kicker { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: #4DB8AE; }
+.yol-ust h2 {
   font-family: 'Fraunces', Georgia, serif;
   font-weight: 800; font-size: clamp(26px,3vw,38px);
-  letter-spacing: -.04em; color: #fff; margin-bottom: 10px;
+  letter-spacing: -.04em; color: #fff; margin: 10px 0; text-wrap: balance;
 }
-.nasil-ust p { font-size: 15px; color: rgba(255,255,255,.5); }
-.nasil-adimlar {
-  display: grid; grid-template-columns: repeat(3,1fr);
-  gap: 2px;
-  position: relative;
+.yol-ust p { font-size: 15px; color: rgba(255,255,255,.55); max-width: 580px; margin: 0 auto; }
+.yol-govde { display: grid; grid-template-columns: 250px minmax(0,1fr); gap: 28px; align-items: start; }
+.yol-adimlar { list-style: none; display: flex; flex-direction: column; gap: 2px; position: relative; }
+.yol-adim button {
+  width: 100%; display: flex; align-items: center; gap: 12px;
+  padding: 9px 12px; border-radius: 10px; border: 1px solid transparent;
+  background: none; color: rgba(255,255,255,.5); font: inherit; font-size: 13.5px;
+  text-align: left; cursor: pointer; position: relative; overflow: hidden;
+  transition: color .2s, background .2s;
 }
-.nasil-adimlar::before {
-  content: '';
-  position: absolute; top: 28px; left: calc(16.6% + 24px); right: calc(16.6% + 24px);
-  height: 1px; background: rgba(255,255,255,.1);
+.yol-adim button:hover { color: #fff; }
+.yol-adim .no {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  border: 1px solid rgba(255,255,255,.15);
+  display: grid; place-items: center; font-size: 11px; font-weight: 700;
 }
-.nasil-adim {
-  padding: 32px 32px 32px;
-  background: var(--dark3);
-  border: 1px solid rgba(255,255,255,.07);
-  border-radius: var(--r);
-  position: relative;
-  transition: border-color .2s;
+.yol-adim.bitti .no { border-color: rgba(77,184,174,.5); color: #4DB8AE; }
+.yol-adim.aktif button { background: var(--dark3); border-color: rgba(77,184,174,.35); color: #fff; }
+.yol-adim.aktif .no { background: #4DB8AE; border-color: #4DB8AE; color: #071210; }
+.yol-adim.aktif button::after {
+  content: ''; position: absolute; left: 0; bottom: 0; height: 2px; width: 0;
+  background: #4DB8AE; animation: yolIlerle var(--sure, 7s) linear forwards;
 }
-.nasil-adim:hover { border-color: rgba(77,184,174,.3); }
-.nasil-no {
-  width: 44px; height: 44px; border-radius: 50%;
-  background: var(--dark2); border: 1px solid rgba(77,184,174,.4);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Fraunces', serif; font-weight: 800; font-size: 16px;
-  color: #4DB8AE; margin-bottom: 24px;
+.yol-durdu .yol-adim.aktif button::after { animation-play-state: paused; }
+@keyframes yolIlerle { to { width: 100%; } }
+
+.yol-sag { min-width: 0; display: flex; flex-direction: column; gap: 18px; }
+.yol-sahne {
+  position: relative; height: 400px; overflow: hidden;
+  background: radial-gradient(120% 90% at 50% 0%, #12302A 0%, #071210 72%);
+  border: 1px solid rgba(255,255,255,.07); border-radius: var(--r);
 }
-.nasil-adim h3 {
-  font-family: 'Fraunces', serif; font-weight: 700; font-size: 17px;
-  color: #fff; letter-spacing: -.02em; margin-bottom: 10px;
+.yol-olcek { position: absolute; top: 0; left: 0; width: 720px; height: 400px; transform-origin: 0 0; }
+.yol-alt { display: flex; gap: 20px; align-items: flex-start; justify-content: space-between; }
+.yol-yazi { min-width: 0; }
+.yol-sayac { font-size: 11px; font-weight: 700; letter-spacing: .12em; color: #4DB8AE; }
+.yol-yazi h3 { font-family: 'Fraunces', serif; font-weight: 700; font-size: 21px; letter-spacing: -.02em; margin: 4px 0 6px; }
+.yol-yazi p { font-size: 14px; color: rgba(255,255,255,.62); line-height: 1.6; max-width: 62ch; min-height: 4.8em; }
+.yol-kont { display: flex; gap: 8px; flex-shrink: 0; }
+.yol-kont button {
+  width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+  border: 1px solid rgba(255,255,255,.15); background: var(--dark3); color: #fff;
+  display: grid; place-items: center; transition: border-color .2s;
 }
-.nasil-adim p { font-size: 13px; color: rgba(255,255,255,.5); line-height: 1.65; }
+.yol-kont button:hover { border-color: #4DB8AE; }
+
+/* Sahnedeki cihazlar (720×400 tuvalde sabit ölçü, tamamı JS ile ölçeklenir) */
+.c-et { position: absolute; top: 372px; font-size: 10px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.4); text-align: center; }
+.y-tel, .y-tab { position: absolute; top: 22px; background: #050908; border: 1.5px solid #2B3D39; box-shadow: 0 20px 50px rgba(0,0,0,.5); }
+.y-tel { left: 20px; width: 168px; height: 340px; border-radius: 30px; padding: 7px; }
+.y-tel::before { content: ''; position: absolute; top: 13px; left: 50%; width: 44px; height: 11px; margin-left: -22px; border-radius: 8px; background: #050908; z-index: 3; }
+#yTel { position: relative; width: 100%; height: 100%; border-radius: 23px; overflow: hidden; background: #F6F4EF; color: #14231F; font-size: 10px; line-height: 1.35; }
+.y-ek { position: absolute; left: 224px; top: 66px; width: 188px; }
+.y-ek-cer { position: relative; background: #1A1A1A; border-radius: 12px; padding: 9px 9px 14px; box-shadow: 0 18px 40px rgba(0,0,0,.5); }
+#yEink { position: relative; height: 206px; overflow: hidden; background: #ECEAE3; color: #111; border-radius: 4px; padding: 12px 11px; font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; }
+.y-flash { position: absolute; inset: 9px 9px 14px; border-radius: 4px; pointer-events: none; opacity: 0; }
+.y-flash.on { animation: ekFlash .7s steps(1); }
+@keyframes ekFlash { 0% { opacity: 1; background: #111; } 33% { opacity: 1; background: #ECEAE3; } 66% { opacity: 1; background: #111; } 100% { opacity: 0; } }
+.y-ek-ayak { width: 70px; height: 16px; margin: 0 auto; background: linear-gradient(#2A2A2A,#151515); clip-path: polygon(18% 0,82% 0,100% 100%,0 100%); }
+.y-ek-not { margin-top: 8px; text-align: center; font-size: 9px; color: rgba(255,255,255,.45); font-family: ui-monospace, Menlo, Consolas, monospace; }
+.y-tab { left: 444px; width: 256px; height: 330px; border-radius: 20px; padding: 9px; }
+#yTab { position: relative; height: 100%; overflow: hidden; border-radius: 12px; background: #0C1F1B; color: #E8F5F2; font-size: 10px; line-height: 1.35; }
+.y-akis { position: absolute; z-index: 9; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; transition: left .75s cubic-bezier(.6,0,.2,1), top .75s cubic-bezier(.6,0,.2,1); }
+
+.gir { animation: yGir .45s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes yGir { from { opacity: 0; transform: translateY(6px) scale(.98); } }
+.bas { animation: yBas .35s ease; }
+@keyframes yBas { 50% { transform: scale(.9); } }
+svg.qd rect { transform-box: fill-box; transform-origin: center; animation: qGir .25s ease both; }
+@keyframes qGir { from { opacity: 0; transform: scale(.2); } }
+
+/* Telefon ekranları */
+.t-kilit { height: 100%; display: flex; flex-direction: column; align-items: center; gap: 2px; padding-top: 62px; background: linear-gradient(160deg,#1F4E48,#0C1F1B); color: #fff; }
+.t-saat { font-family: 'Fraunces', serif; font-size: 40px; font-weight: 700; letter-spacing: -.03em; }
+.t-kilit small { opacity: .65; }
+.t-kamera { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; background: #0B0F0E; color: #fff; }
+.t-vizor { position: relative; width: 104px; height: 104px; display: grid; place-items: center; border-radius: 10px; background: #ECEAE3; outline: 2px solid #4DB8AE; outline-offset: 7px; }
+.t-tara { position: absolute; left: 6%; right: 6%; height: 2px; background: #4DB8AE; box-shadow: 0 0 10px #4DB8AE; animation: tara 1.3s ease-in-out infinite alternate; }
+@keyframes tara { from { top: 8%; } to { top: 90%; } }
+.t-bas { display: flex; justify-content: space-between; align-items: flex-end; padding: 24px 10px 8px; background: #1F4E48; color: #fff; }
+.t-bas b { font-family: 'Fraunces', serif; font-size: 12px; }
+.t-bas span { font-size: 9px; opacity: .8; }
+.t-liste { display: flex; flex-direction: column; gap: 6px; padding: 8px; }
+.t-urun { display: flex; align-items: center; justify-content: space-between; padding: 7px 8px; border-radius: 8px; background: #fff; border: 1px solid #E4E0D6; }
+.t-urun b { display: block; font-size: 10.5px; }
+.t-urun small { color: #6B7D78; }
+.t-ekle { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; background: #1F4E48; color: #fff; font-size: 11px; font-weight: 700; }
+.t-urun.sec .t-ekle { background: #B8711C; }
+.t-sepet { position: absolute; left: 8px; right: 8px; bottom: 10px; display: flex; align-items: center; gap: 6px; padding: 8px; border-radius: 10px; background: #0C1F1B; color: #fff; }
+.t-sepet span { flex: 1; font-size: 9px; opacity: .75; }
+.t-sepet b { font-size: 10.5px; }
+.t-sepet i { font-style: normal; font-size: 9px; font-weight: 700; padding: 5px 7px; border-radius: 6px; background: #4DB8AE; color: #06201C; }
+.t-durum { padding: 16px 10px 0; text-align: center; }
+.t-ok { width: 34px; height: 34px; margin: 0 auto 8px; border-radius: 50%; display: grid; place-items: center; background: #E3F3EF; color: #1F7A6A; font-size: 16px; font-weight: 700; }
+.t-durum > b { display: block; font-size: 12px; }
+.t-durum small { color: #6B7D78; }
+.t-asama { list-style: none; display: flex; margin: 14px 0 0; }
+.t-asama li { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 8.5px; color: #9AA9A5; }
+.t-asama li::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #DCD8CE; transition: background .3s, box-shadow .3s; }
+.t-asama li.tamam { color: #1F4E48; }
+.t-asama li.tamam::before { background: #1F7A6A; }
+.t-asama li.aktif { color: #B8711C; font-weight: 700; }
+.t-asama li.aktif::before { background: #D4921A; box-shadow: 0 0 0 4px rgba(212,146,26,.22); }
+.t-not { margin-top: 12px; padding: 8px; border-radius: 8px; background: #E3F3EF; color: #1F4E48; font-size: 9.5px; font-weight: 600; }
+.t-btnlar { position: absolute; left: 8px; right: 8px; bottom: 10px; display: flex; gap: 6px; }
+.t-btnlar span { flex: 1; text-align: center; padding: 7px 4px; border-radius: 8px; border: 1px solid #D6D1C5; background: #fff; font-size: 9px; font-weight: 600; }
+.t-btnlar span.ana { background: #1F4E48; border-color: #1F4E48; color: #fff; }
+.t-son { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 0 14px; text-align: center; }
+.t-son b { font-size: 12px; }
+.t-son small { color: #6B7D78; }
+
+/* E-ink ekran içeriği */
+.e-kapali { height: 100%; display: grid; place-items: center; font-size: 9px; letter-spacing: .1em; color: #B5B2AA; }
+.e-ust { display: flex; justify-content: space-between; align-items: flex-start; }
+.e-salon { font-size: 7.5px; letter-spacing: .12em; color: #555; }
+.e-masa { font-size: 30px; font-weight: 800; letter-spacing: -.04em; line-height: 1; }
+.e-etk { margin-top: 2px; padding: 2px 5px; border: 1.2px solid #111; border-radius: 2px; font-size: 7.5px; font-weight: 700; letter-spacing: .1em; }
+.e-etk.ters { background: #111; color: #ECEAE3; }
+.e-cizgi { height: 1px; margin: 8px 0; background: #BBB; }
+.e-et { font-size: 7px; letter-spacing: .12em; color: #666; }
+.e-tutar { font-size: 21px; font-weight: 800; letter-spacing: -.03em; }
+.e-kucuk { font-size: 7px; color: #777; line-height: 1.5; }
+.e-qr-sat { display: flex; align-items: flex-end; gap: 8px; margin-top: 8px; }
+.e-qr { line-height: 0; padding: 3px; background: #fff; border: 1px solid #CCC; }
+.e-orta { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-top: 4px; }
+.e-tok { font-size: 6.5px; color: #999; }
+
+/* Personel tableti (Adfix yönetim ekranı) */
+.p-ust { height: 30px; display: flex; align-items: center; gap: 6px; padding: 0 10px; background: #0A1915; border-bottom: 1px solid rgba(255,255,255,.07); }
+.p-logo { width: 16px; height: 16px; border-radius: 5px; display: grid; place-items: center; background: #2A7A6E; color: #fff; font-size: 9px; font-weight: 800; }
+.p-ust b { font-size: 10.5px; }
+.p-ust span { margin-left: auto; font-size: 8.5px; color: #7AADA4; }
+.p-govde { padding: 9px; }
+.p-plan { display: grid; grid-template-columns: repeat(3,1fr); gap: 6px; }
+.p-masa { height: 60px; display: flex; flex-direction: column; justify-content: space-between; padding: 6px 7px; border-radius: 8px; background: #152D28; border: 1px solid rgba(255,255,255,.06); transition: background .4s, border-color .4s; }
+.p-masa b { font-size: 11px; }
+.p-masa small { font-size: 8px; color: #7AADA4; }
+.p-masa.acik { background: rgba(42,122,110,.3); border-color: #2A7A6E; }
+.p-masa.acik small { color: #9FE3D6; }
+.p-masa.odak { box-shadow: 0 0 0 2px #4DB8AE; }
+.p-qrr { margin-left: 3px; padding: 1px 4px; border-radius: 3px; background: #6D4BD8; color: #fff; font-size: 7px; font-weight: 700; vertical-align: 1px; }
+.p-satir { display: flex; align-items: center; gap: 7px; padding: 7px 6px; border-radius: 7px; border-bottom: 1px solid rgba(255,255,255,.05); transition: background .3s, box-shadow .3s; }
+.p-satir .ad { flex: 1; min-width: 0; }
+.p-satir .ad b { font-size: 10.5px; font-weight: 600; }
+.p-satir .tut { font-weight: 600; font-variant-numeric: tabular-nums; }
+.p-satir.vurgu { background: rgba(77,184,174,.14); box-shadow: inset 2px 0 0 #4DB8AE; }
+.p-mus { display: inline-block; margin-left: 4px; padding: 1px 5px; border-radius: 3px; background: rgba(139,92,246,.25); color: #C4B5FD; font-size: 7px; font-weight: 700; vertical-align: 1px; }
+.p-nok { width: 7px; height: 7px; border-radius: 50%; background: #D4921A; flex-shrink: 0; }
+.p-nok.hazir { background: #3ECF8E; }
+.p-top { position: absolute; left: 9px; right: 9px; bottom: 9px; display: flex; justify-content: space-between; align-items: baseline; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.08); }
+.p-top span { color: #7AADA4; }
+.p-top b { font-family: 'Fraunces', serif; font-size: 17px; font-variant-numeric: tabular-nums; }
+.p-kds { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+.p-kol h4 { margin-bottom: 6px; font-size: 8px; font-weight: 700; letter-spacing: .12em; color: #7AADA4; }
+.p-kart { margin-bottom: 6px; padding: 7px; border-radius: 8px; background: #152D28; border-left: 3px solid #D4921A; transition: border-color .3s, opacity .3s; }
+.p-kart.hazir { border-left-color: #3ECF8E; opacity: .8; }
+.p-kart small { display: block; font-size: 8px; color: #7AADA4; }
+.p-kart b { display: block; margin: 3px 0 4px; font-size: 10.5px; }
+.p-rz { display: inline-block; padding: 2px 5px; border-radius: 3px; background: rgba(212,146,26,.2); color: #F0B44C; font-size: 7.5px; font-weight: 700; }
+.p-rz.hazir { background: rgba(62,207,142,.18); color: #3ECF8E; }
+.p-bos { padding-top: 92px; text-align: center; color: #7AADA4; }
+.p-ode { display: flex; flex-direction: column; gap: 10px; }
+.p-ode .net { display: flex; justify-content: space-between; color: #7AADA4; }
+.p-ode .net b { color: #E8F5F2; }
+.p-turler { display: flex; gap: 5px; }
+.p-turler span { flex: 1; text-align: center; padding: 6px 2px; border-radius: 6px; border: 1px solid rgba(255,255,255,.12); font-size: 9px; }
+.p-turler span.sec { background: #2A7A6E; border-color: #4DB8AE; font-weight: 700; }
+.p-kalan { padding: 12px; border-radius: 8px; background: #152D28; text-align: center; }
+.p-kalan small { display: block; font-size: 8.5px; color: #7AADA4; }
+.p-kalan b { font-family: 'Fraunces', serif; font-size: 24px; font-variant-numeric: tabular-nums; }
+.p-kalan.sifir b { color: #3ECF8E; }
+.p-dugme { padding: 8px; border-radius: 7px; background: #4DB8AE; color: #06201C; font-weight: 700; text-align: center; }
+.p-dugme.ok { background: #3ECF8E; }
+.p-qrv { display: flex; flex-direction: column; align-items: center; gap: 9px; padding-top: 6px; }
+.p-qrv > small { color: #7AADA4; }
+.p-qrkutu { width: 120px; height: 120px; display: grid; place-items: center; padding: 7px; border-radius: 8px; background: #fff; }
+.p-qrkutu em { font-style: normal; font-size: 9px; color: #888; }
+.p-url { padding: 4px 7px; border-radius: 5px; background: rgba(77,184,174,.1); color: #9FE3D6; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 8.5px; }
+.p-ok { color: #3ECF8E; font-weight: 700; }
+.p-bil { position: absolute; left: 8px; right: 8px; bottom: 8px; z-index: 4; display: flex; align-items: center; gap: 6px; padding: 8px 9px; border-radius: 8px; background: #6D4BD8; color: #fff; font-size: 9.5px; font-weight: 600; box-shadow: 0 8px 20px rgba(0,0,0,.35); }
+.p-bil.amber { background: #B8711C; }
+.p-bil.yesil { background: #1F7A6A; }
+.p-bil.yeni { animation: bilGir .4s cubic-bezier(.2,.8,.2,1); }
+@keyframes bilGir { from { opacity: 0; transform: translateY(14px); } }
 
 /* ── E-ink showcase full section ── */
 .eink-sahne-bolum {
@@ -741,9 +892,10 @@ footer {
   .b-mutfak { grid-column: span 1; }
   .b-rapor  { grid-column: span 1; }
   .b-eink   { grid-column: span 2; }
-  .nasil { padding: 72px 24px; }
-  .nasil-adimlar { grid-template-columns: 1fr; gap: 12px; }
-  .nasil-adimlar::before { display: none; }
+  .yol { padding: 72px 24px; }
+  .yol-govde { grid-template-columns: minmax(0,1fr); gap: 18px; }
+  .yol-adimlar { flex-direction: row; gap: 6px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: thin; }
+  .yol-adim button { white-space: nowrap; }
   .eink-sahne-bolum { padding: 72px 24px; }
   .eink-sahne-ic { grid-template-columns: 1fr; gap: 48px; }
   .stats { padding: 48px 24px; }
@@ -759,6 +911,11 @@ footer {
   .es-paneller { gap: 10px; }
   .stats-ic { grid-template-columns: repeat(2,1fr); }
   .giris-kart { padding: 28px 20px; }
+  .yol { padding: 56px 16px; }
+  .yol-adim .yad { display: none; }
+  .yol-adim button { padding: 6px; }
+  .yol-alt { flex-direction: column; gap: 12px; }
+  .yol-yazi p { min-height: 6.4em; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
@@ -1012,28 +1169,43 @@ footer {
   </div>
 </section>
 
-<!-- ── Nasıl Çalışır ── -->
-<section class="nasil" id="nasil-calisir">
-  <div class="nasil-ic">
-    <div class="nasil-ust fade-in">
-      <h2>Üç adımda hazır.</h2>
-      <p>Kendi sunucunuza kurun, QR kodları asın, yönetmeye başlayın.</p>
+<!-- ── Nasıl Çalışır: bir adisyonun yolculuğu (animasyonlu) ── -->
+<section class="yol" id="nasil-calisir">
+  <div class="yol-ic">
+    <div class="yol-ust fade-in">
+      <span class="yol-kicker">Adım adım</span>
+      <h2>Bir adisyonun yolculuğu.</h2>
+      <p>Karekodun kurulmasından hesabın kapanmasına kadar her adımda müşterinin telefonunda, masadaki ekranda ve personelin tabletinde ne olduğunu izleyin.</p>
     </div>
-    <div class="nasil-adimlar">
-      <div class="nasil-adim fade-in">
-        <div class="nasil-no">1</div>
-        <h3>Sistemi Kurun</h3>
-        <p>Python + SQLite. Tek komutla çalışır. Bulut aboneliği yok, sunucunuz tam kontrolünüzde.</p>
-      </div>
-      <div class="nasil-adim fade-in" style="transition-delay:.1s">
-        <div class="nasil-no">2</div>
-        <h3>Masaları Tanımlayın</h3>
-        <p>Salon ve masa gruplarını oluşturun. QR kodları otomatik üretilir, masalara asın.</p>
-      </div>
-      <div class="nasil-adim fade-in" style="transition-delay:.2s">
-        <div class="nasil-no">3</div>
-        <h3>Yönetmeye Başlayın</h3>
-        <p>Tabletten veya PC'den adisyon açın, mutfak ekranını izleyin, günsonunda raporu görün.</p>
+    <div class="yol-govde fade-in">
+      <ol class="yol-adimlar" id="yolAdimlar"></ol>
+      <div class="yol-sag">
+        <div class="yol-sahne" id="yolSahne" aria-hidden="true">
+          <div class="yol-olcek" id="yolOlcek">
+            <div class="y-tel"><div id="yTel"></div></div>
+            <div class="y-ek">
+              <div class="y-ek-cer"><div id="yEink"></div><div class="y-flash" id="yFlash"></div></div>
+              <div class="y-ek-ayak"></div>
+              <div class="y-ek-not">↻ /api/acik/masa/3/ekran</div>
+            </div>
+            <div class="y-tab"><div id="yTab"></div></div>
+            <div class="c-et" style="left:20px;width:168px">Müşteri telefonu</div>
+            <div class="c-et" style="left:224px;width:188px">Masa ekranı (e-ink)</div>
+            <div class="c-et" style="left:444px;width:256px">Personel tableti</div>
+          </div>
+        </div>
+        <div class="yol-alt">
+          <div class="yol-yazi">
+            <div class="yol-sayac" id="yolSayac"></div>
+            <h3 id="yolBaslik"></h3>
+            <p id="yolMetin"></p>
+          </div>
+          <div class="yol-kont">
+            <button type="button" id="yolGeri" aria-label="Önceki adım"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+            <button type="button" id="yolOynat" aria-label="Duraklat"></button>
+            <button type="button" id="yolIleri" aria-label="Sonraki adım"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1261,6 +1433,364 @@ document.getElementById('kSlug').addEventListener('keydown',  e => { if (e.key =
 document.getElementById('kAdi').addEventListener('keydown',   e => { if (e.key === 'Enter') document.getElementById('kSifre').focus(); });
 document.getElementById('kSifre').addEventListener('keydown', e => { if (e.key === 'Enter') kafeGiris(); });
 document.getElementById('mSifre').addEventListener('keydown', e => { if (e.key === 'Enter') merkezGiris(); });
+
+// ── Adım adım animasyon ──
+(function () {
+  const bolum = document.getElementById('nasil-calisir');
+  const sahne = document.getElementById('yolSahne');
+  if (!bolum || !sahne) return;
+  const olcek = document.getElementById('yolOlcek');
+  const telEl = document.getElementById('yTel');
+  const ekEl = document.getElementById('yEink');
+  const tabEl = document.getElementById('yTab');
+  const flash = document.getElementById('yFlash');
+  const listeEl = document.getElementById('yolAdimlar');
+  const oynatBt = document.getElementById('yolOynat');
+  const W = 720, H = 400, SURE = 7000;
+
+  function olcekle() {
+    const w = sahne.clientWidth, s = Math.min(1, w / W);
+    olcek.style.transform = 'scale(' + s + ')';
+    olcek.style.left = ((w - W * s) / 2) + 'px';
+    sahne.style.height = (H * s) + 'px';
+  }
+  if (window.ResizeObserver) new ResizeObserver(olcekle).observe(sahne);
+  window.addEventListener('resize', olcekle);
+  olcekle();
+
+  const tl = k => '₺' + (k / 100).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const URUN = {
+    latte:  { ad: 'Latte',        f: 8500,  bar: true },
+    tost:   { ad: 'Kaşarlı Tost', f: 10000 },
+    cheese: { ad: 'Cheesecake',   f: 11000 },
+  };
+
+  // Görsel amaçlı karekod deseni (gerçek karekodu sunucu üretir); belirteç değişince desen de değişir.
+  function qr(tohum, px, ciz) {
+    let h = 2166136261;
+    for (const c of tohum) h = Math.imul(h ^ c.charCodeAt(0), 16777619) >>> 0;
+    const r = () => { h ^= h << 13; h >>>= 0; h ^= h >> 17; h ^= h << 5; h >>>= 0; return h / 4294967296; };
+    const bul = (x, y) => {
+      for (const [cx, cy] of [[0, 0], [14, 0], [0, 14]]) {
+        const dx = x - cx, dy = y - cy;
+        if (dx < -1 || dy < -1 || dx > 7 || dy > 7) continue;
+        if (dx < 0 || dy < 0 || dx > 6 || dy > 6) return false;
+        if (dx === 0 || dx === 6 || dy === 0 || dy === 6) return true;
+        return dx >= 2 && dx <= 4 && dy >= 2 && dy <= 4;
+      }
+      return null;
+    };
+    let s = '';
+    for (let y = 0; y < 21; y++) for (let x = 0; x < 21; x++) {
+      const f = bul(x, y), acik = f === null ? r() < 0.48 : f;
+      if (acik) s += '<rect x="' + x + '" y="' + y + '" width="1.02" height="1.02"' +
+        (ciz ? ' style="animation-delay:' + (x + y) * 32 + 'ms"' : '') + '/>';
+    }
+    return '<svg' + (ciz ? ' class="qd"' : '') + ' width="' + px + '" height="' + px +
+      '" viewBox="0 0 21 21" fill="#111" shape-rendering="crispEdges">' + s + '</svg>';
+  }
+
+  // Durum: her yamada GECICI alanlar sıfırlanır, böylece animasyonlar yalnızca bir kez oynar
+  const GECICI = { basili: null, yeniSatir: null, hazirYeni: null, qrCiz: false, bilYeni: false };
+  let S = {}, sonTel = null, sonTab = null;
+  function taban(o) {
+    S = Object.assign({
+      tel: 'kilit', sepet: {}, telAsama: 0, telNot: '',
+      eink: 'bos', tutar: 0, token: 'k7Qm2x',
+      tab: 'plan', qrHazir: false, m3: 'bos', satirlar: [], vurgu: -1, mutfakTemiz: false,
+      kalan: 29500, odeBitti: false, bil: null, bilTip: '',
+    }, GECICI, o);
+    if (!o.ekToken) S.ekToken = S.token;
+    sonTel = sonTab = null;
+    ciz();
+  }
+  function p(o) { Object.assign(S, GECICI, o); ciz(); }
+  const sat = (u, durum) => ({ u, durum: durum || 'bekliyor' });
+  const toplam = () => S.satirlar.reduce((t, x) => t + URUN[x.u].f, 0);
+
+  function telHTML() {
+    const bas = '<div class="t-bas"><b>Kafe Demo</b><span>Masa 3</span></div>';
+    if (S.tel === 'kilit') return '<div class="t-kilit"><div class="t-saat">20:14</div><small>Salı, 3 Kasım</small></div>';
+    if (S.tel === 'kamera') return '<div class="t-kamera"><div class="t-vizor">' + qr(S.ekToken, 84) +
+      '<div class="t-tara"></div></div><small>Masadaki karekodu okutun</small></div>';
+    if (S.tel === 'menu') {
+      let adet = 0, tut = 0;
+      const satirlar = ['latte', 'tost', 'cheese'].map(k => {
+        const a = S.sepet[k] || 0; adet += a; tut += a * URUN[k].f;
+        return '<div class="t-urun' + (a ? ' sec' : '') + (S.basili === k ? ' bas' : '') + '"><div><b>' +
+          URUN[k].ad + '</b><small>' + tl(URUN[k].f) + '</small></div><span class="t-ekle">' + (a || '+') + '</span></div>';
+      }).join('');
+      return bas + '<div class="t-liste">' + satirlar + '</div>' + (adet ?
+        '<div class="t-sepet' + (S.basili === 'gonder' ? ' bas' : '') + '"><span>Sepet · ' + adet + ' ürün</span><b>' +
+        tl(tut) + '</b><i>Gönder</i></div>' : '');
+    }
+    if (S.tel === 'durum') {
+      const a = S.telAsama;
+      const li = ['tamam', a >= 2 ? 'tamam' : a === 1 ? 'aktif' : '', a === 2 ? 'tamam' : ''];
+      return bas + '<div class="t-durum"><div class="t-ok">✓</div><b>' + (a === 2 ? 'Siparişiniz hazır' : 'Sipariş alındı') +
+        '</b><small>Adisyon #004</small><ol class="t-asama"><li class="' + li[0] + '">Alındı</li><li class="' + li[1] +
+        '">Hazırlanıyor</li><li class="' + li[2] + '">Hazır</li></ol>' +
+        (S.telNot ? '<div class="t-not">' + S.telNot + '</div>' : '') +
+        '</div><div class="t-btnlar"><span>Garson çağır</span><span class="ana' + (S.basili === 'hesap' ? ' bas' : '') +
+        '">Hesap iste</span></div>';
+    }
+    return '<div class="t-son"><div class="t-ok">✓</div><b>Hesabınız kapandı</b><small>Bizi tercih ettiğiniz için teşekkürler!</small></div>';
+  }
+
+  function einkHTML() {
+    if (S.eink === 'kapali') return '<div class="e-kapali">— ekran kapalı —</div>';
+    const acik = S.eink === 'acik';
+    const ust = '<div class="e-ust"><div><div class="e-salon">İÇ SALON</div><div class="e-masa">M3</div></div><div class="e-etk' +
+      (acik ? ' ters">AÇIK' : '">BOŞ') + '</div></div><div class="e-cizgi"></div>';
+    if (!acik) return ust + '<div class="e-orta"><div class="e-qr">' + qr(S.ekToken, 78) +
+      '</div><div class="e-et">MENÜ İÇİN OKUTUN</div><div class="e-tok">t=' + S.ekToken + '</div></div>';
+    return ust + '<div class="e-et">TOPLAM</div><div class="e-tutar">' + tl(S.tutar) +
+      '</div><div class="e-kucuk">Adisyon #004</div><div class="e-qr-sat"><div class="e-qr">' + qr(S.ekToken, 54) +
+      '</div><div class="e-kucuk">Sipariş için<br>okutun<br><span class="e-tok">t=' + S.ekToken + '</span></div></div>';
+  }
+
+  const TAB_BASLIK = {
+    qr: ['QR Menü', 'Yönetici'], plan: ['Masalar', 'Garson'], adisyon: ['Masa 3 · #004', 'Garson'],
+    mutfak: ['Mutfak & Bar', 'Mutfak'], tahsilat: ['Tahsilat · #004', 'Kasiyer'],
+  };
+  function tabGovde() {
+    if (S.tab === 'qr') return '<div class="p-qrv"><small>Masa 3 karekodu</small><div class="p-qrkutu">' +
+      (S.qrCiz ? qr(S.token, 104, true) : S.qrHazir ? qr(S.token, 104) : '<em>üretiliyor…</em>') +
+      '</div><div class="p-url">adfixapp.com.tr/menu?masa=3</div>' +
+      (S.qrHazir ? '<div class="p-ok gir">✓ Karekod hazır</div>' : '') + '</div>';
+    if (S.tab === 'plan') {
+      const M = [['M1', 24000], ['M2'], ['M3'], ['M4'], ['M5', 41000], ['M6'], ['M7', 9500], ['M8'], ['M9']];
+      return '<div class="p-plan">' + M.map(([ad, t]) => {
+        if (ad === 'M3') t = S.m3 === 'acik' ? toplam() : 0;
+        return '<div class="p-masa' + (t ? ' acik' : '') + (ad === 'M3' ? ' odak' : '') + '"><b>' + ad +
+          (ad === 'M3' && t ? '<span class="p-qrr">QR</span>' : '') + '</b><small>' + (t ? tl(t) : 'Boş') + '</small></div>';
+      }).join('') + '</div>';
+    }
+    if (S.tab === 'adisyon') return S.satirlar.map((x, i) =>
+      '<div class="p-satir' + (S.vurgu === i ? ' vurgu' : '') + (S.yeniSatir === x.u ? ' gir' : '') +
+      '"><span class="p-nok' + (x.durum === 'hazir' ? ' hazir' : '') + '"></span><span class="ad"><b>' + URUN[x.u].ad +
+      '</b><span class="p-mus">Müşteri</span></span><span class="tut">' + tl(URUN[x.u].f) + '</span></div>').join('') +
+      '<div class="p-top"><span>Toplam</span><b>' + tl(toplam()) + '</b></div>';
+    if (S.tab === 'mutfak') {
+      if (S.mutfakTemiz) return '<div class="p-bos gir">Bekleyen sipariş yok</div>';
+      const kart = x => {
+        const hz = x.durum === 'hazir';
+        return '<div class="p-kart' + (hz ? ' hazir' : '') + (S.hazirYeni === x.u ? ' bas' : '') +
+          '"><small>Masa 3 · #004 <span class="p-mus">Müşteri</span></small><b>' + URUN[x.u].ad +
+          '</b><span class="p-rz' + (hz ? ' hazir">Hazır' : '">Bekliyor') + '</span></div>';
+      };
+      return '<div class="p-kds"><div class="p-kol"><h4>MUTFAK</h4>' + S.satirlar.filter(x => !URUN[x.u].bar).map(kart).join('') +
+        '</div><div class="p-kol"><h4>BAR</h4>' + S.satirlar.filter(x => URUN[x.u].bar).map(kart).join('') + '</div></div>';
+    }
+    return '<div class="p-ode"><div class="net"><span>Net toplam</span><b>' + tl(29500) +
+      '</b></div><div class="p-turler"><span>Nakit</span><span class="sec">Kart</span><span>Yemek çeki</span></div>' +
+      '<div class="p-kalan' + (S.kalan === 0 ? ' sifir' : '') + '"><small>Kalan</small><b>' + tl(S.kalan) + '</b></div>' +
+      (S.odeBitti ? '<div class="p-dugme ok gir">✓ Ödeme alındı · Adisyon kapanabilir</div>'
+                  : '<div class="p-dugme' + (S.basili === 'tahsil' ? ' bas' : '') + '">Kartla ' + tl(29500) + ' tahsil et</div>') +
+      '</div>';
+  }
+  function tabHTML() {
+    const [b, rol] = TAB_BASLIK[S.tab];
+    return '<div class="p-ust"><span class="p-logo">A</span><b>' + b + '</b><span>' + rol + '</span></div>' +
+      '<div class="p-govde' + (S.tab !== sonTab ? ' gir' : '') + '">' + tabGovde() + '</div>' +
+      (S.bil ? '<div class="p-bil ' + S.bilTip + (S.bilYeni ? ' yeni' : '') + '">' + S.bil + '</div>' : '');
+  }
+
+  function ciz() {
+    const t = telHTML();
+    telEl.innerHTML = S.tel !== sonTel ? '<div class="gir" style="height:100%">' + t + '</div>' : t;
+    ekEl.innerHTML = einkHTML();
+    tabEl.innerHTML = tabHTML();
+    sonTel = S.tel; sonTab = S.tab;
+  }
+
+  // Zamanlama
+  let zaman = [], adimT = null;
+  const sonra = (ms, f) => zaman.push(setTimeout(f, ms));
+  function temizle() {
+    zaman.forEach(clearTimeout); zaman = [];
+    olcek.querySelectorAll('.y-akis').forEach(d => d.remove());
+  }
+  function einkYenile(o) {
+    flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on');
+    sonra(240, () => p(o));
+  }
+  const KONUM = { tel: [104, 190], eink: [318, 170], tab: [572, 185] };
+  function ucur(a, b, renk) {
+    const d = document.createElement('div');
+    d.className = 'y-akis';
+    d.style.background = renk;
+    d.style.boxShadow = '0 0 0 4px ' + renk + '33, 0 0 16px ' + renk;
+    d.style.left = KONUM[a][0] + 'px'; d.style.top = KONUM[a][1] + 'px';
+    olcek.appendChild(d);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      d.style.left = KONUM[b][0] + 'px'; d.style.top = KONUM[b][1] + 'px';
+    }));
+    sonra(820, () => d.remove());
+  }
+  function bildir(metin, tip, sure) {
+    p({ bil: metin, bilTip: tip || '', bilYeni: true });
+    sonra(sure || 2300, () => p({ bil: null }));
+  }
+
+  const MOR = '#8B5CF6', TEAL = '#4DB8AE', AMBER = '#D4921A', YESIL = '#3ECF8E';
+  const ILK2 = () => [sat('latte'), sat('tost')];
+  const ADIM = [
+    { kisa: 'QR karekod', baslik: 'Masaya karekod üretilir',
+      metin: 'Yönetici, Yönetim → QR Menü ekranından masaya özel karekodu üretir. Karekod sunucuda yerel olarak çizilir; dış bir servise gidilmez.',
+      kur() {
+        taban({ tab: 'qr', eink: 'kapali' });
+        sonra(400, () => p({ qrCiz: true }));
+        sonra(2100, () => p({ qrHazir: true }));
+      } },
+    { kisa: 'E-ink ekran', baslik: 'Masa ekranı devreye girer',
+      metin: 'Masadaki e-ink ekran sunucuya düzenli aralıklarla sorar (ör. 30 saniyede bir). Masa boşken menü karekodunu gösterir; görüntü değişmedikçe neredeyse hiç pil harcamaz.',
+      kur() {
+        taban({ eink: 'kapali' });
+        sonra(500, () => ucur('eink', 'tab', TEAL));
+        sonra(1250, () => ucur('tab', 'eink', TEAL));
+        sonra(1900, () => einkYenile({ eink: 'bos' }));
+        sonra(3600, () => ucur('eink', 'tab', TEAL));
+        sonra(4350, () => ucur('tab', 'eink', TEAL));
+      } },
+    { kisa: 'Karekodu okutma', baslik: 'Müşteri karekodu okutur',
+      metin: 'Müşteri masadaki karekodu telefon kamerasıyla okutur. Uygulama indirmeden, o masaya bağlı menü açılır.',
+      kur() {
+        taban({});
+        sonra(500, () => p({ tel: 'kamera' }));
+        sonra(2700, () => p({ tel: 'menu' }));
+      } },
+    { kisa: 'Sipariş verme', baslik: 'Müşteri sipariş verir',
+      metin: 'Ürünleri sepete ekleyip gönderir. Masada açık adisyon yoksa sistem kendisi açar ve karekod belirtecini yeniler; masa ekranı tutarı göstermeye başlar.',
+      kur() {
+        taban({ tel: 'menu' });
+        sonra(700, () => p({ sepet: { latte: 1 }, basili: 'latte' }));
+        sonra(1500, () => p({ sepet: { latte: 1, tost: 1 }, basili: 'tost' }));
+        sonra(2300, () => p({ basili: 'gonder' }));
+        sonra(2500, () => ucur('tel', 'tab', MOR));
+        sonra(3250, () => { p({ tel: 'durum', telAsama: 0, m3: 'acik', satirlar: ILK2(), token: 'Pd4vT9' }); bildir('Masa 3 · yeni karekod siparişi'); });
+        sonra(3700, () => ucur('tab', 'eink', TEAL));
+        sonra(4450, () => einkYenile({ eink: 'acik', tutar: 18500, ekToken: 'Pd4vT9' }));
+      } },
+    { kisa: 'İnceleme', baslik: 'Sipariş incelenir',
+      metin: 'Garson, müşterinin eklediği satırları tablette mor "Müşteri" rozetiyle görür. Hatalı bir satır sebep yazılarak iptal edilebilir; silinmez, kayıtta kalır.',
+      kur() {
+        taban({ tel: 'durum', eink: 'acik', tutar: 18500, token: 'Pd4vT9', tab: 'adisyon', m3: 'acik', satirlar: ILK2() });
+        sonra(700, () => p({ vurgu: 0 }));
+        sonra(1700, () => p({ vurgu: 1 }));
+        sonra(2700, () => { p({ vurgu: -1 }); bildir('Satırlar mutfak ve bar ekranına düştü', 'yesil'); });
+      } },
+    { kisa: 'Hazırlık', baslik: 'Mutfak ve bar hazırlar',
+      metin: 'Yiyecekler mutfak sütununa, içecekler bar sütununa düşer. Hazırlanan ürün "Hazır" işaretlenir; müşteri durumu telefonundan takip eder.',
+      kur() {
+        taban({ tel: 'durum', eink: 'acik', tutar: 18500, token: 'Pd4vT9', tab: 'mutfak', m3: 'acik', satirlar: ILK2() });
+        sonra(1000, () => p({ telAsama: 1 }));
+        sonra(2300, () => p({ satirlar: [sat('latte', 'hazir'), sat('tost')], hazirYeni: 'latte' }));
+        sonra(3700, () => p({ satirlar: [sat('latte', 'hazir'), sat('tost', 'hazir')], hazirYeni: 'tost', telAsama: 2 }));
+      } },
+    { kisa: 'Teslim', baslik: 'Sipariş masaya gelir',
+      metin: 'Hazır olan sipariş mutfak ekranından düşer, garson masaya götürür. Müşteri telefonunda siparişin hazır olduğunu görür.',
+      kur() {
+        const hz = [sat('latte', 'hazir'), sat('tost', 'hazir')];
+        taban({ tel: 'durum', telAsama: 2, eink: 'acik', tutar: 18500, token: 'Pd4vT9', tab: 'mutfak', m3: 'acik', satirlar: hz });
+        sonra(900, () => p({ mutfakTemiz: true }));
+        sonra(1400, () => ucur('tab', 'tel', YESIL));
+        sonra(2200, () => p({ telNot: 'Siparişiniz masanızda. Afiyet olsun!' }));
+      } },
+    { kisa: 'Ek sipariş', baslik: 'Müşteri ek sipariş verir',
+      metin: 'Müşteri aynı karekoddan yeni ürün ekler. Masada zaten açık bir adisyon olduğu için yeni adisyon açılmaz; satır mevcut adisyona eklenir, tutar ve masa ekranı güncellenir.',
+      kur() {
+        const hz = [sat('latte', 'hazir'), sat('tost', 'hazir')];
+        taban({ tel: 'menu', eink: 'acik', tutar: 18500, token: 'Pd4vT9', tab: 'adisyon', m3: 'acik', satirlar: hz });
+        sonra(800, () => p({ sepet: { cheese: 1 }, basili: 'cheese' }));
+        sonra(1700, () => p({ basili: 'gonder' }));
+        sonra(1900, () => ucur('tel', 'tab', MOR));
+        sonra(2650, () => p({ tel: 'durum', telAsama: 0, satirlar: hz.concat(sat('cheese')), yeniSatir: 'cheese' }));
+        sonra(3200, () => ucur('tab', 'eink', TEAL));
+        sonra(3950, () => einkYenile({ tutar: 29500 }));
+      } },
+    { kisa: 'Ödeme', baslik: 'Hesap istenir ve ödenir',
+      metin: 'Müşteri "Hesap iste"ye basar, personelin ekranına bildirim düşer. Kasiyer nakit, kart veya yemek çekiyle tahsil eder; kalandan fazla tutar kaydedilmez.',
+      kur() {
+        const hp = [sat('latte', 'hazir'), sat('tost', 'hazir'), sat('cheese', 'hazir')];
+        taban({ tel: 'durum', telAsama: 2, eink: 'acik', tutar: 29500, token: 'Pd4vT9', tab: 'plan', m3: 'acik', satirlar: hp });
+        sonra(700, () => p({ basili: 'hesap' }));
+        sonra(900, () => ucur('tel', 'tab', AMBER));
+        sonra(1650, () => bildir('Masa 3 hesap istiyor', 'amber', 1500));
+        sonra(3000, () => p({ tab: 'tahsilat', kalan: 29500 }));
+        sonra(3700, () => p({ basili: 'tahsil' }));
+        for (let i = 1; i <= 12; i++) sonra(3800 + i * 45, () => p({ kalan: Math.round(29500 * (1 - i / 12)) }));
+        sonra(4500, () => p({ odeBitti: true }));
+      } },
+    { kisa: 'Kapanış', baslik: 'Adisyon kapanır, masa boşalır',
+      metin: 'Kalan sıfırlanınca adisyon kapatılır ve masa boşa döner. Kapanışta masaya yeni bir karekod belirteci üretilir; masa ekranı bir sonraki sorguda yeni karekodu basar.',
+      kur() {
+        const hp = [sat('latte', 'hazir'), sat('tost', 'hazir'), sat('cheese', 'hazir')];
+        taban({ tel: 'durum', telAsama: 2, eink: 'acik', tutar: 29500, token: 'Pd4vT9', tab: 'tahsilat', m3: 'acik', satirlar: hp, kalan: 0, odeBitti: true });
+        sonra(900, () => { p({ tab: 'plan', m3: 'bos', token: 'Zr8bW1' }); bildir('Adisyon #004 kapandı', 'yesil'); });
+        sonra(1800, () => ucur('eink', 'tab', TEAL));
+        sonra(2550, () => ucur('tab', 'eink', TEAL));
+        sonra(3200, () => einkYenile({ eink: 'bos', tutar: 0, ekToken: 'Zr8bW1' }));
+        sonra(3600, () => p({ tel: 'son' }));
+      } },
+  ];
+
+  // Oynatıcı
+  const azHareket = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let aktif = 0, oynuyor = !azHareket, gorunur = false, basladi = false;
+  bolum.style.setProperty('--sure', SURE + 'ms');
+  const IK_DUR = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/></svg>';
+  const IK_OYN = '<svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.5v15a1 1 0 0 0 1.5.86l12.5-7.5a1 1 0 0 0 0-1.72L8.5 3.64A1 1 0 0 0 7 4.5z"/></svg>';
+
+  function arayuz() {
+    listeEl.innerHTML = ADIM.map((a, i) =>
+      '<li class="yol-adim' + (i === aktif ? ' aktif' : i < aktif ? ' bitti' : '') + '"><button type="button" data-i="' + i +
+      '"' + (i === aktif ? ' aria-current="step"' : '') + '><span class="no">' + (i + 1) + '</span><span class="yad">' + a.kisa +
+      '</span></button></li>').join('');
+    document.getElementById('yolSayac').textContent = String(aktif + 1).padStart(2, '0') + ' / ' + ADIM.length;
+    document.getElementById('yolBaslik').textContent = ADIM[aktif].baslik;
+    document.getElementById('yolMetin').textContent = ADIM[aktif].metin;
+    oynatBt.innerHTML = oynuyor ? IK_DUR : IK_OYN;
+    oynatBt.setAttribute('aria-label', oynuyor ? 'Duraklat' : 'Oynat');
+    bolum.classList.toggle('yol-durdu', !oynuyor);
+    if (listeEl.scrollWidth > listeEl.clientWidth) {
+      const a = listeEl.querySelector('.aktif');
+      if (a) listeEl.scrollTo({ left: a.offsetLeft - 8, behavior: 'smooth' });
+    }
+  }
+  function zamanla() {
+    clearTimeout(adimT);
+    if (oynuyor && gorunur) adimT = setTimeout(() => git(aktif + 1), SURE);
+  }
+  function git(i) {
+    temizle();
+    aktif = (i + ADIM.length) % ADIM.length;
+    arayuz();
+    ADIM[aktif].kur();
+    zamanla();
+  }
+
+  listeEl.addEventListener('click', e => {
+    const b = e.target.closest('button[data-i]');
+    if (b) git(+b.dataset.i);
+  });
+  document.getElementById('yolGeri').addEventListener('click', () => git(aktif - 1));
+  document.getElementById('yolIleri').addEventListener('click', () => git(aktif + 1));
+  oynatBt.addEventListener('click', () => {
+    oynuyor = !oynuyor;
+    if (oynuyor) git(aktif); else { clearTimeout(adimT); arayuz(); }
+  });
+
+  new IntersectionObserver(es => es.forEach(e => {
+    gorunur = e.isIntersecting;
+    if (!gorunur) { clearTimeout(adimT); return; }
+    if (!basladi) { basladi = true; git(0); }
+    else zamanla();
+  }), { threshold: 0.25 }).observe(sahne);
+
+  arayuz();
+  taban({ tab: 'qr', eink: 'kapali' });
+})();
 
 // Scroll fade-in
 const obs = new IntersectionObserver(entries => {
